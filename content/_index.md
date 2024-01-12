@@ -233,6 +233,7 @@ sections:
       subtitle:
       text: |-
         If you have any questions, please don't hesitate to get in touch.
+      email: shijie.xu@ees.hokudai.ac.jp
       address:
         street: Graduate School of Environmental Science, Hokkaido University Kita-10 Nishi-5, Kita-ku
         city: Sapporo
