@@ -3,7 +3,7 @@
 title: 许仕杰
 
 # Name pronunciation (optional)
-name_pronunciation: Shijie Xu
+name_pronunciation: XU Shijie
 
 # Full name (for SEO)
 first_name: Shijie
@@ -31,6 +31,7 @@ bio: My research interests include AI and Bioinformatics.
 interests:
   - Artificial Intelligence
   - Bioinformatics
+  - Chemoinformatics
 
 # Education to show in About widget
 education:
@@ -51,37 +52,43 @@ skills:
   - name: Technical
     items:
       - name: Python
-        description: 'I am working with Python for daily work.'
-        percent: 80
+        description: 'I am working with Python for daily work. Familiar with PyTorch etc.'
+        # percent: 
         icon: python
         icon_pack: fab
-      - name: LaTeX
-        description: ''
-        percent: 100
-        icon: latex
-        icon_pack: fas
-      - name: SQL
-        description: ''
-        percent: 40
-        icon: database
-        icon_pack: fas
+      - name: C/C++
+        description: 'C is my first programming language. Then C++ as "C with classes".'
+      - name: R
+        description: 'A little bit of R (for its beautiful plots).'
+        icon: r-project
+        icon_pack: fab
+      - name: $\LaTeX$
+        description: 'I use $\LaTeX$ for writing papers and reports.'
+  - name: Languages
+    items:
+      - name: Chinese
+        description: 'Native for Lower Yangtze dialect and standard Mandarin.'
+      - name: English
+        description: 'Professional working proficiency'
+      - name: Japanese
+        description: 'Basic'
   - name: Hobbies
     color: '#eeac02'
     color_border: '#f0bf23'
     items:
       - name: Hiking
         description: ''
-        percent: 60
+        percent: 80
         icon: person-hiking
         icon_pack: fas
       - name: Cats
         description: ''
-        percent: 100
+        percent: 60
         icon: cat
         icon_pack: fas
       - name: Photography
         description: ''
-        percent: 80
+        percent: 70
         icon: camera-retro
         icon_pack: fas
 
@@ -93,21 +100,21 @@ social:
   - icon: envelope
     icon_pack: fas
     link: '/#contact'
-  - icon: twitter
-    icon_pack: fab
-    link: https://twitter.com/GeorgeCushen
-    label: Follow me on Twitter
-    display:
-      header: true
-  - icon: graduation-cap # Alternatively, use `google-scholar` icon from `ai` icon pack
-    icon_pack: fas
-    link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
+#   - icon: twitter
+#     icon_pack: fab
+#     link: https://twitter.com/GeorgeCushen
+#     label: Follow me on Twitter
+#     display:
+#       header: true
+#   - icon: graduation-cap # Alternatively, use `google-scholar` icon from `ai` icon pack
+#     icon_pack: fas
+#     link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
   - icon: github
     icon_pack: fab
-    link: https://github.com/gcushen
-  - icon: linkedin
-    icon_pack: fab
-    link: https://www.linkedin.com/
+    link: https://github.com/xu-shi-jie
+#   - icon: linkedin
+#     icon_pack: fab
+#     link: https://www.linkedin.com/
   # Link to a PDF of your resume/CV.
   # To use: copy your resume to `static/uploads/resume.pdf`, enable `ai` icons in `params.yaml`,
   # and uncomment the lines below.
@@ -118,6 +125,5 @@ social:
 # Highlight the author in author lists? (true/false)
 highlight_name: true
 ---
-
-Chien Shiung Wu is a professor of artificial intelligence at the Stanford AI Lab. Her research interests include distributed robotics, mobile computing and programmable matter. She leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Shijie Xu is a PhD student working on AI and Bioinformatics. He is currently a member of the [Onoda Lab](https://onoda-lab.jp) at Hokkaido University. His research interests include AI and Bioinformatics.
 {style="text-align: justify;"}
