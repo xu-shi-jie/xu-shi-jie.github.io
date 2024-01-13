@@ -48,49 +48,49 @@ education:
 
 # Skills
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
-skills:
-  - name: Technical
-    items:
-      - name: Python
-        description: 'I am working with Python for daily work. Familiar with PyTorch etc.'
-        # percent: 
-        icon: python
-        icon_pack: fab
-      - name: C/C++
-        description: 'C is my first programming language. Then C++ as "C with classes".'
-      - name: R
-        description: 'A little bit of R (for its beautiful plots).'
-        icon: r-project
-        icon_pack: fab
-      - name: $\LaTeX$
-        description: 'I use $\LaTeX$ for writing papers and reports.'
-  - name: Languages
-    items:
-      - name: Chinese
-        description: 'Native for Lower Yangtze dialect and standard Mandarin.'
-      - name: English
-        description: 'Professional working proficiency'
-      - name: Japanese
-        description: 'Basic'
-  - name: Hobbies
-    color: '#eeac02'
-    color_border: '#f0bf23'
-    items:
-      - name: Hiking
-        description: ''
-        percent: 80
-        icon: person-hiking
-        icon_pack: fas
-      - name: Cats
-        description: ''
-        percent: 60
-        icon: cat
-        icon_pack: fas
-      - name: Photography
-        description: ''
-        percent: 70
-        icon: camera-retro
-        icon_pack: fas
+# skills:
+#   - name: Programming 
+#     items:
+#       - name: Python
+#         description: 'I am working with Python for daily work. Familiar with PyTorch etc.'
+#         # percent: 
+#         icon: python
+#         icon_pack: fab
+#       - name: C/C++
+#         description: 'C is my first programming language. Then C++ as "C with classes".'
+#       - name: R
+#         description: 'A little bit of R (for its beautiful plots).'
+#         icon: r-project
+#         icon_pack: fab
+#       - name: $\LaTeX$
+#         description: 'I use $\LaTeX$ for writing papers and reports.'
+#   - name: Languages
+#     items:
+#       - name: Chinese
+#         description: 'Native for Lower Yangtze dialect and standard Mandarin.'
+#       - name: English
+#         description: 'Professional working proficiency'
+#       - name: Japanese
+#         description: 'Basic'
+#   - name: Hobbies
+#     color: '#eeac02'
+#     color_border: '#f0bf23'
+#     items:
+#       - name: Hiking
+#         description: ''
+#         percent: 80
+#         icon: person-hiking
+#         icon_pack: fas
+#       - name: Cats
+#         description: ''
+#         percent: 60
+#         icon: cat
+#         icon_pack: fas
+#       - name: Photography
+#         description: ''
+#         percent: 70
+#         icon: camera-retro
+#         icon_pack: fas
 
 # Social/Academic Networking
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
@@ -112,6 +112,13 @@ social:
   - icon: github
     icon_pack: fab
     link: https://github.com/xu-shi-jie
+
+  - icon: orcid
+    icon_pack: fab
+    link: https://orcid.org/0000-0001-6974-353X
+  - icon: researchgate
+    icon_pack: fab
+    link: https://www.researchgate.net/profile/Shijie-Xu-14
 #   - icon: linkedin
 #     icon_pack: fab
 #     link: https://www.linkedin.com/
@@ -125,5 +132,6 @@ social:
 # Highlight the author in author lists? (true/false)
 highlight_name: true
 ---
-Shijie Xu is a PhD student working on AI and Bioinformatics. He is currently a member of the [Onoda Lab](https://onoda-lab.jp) at Hokkaido University. His research interests include AI and Bioinformatics.
+
+Shijie Xu is a PhD student working on the development of machine learning methods for protein analysis. He is currently a member of the [Onoda Lab](https://onoda-lab.jp) at Hokkaido University. His research interests include AI and Bioinformatics.
 {style="text-align: justify;"}

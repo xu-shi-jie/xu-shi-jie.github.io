@@ -42,14 +42,14 @@ sections:
       title: Biography
       # Choose a user profile to display (a folder name within `content/authors/`)
       username: admin
-  - block: skills
-    content:
-      title: Skills
-      text: ''
-      # Choose a user to display skills from (a folder name within `content/authors/`)
-      username: admin
-    design:
-      columns: '1'
+#   - block: skills
+#     content:
+#       title: Skills
+#       text: ''
+#       # Choose a user to display skills from (a folder name within `content/authors/`)
+#       username: admin
+#     design:
+#       columns: '1'
 #   - block: experience
 #     content:
 #       title: Experience
@@ -189,28 +189,30 @@ sections:
 #         {{< gallery album="demo" >}}
 #     design:
 #       columns: '1'
-#   - block: collection
-#     id: featured
-#     content:
-#       title: Featured Publications
-#       filters:
-#         folders:
-#           - publication
-#         featured_only: true
-#     design:
-#       columns: '2'
-#       view: card
   - block: collection
-    id: publications
+    id: featured
     content:
       title: Recent Publications
       filters:
         folders:
           - publication
-        exclude_featured: false
+        featured_only: true
     design:
       columns: '2'
-      view: citation
+      view: card
+
+#   - block: collection
+#     id: publications
+#     content:
+#       title: Recent Publications
+#       filters:
+#         folders:
+#           - publication
+#         exclude_featured: false
+#     design:
+#       columns: '2'
+#       view: citation
+      
   - block: collection
     id: talks
     content:
@@ -235,15 +237,14 @@ sections:
         If you have any questions, please don't hesitate to get in touch.
       email: shijie.xu@ees.hokudai.ac.jp
       address:
-        street: Graduate School of Environmental Science, Hokkaido University Kita-10 Nishi-5, Kita-ku
+        street: Graduate School of Environmental Science, Hokkaido University, Kita-10 Nishi-5, Kita-ku
         city: Sapporo
         region: Hokkaido
         postcode: '060-0810'
         country: Japan
         country_code: JP
       office_hours:
-        - 'Weekday 9:30 to 18:00'
-        - 'Saturday 10:00 to 13:00'
+        - 'Weekday 9:30 to 18:00, Saturday 10:00 to 13:00 (JST)'
       # Choose a map provider in `params.yaml` to show a map from these coordinates
       coordinates:
         latitude: '43.07309536330109'
