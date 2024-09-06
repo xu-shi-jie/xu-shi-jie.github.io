@@ -79,8 +79,5 @@ Create your slides in Markdown - click the *Slides* button to check out the exam
 
 <!-- Add the publication's **full text** or **supplementary notes** here. You can use rich formatting such as including [code, math, and images](https://docs.hugoblox.com/content/writing-markdown-latex/). -->
 
-```diff
-  Unchanged Line
-- Due to the limitation of computational resources, we are currently unable to provide the web server for IDP-ELM. If you want to utilize the IDP prediction for your research, please contact us via email (shijie.xu@ees.hokudai.ac.jp). We are glad to provide the prediction results for you as soon as possible, including the predicted IDRs and their functions.
-+ Our publicly available are now published! [https://onodalab.ees.hokudai.ac.jp/idp-elm](https://onodalab.ees.hokudai.ac.jp/idp-elm)
-```
+<strike>Due to the limitation of computational resources, we are currently unable to provide the web server for IDP-ELM. If you want to utilize the IDP prediction for your research, please contact us via email (shijie.xu@ees.hokudai.ac.jp). We are glad to provide the prediction results for you as soon as possible, including the predicted IDRs and their functions.</strike>
+Our publicly available are now published! [https://onodalab.ees.hokudai.ac.jp/idp-elm](https://onodalab.ees.hokudai.ac.jp/idp-elm)
