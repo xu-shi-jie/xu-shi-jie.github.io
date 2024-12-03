@@ -25,20 +25,17 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Set up Git Repository
         uses: actions/checkout@v4
-      - name: Setup TeXLive
-        uses: xu-cheng/texlive-action@v2
-        with:
-          scheme: full
-          run: bash ${GITHUB_WORKSPACE}/cv-latex/build
+      # - name: Setup TeXLive
+      #   uses: xu-cheng/texlive-action@v2
+      #   with:
+      #     scheme: full
+      #     run: bash ${GITHUB_WORKSPACE}/cv-latex/build
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
           hugo-version: '0.91.2'
-          # extended: true
-
       - name: Build
-        run: hugo --minify
-
+        run: hugo
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref == 'refs/heads/main' }}
