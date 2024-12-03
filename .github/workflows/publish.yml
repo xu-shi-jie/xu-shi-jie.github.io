@@ -30,29 +30,18 @@ jobs:
         with:
           scheme: full
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
-      - name: Hugo build
-        run: hugo --minify
-      - name: Upload static files as artifact
-        uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
         with:
-          path: ${{ github.workspace }}/public
-  deploy:
-      # Add a dependency to the build job
-      needs: build
+          hugo-version: '0.91.2'
+          # extended: true
 
-      # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-      permissions:
-        pages: write      # to deploy to Pages
-        id-token: write   # to verify the deployment originates from an appropriate source
+      - name: Build
+        run: hugo --minify
 
-      # Deploy to the github-pages environment
-      environment:
-        name: github-pages
-        url: ${{ steps.deployment.outputs.page_url }}
-
-      # Specify runner + deployment step
-      runs-on: ubuntu-latest
-      steps:
-        - name: Deploy to GitHub Pages
-          id: deployment
-          uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
