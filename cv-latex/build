@@ -1,0 +1,4 @@
+cd cv-latex
+xelatex cv.tex
+rm cv.aux cv.log cv.out
+mv cv.pdf ../static/resume.pdf
