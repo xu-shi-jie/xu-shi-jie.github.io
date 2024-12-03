@@ -31,9 +31,7 @@ jobs:
           scheme: full
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
       - name: Hugo build
-        uses: jakejarvis/hugo-build-action@v0.111.3
-        with:
-          args: --minify --buildDrafts
+        run: hugo --minify
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v3 # or specific "vX.X.X" version tag for this action
         with:
