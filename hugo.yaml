@@ -31,7 +31,7 @@ params:
   ShowShareButtons: true
   ShowPostNavLinks: true
   ShowBreadCrumbs: true
-  ShowCodeCopyButtons: false
+  ShowCodeCopyButtons: true
   ShowWordCount: true
   ShowRssButtonInSectionTermList: true
   UseHugoToc: true
@@ -74,9 +74,9 @@ params:
 
   # home-info mode
   homeInfoParams:
-    Title: "\U0001F44B Welcome to Shijie's Blog"
-    Content: |
-      Shijie Xu is a PhD student in [Onoda Lab](https://onoda-lab.jp) at [Hokkaido University](https://www.global.hokudai.ac.jp/). Check his [CV](docs/resume.pdf).
+    Title: #"\U0001F44B Welcome to Shijie's Blog"
+    Content: #|
+      #Shijie Xu is a PhD student in [Onoda Lab](https://onoda-lab.jp) at [Hokkaido University](https://www.global.hokudai.ac.jp/). Check his [CV](docs/resume.pdf).
 
   socialIcons:
     - name: orcid
@@ -116,8 +116,6 @@ params:
     minMatchCharLength: 0
     limit: 10 # refer: https://www.fusejs.io/api/methods.html#search
     keys: ["title", "permalink", "summary", "content"]
-
-  
   math: true
 menu:
   main:
