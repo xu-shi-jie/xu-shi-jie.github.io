@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Shijie&#39;s Blog</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Shijie&#39;s Blog</description>
+    <image>
+      <title>Shijie&#39;s Blog</title>
+      <url>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>http://localhost:1313/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- 0.135.0</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Dec 2008 10:35:57 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Proof of Fermat&#39;s little theorem</title>
+      <link>http://localhost:1313/posts/fermat/</link>
+      <pubDate>Wed, 03 Dec 2008 10:35:57 +0900</pubDate>
+      <guid>http://localhost:1313/posts/fermat/</guid>
+      <description>&lt;p&gt;&lt;em&gt;Fermat&amp;rsquo;s little theorem&lt;/em&gt; states that for all primes $p$ and integers $a$, $a^p\equiv a\mod p$.&lt;/p&gt;
+&lt;p&gt;It is easy to verify that the theorem holds when $p=2$, since $a^2-a\equiv a(a-1)\equiv 0\mod 2$. To prove the theorem, it suffices to consider only the case $a\ge 0$, because $(-a)^p\equiv -a^p\equiv -a\mod p$ holds whenever the theorem is valid for $a&gt;0$.&lt;/p&gt;
+&lt;p&gt;The theorem is trivially true for $a=0$. Assuming it holds for $a$, we aim to prove it for $a+1$. By induction, the theorem will then be established.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
