@@ -2,6 +2,7 @@
 date: '2008-12-03T10:35:57+09:00'
 draft: false
 title: Proof of Fermat's little theorem
+comments: true
 ---
 
 *Fermat's little theorem* states that for all primes $p$ and integers $a$, $a^p\equiv a\mod p$.
