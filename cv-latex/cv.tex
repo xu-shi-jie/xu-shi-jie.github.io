@@ -7,6 +7,16 @@
 \usepackage{newtxtext} % Use Times New Roman font
 \usepackage[pro]{fontawesome5}
 \usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{datetime2}
+
+% define compile time
+\DTMsetstyle{iso}
+\newcommand{\CompileTime}{\DTMnow}
+% 设置页眉
+\pagestyle{fancy}
+\fancyhead[R]{Updated on \CompileTime}
+\fancyfoot{}
 
 % Define ORCID green
 \definecolor{orcid}{RGB}{166, 206, 57}
