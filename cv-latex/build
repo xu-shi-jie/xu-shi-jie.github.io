@@ -1,4 +1,4 @@
 cd cv-latex
-xelatex cv.tex
-rm cv.aux cv.log cv.out
+pdflatex cv.tex
+rm -f cv.aux cv.log cv.out cv.fls cv.fdb_latexmk
 mv cv.pdf ../static/docs/resume.pdf

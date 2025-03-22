@@ -5,6 +5,11 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{newtxtext} % Use Times New Roman font
+\usepackage[pro]{fontawesome5}
+\usepackage{xcolor}
+
+% Define ORCID green
+\definecolor{orcid}{RGB}{166, 206, 57}
 
 \setlength{\parindent}{0pt} % Remove paragraph indent
 % not hyperlink the email and phone number
@@ -18,10 +23,10 @@
 \begin{minipage}[c]{0.75\textwidth} % Right side for the details
     {\Huge \textbf{\textit{CURRICULUM VITAE}}}\vspace{1cm}\\
     {\Huge \textbf{Shijie Xu}}\vspace{1cm}\\
-    Graduate School of Environmental Science, Hokkaio University\\
+    Faculty of Environmental Earth Science, Hokkaido University\\
     Kita-10 Nishi-5, Kita-ku, Sapporo, Hokkaido, 060-0810, Japan\\
 
-    \href{mailto:shijie.xu@ees.hokudai.ac.jp}{shijie.xu@ees.hokudai.ac.jp}
+    \faEnvelope~\href{mailto:shijie.xu@ees.hokudai.ac.jp}{shijie.xu@ees.hokudai.ac.jp}~~~\color{orcid}{\faOrcid}~\href{https://orcid.org/0000-0001-6974-353X}{0000-0001-6974-353X}
 \end{minipage}
 \hfill
 % Header with Photo
@@ -35,23 +40,27 @@
 March 9th, 1995
 % Education
 \section*{Education}
-Ph.D. in Environmental Science, Hokkaido University \hfill March 2025 (expected)\\
-\textit{Dissertation Title:} ``Accurate and Fast Predictions of Protein Structures and Properties via Protein Language Models''\\
-M.Sc. in Computer Science, University of Science and Technology of China \hfill June 2020\\
-B.Sc. in Mathematics, University of Science and Technology of China \hfill June 2017
+Ph.D. in Environmental Science, Hokkaido University \hfill March 2025\\
+\textit{Dissertation Title: ``Accurate and Fast Predictions of Protein\\
+Structures and Properties via Protein Language Models''}\\
+M.S. in Computer Science, University of Science and Technology of China \hfill June 2020\\
+B.S. in Mathematics, University of Science and Technology of China \hfill June 2017
+\section*{Research Experience}
+Postdoctoral Researcher, Hokkaido University\hfill April 2025 - Present\\
+
 \section*{Research Interests}
 Bioinformatics, Deep Learning, Computational Chemistry, Computer Science, Mathematics
 \section*{Skills}
-\textbf{Programming:} Python / PyTorch / C++ / \LaTeX / Bash / Fortran / Rust / HTML / Javascript / FastAPI / Flask / Django / Go / Mathematica / MATLAB / Coq / Haskell\\
-\textbf{Softwares:} AutoDock Vina / PyMOL / GIMP / Powerpoint / Git / Docker / VSCode\\
+\textbf{Programming:} Python / C++ / \LaTeX / FORTRAN / Rust / Mathematica / MATLAB / Coq / Haskell\\
+\textbf{Web development:} HTML / JavaScript / FastAPI / Flask / Django / Go\\
+\textbf{Software:} AutoDock Vina / PyMOL / GIMP / Git / Docker / VSCode\\
 \textbf{Hardware:} GPU workstation building / Linux server maintenance / Raspberry Pi\\
-\textbf{Languages:} English (fluent), Chinese (native), Japanese (basic)
-
+\textbf{Languages:} English (fluent), Chinese (standard and lower Yangtze), Japanese (basic)
 \section*{Publications}
 \begin{enumerate}
     \item \underbar{Shijie Xu} and Akira Onoda*. ``PsiPartition: Improved Site Partitioning for Genomic Data by Parameterized Sorting Indices and Bayesian Optimization.'' \textit{Journal of Molecular Evolution} 92: 874-890, \textbf{2024}, \emph{DOI:} \url{https://doi.org/10.1007/s00239-024-10215-7}
     \item \underbar{Shijie Xu} and Akira Onoda*. ``Accurate and Fast Prediction of Intrinsically Disordered Protein by Multiple Protein Language Models and Ensemble Learning.'' \textit{Journal of Chemical Information and Modeling} 64(7): 2901-2911, \textbf{2023}, \emph{DOI:} \url{https://doi.org/10.1021/acs.jcim.3c01202} 
-    \item \underbar{Shijie Xu} and Akira Onoda*. ``Accurate and Rapid Prediction of Protein \pKa{}: Protein Language Models Reveal the Sequence-\pKa{} Relationship.'' Under review.
+    \item \underbar{Shijie Xu} and Akira Onoda*. ``Accurate and Rapid Prediction of Protein \pKa{}: Protein Language Models Reveal the Sequence-\pKa{} Relationship.'' \textit{Journal of Chemical Theory and Computation}
 \end{enumerate}
 \section*{Presentations}
 \begin{itemize}
@@ -70,8 +79,5 @@ Bioinformatics, Deep Learning, Computational Chemistry, Computer Science, Mathem
     \item Outstanding Freshman Scholarship, University of Science and Technology of China, 2014
     \item First Prize Winner in National High School Mathematics League, Hefei, Anhui, China, 2012
 \end{itemize}
-
-\section*{Rearch Experience}
-Oct 2021 - Mar 2022, Graduate School of Environmental Science, Hokkaido University, Japan, ``Accelerating Biohybrid Catalysis Screen via Machine Learning'', supervised by Prof. Akira Onoda\\
 
 \end{document}
