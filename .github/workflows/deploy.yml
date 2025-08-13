@@ -5,6 +5,12 @@ on:
     branches:
       - master  # 或您使用的默认分支名称
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,10 +26,5 @@ jobs:
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+        id: deployment
+        uses: actions/deploy-pages@v4
