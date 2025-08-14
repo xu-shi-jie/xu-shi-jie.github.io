@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <title>Shijie's Blog</title>
   <style>
     :root {
@@ -40,7 +42,14 @@
       align-items: center;
       border-bottom: 1px solid rgba(128, 128, 128, 0.1);
     }
-
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background-image: url('docs/background-pkalm.jpg'); /* 替换成你的封面图路径 */
+      background-size: cover;
+      background-position: center;
+    }
     .content {
       padding: 0 1rem;
     }
@@ -66,7 +75,7 @@
     }
     .pub-list li, .talk-list li { margin-bottom: 0.5rem; }
     .news-list li { 
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.5rem;
       line-height: 1.6;
       position: relative;
       padding-left: 1.2em;
@@ -173,6 +182,7 @@
   </script>
 </head>
 <body>
+  <div class="hero"></div>
   <div class="content">
   <header>
     <div class="title-row">
@@ -196,9 +206,14 @@
     </div>
   </header>
 
-    <section id="bio" style="display: flex; align-items: center;">
+    <section id="bio">
         <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>
-    </section>
+        <p>
+          <strong>E-mail:</strong>
+          <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()">Decode</button>
+        </p>
+        <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://researchmap.jp/xushijie"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
+      </section>
 
     <section id="news">
     <h2>News</h2>
@@ -222,15 +237,26 @@
       </li>
     </ul>
   </section>
-
+  <section id="Thanks">
+    <h2>Thanks to</h2>
+    <p><a href="https://sites.google.com/eis.hokudai.ac.jp/exexphd-fellow/home">EXEX Fellowship</a> for supporting my research.
+    </p>
+  </section>
   <footer>
-    <p>
-      <a href="https://orcid.org/0000-0001-6974-353X" class="footer-link">Orcid</a>
-      <a href="https://github.com/xu-shi-jie" class="footer-link">Github</a>
-      &copy; 2024-2025 Shijie Xu. Hosted via GitHub Pages.
+    <p style="text-align: center; font-size: small;">
+      &copy; 2025 Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
     </p>
   </footer>
   </div>
-
+  
+  <script>
+  function decodeEmail() {
+    const encoded = "c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw";
+    const decoded = atob(encoded);
+    document.getElementById("email").textContent = decoded;
+    // disable button
+    document.querySelector("button[onclick='decodeEmail()']").disabled = true;
+  }
+  </script>
 </body>
 </html>
