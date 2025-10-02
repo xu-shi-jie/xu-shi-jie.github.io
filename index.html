@@ -4,8 +4,11 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Asul:wght@400;700&display=swap" rel="stylesheet">
 
-  <title>Shijie's Blog</title>
+  <title>Shijie Xu</title>
   <style>
     :root {
       --text-color: #222;
@@ -24,7 +27,8 @@
     }
 
     body {
-      font-family: -apple-system,BlinkMacSystemFont,segoe ui,Roboto,Oxygen,Ubuntu,Cantarell,open sans,helvetica neue,sans-serif;
+      font-family: 'Asul', -apple-system, BlinkMacSystemFont, segoe ui, Roboto, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+      font-size: 18px;
       max-width: 800px;
       margin: 0 auto;
       line-height: 1.6;
@@ -64,11 +68,11 @@
     }
     
     header h1 { 
-      font-size: 2.5rem;
+      font-size: 3rem;
       margin: 0;
     }
     
-    section h2 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+    section h2 { font-size: 2rem; margin-bottom: 0.5rem; }
     .pub-list, .talk-list, .news-list { 
       list-style-type: none; 
       padding: 0; 
@@ -92,7 +96,7 @@
       opacity: 0.8;
       font-family: monospace;
       white-space: nowrap;
-      font-size: 1rem;
+      font-size: 1.1rem;
     }
     a {
       color: var(--text-color);
@@ -186,7 +190,7 @@
   <div class="content">
   <header>
     <div class="title-row">
-      <h1>👋 Welcome to Shijie's Blog</h1>
+      <h1>Shijie XU</h1>
       <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
         <svg class="moon" viewBox="0 0 24 24">
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -258,5 +262,17 @@
     document.querySelector("button[onclick='decodeEmail()']").disabled = true;
   }
   </script>
+
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-F4QML3QF9Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-F4QML3QF9Y');
+  </script>
+
 </body>
 </html>
