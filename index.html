@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Asul:wght@400;700&display=swap" rel="stylesheet">
 
   <title>Shijie Xu</title>
+  <meta name="keywords" content="protein structure prediction, metal binding sites, deep learning, molecular simulation">
   <style>
     :root {
       --text-color: #222;
@@ -35,6 +36,14 @@
       color: var(--text-color);
       background: var(--bg-color);
       transition: color 0.3s, background-color 0.3s;
+    }
+
+    /* Paragraph justification and word-break behavior */
+    .content p {
+      text-align: justify; /* left and right justified */
+      text-justify: inter-word;
+      word-break: normal; /* avoid breaking words mid-word */
+      overflow-wrap: normal; /* prefer breaking at whitespace */
     }
 
     nav {
@@ -73,28 +82,28 @@
     }
     
     section h2 { font-size: 2rem; margin-bottom: 0.5rem; }
-    .pub-list, .talk-list, .news-list { 
+    .pub-list, .talk-list { 
       list-style-type: none; 
       padding: 0; 
     }
     .pub-list li, .talk-list li { margin-bottom: 0.5rem; }
-    .news-list li { 
+    .pub-list li { 
       margin-bottom: 0.5rem;
       line-height: 1.6;
       position: relative;
       padding-left: 1.2em;
     }
-    .news-list li::before {
+    .pub-list li::before {
       content: "•";
       position: absolute;
       left: 0;
       color: var(--text-color);
       opacity: 0.8;
     }
-    .news-list .news-date {
+    .pub-list .pub-date {
       color: var(--text-color);
       opacity: 0.8;
-      font-family: monospace;
+      font-family: inherit;
       white-space: nowrap;
       font-size: 1.1rem;
     }
@@ -161,6 +170,90 @@
       border-bottom: none;
       margin-right: 1rem;
     }
+    /* Style software links as pill-shaped outline badges with transparent background */
+    #software a {
+      display: inline-flex;
+      align-items: center; /* vertically center icon and text */
+      gap: 0.45rem; /* spacing between icon and text */
+      margin: 0 0.5rem 0.5rem 0; /* right and bottom spacing for wrap */
+      padding: 0.25rem 0.9rem;
+      border-radius: 999px; /* pill shape */
+      background: transparent;
+      color: var(--text-color); /* keep text color consistent with surrounding text */
+      text-decoration: none;
+      border: 1px solid currentColor; /* border matches text color (black or white depending on theme) */
+      transition: background-color 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease;
+    }
+
+    #software a:hover {
+      transform: translateY(-1px);
+      background: rgba(0,0,0,0.03); /* subtle hover tint in light theme */
+    }
+
+    /* In dark theme make hover a bit lighter */
+    [data-theme="dark"] #software a:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    #software a:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
+    }
+
+    /* Focus ring for dark theme (lighter ring) */
+    [data-theme="dark"] #software a:focus {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
+    }
+    /* Icon spacing inside software links */
+    #software a i {
+      font-size: 1em; /* match surrounding text size */
+      line-height: 1; /* prevent extra height */
+      vertical-align: middle;
+      /* margin-right removed in favor of gap on the anchor */
+    }
+    /* Accessible visually-hidden helper for screen readers */
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0 0 0 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    /* Tooltip visual using data-tooltip attribute */
+    [data-tooltip] {
+      position: relative;
+    }
+    [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: calc(100% + 8px);
+      background: rgba(0,0,0,0.85);
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+      font-size: 0.85rem;
+      line-height: 1;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+      z-index: 60;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    }
+    [data-tooltip]:hover::after,
+    [data-tooltip]:focus-visible::after {
+      opacity: 1;
+    }
+    /* Publications formatting */
+    .pub-list u { text-decoration: underline; font-weight: 600; }
+  .pub-list a { word-break: break-word; overflow-wrap: anywhere; }
   </style>
   <script>
     function toggleTheme() {
@@ -211,7 +304,7 @@
   </header>
 
     <section id="bio">
-        <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>
+        <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. His research focuses on bioinformatics, computational chemistry, and deep learning. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>   
         <p>
           <strong>E-mail:</strong>
           <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()">Decode</button>
@@ -219,27 +312,32 @@
         <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://researchmap.jp/xushijie"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
       </section>
 
-    <section id="news">
-    <h2>News</h2>
-    <ul class="news-list">
+  <section id="pub">
+  <h2>Publications</h2>
+    <ol class="pub-list">
       <li>
-        <span class="news-date">[2025/3/26]</span>
-        Our paper "Accurate and Rapid Prediction of Protein p<i>K</i><sub>a</sub>: Protein Language Models Reveal the Sequence-p<i>K</i><sub>a</sub> Relationship" has been published in 
-        <a href="https://pubs.acs.org/doi/10.1021/acs.jctc.4c01288">Journal of Chemical Theory and Computation</a>.
+        <u>Shijie Xu</u> and Akira Onoda*. "Accurate and Rapid Prediction of Protein p<i>K</i><sub>a</sub>: Protein Language Models Reveal the Sequence-p<i>K</i><sub>a</sub> Relationship." <em><a href="https://doi.org/10.1021/acs.jctc.4c01288">Journal of Chemical Theory and Computation</a></em> 21(7): 3752–3764, <strong>2025</strong>.
       </li>
       <li>
-        <span class="news-date">[2024/12/05]</span>
-        Our paper "PsiPartition: Improved Site Partitioning for Genomic Data by Parameterized Sorting Indices and Bayesian Optimization" has been published in 
-        <a href="https://link.springer.com/article/10.1007/s00239-024-10215-7">Journal of Molecular Evolution</a>.
-        (<a href="https://www.hokudai.ac.jp/news/2024/12/post-1700.html">プレスリリース</a> | 
-        <a href="https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/">Press release</a>)
+        <u>Shijie Xu</u> and Akira Onoda*. "PsiPartition: Improved Site Partitioning for Genomic Data by Parameterized Sorting Indices and Bayesian Optimization." <em><a href="https://doi.org/10.1007/s00239-024-10215-7">Journal of Molecular Evolution</a></em> 92: 874-890, <strong>2024</strong>.
+        (<a href="https://www.hokudai.ac.jp/news/2024/12/post-1700.html">プレスリリース</a> | <a href="https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/">Press release</a>)
       </li>
       <li>
-        <span class="news-date">[2023/10/26]</span>
-        Our paper "Accurate and Fast Prediction of Intrinsically Disordered Protein by Multiple Protein Language Models and Ensemble Learning" has been published in 
-        <a href="https://pubs.acs.org/doi/abs/10.1021/acs.jcim.3c01202">Journal of Chemical Information and Modeling</a>.
+        <u>Shijie Xu</u> and Akira Onoda*. "Accurate and Fast Prediction of Intrinsically Disordered Protein by Multiple Protein Language Models and Ensemble Learning." <em><a href="https://doi.org/10.1021/acs.jcim.3c01202">Journal of Chemical Information and Modeling</a></em> 64(7): 2901-2911, <strong>2023</strong>.
       </li>
-    </ul>
+    </ol>
+  </section>
+
+  <section id="software">
+    <h2>Software</h2>
+  <a href="https://github.com/xu-shi-jie/pKALM" data-tooltip="Fast and accurate prediction of protein pKa." aria-describedby="tip-pkalm"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> pKALM<span id="tip-pkalm" class="sr-only">pKALM — Fast and accurate prediction of protein pKa.</span></a>
+  <a href="https://github.com/xu-shi-jie/revPKAD2" data-tooltip="Revised protein pKa database based on PKAD2." aria-describedby="tip-revpkad2"><i class="fa-solid fa-database" aria-hidden="true"></i> revPKAD2<span id="tip-revpkad2" class="sr-only">revPKAD2 — Revised protein pKa database based on PKAD2.</span></a>
+  <a href="https://github.com/xu-shi-jie/PsiPartition" data-tooltip="More accurate partitioned models for phylogenetics." aria-describedby="tip-psipart"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> PsiPartition<span id="tip-psipart" class="sr-only">PsiPartition — More accurate partitioned models for phylogenetics.</span></a>
+  <a href="https://github.com/xu-shi-jie/idp-elm" data-tooltip="Fast and accurate prediction of intrinsically disordered proteins (IDPs)." aria-describedby="tip-idpelm"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> IDP-ELM<span id="tip-idpelm" class="sr-only">IDP-ELM — Fast and accurate prediction of intrinsically disordered proteins (IDPs).</span></a><br>
+  <a href="https://github.com/xu-shi-jie/hokudai-dissertation" data-tooltip="Hokkaido University dissertation LaTeX template." aria-describedby="tip-dissertation"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Dissertation LaTeX<span id="tip-dissertation" class="sr-only">Dissertation LaTeX — Hokkaido University dissertation LaTeX template.</span></a>
+  <a href="https://github.com/xu-shi-jie/bib-journal-abbreviator" data-tooltip="Small tool to abbreviate journal names in BibTeX." aria-describedby="tip-refabbr"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Refabbr<span id="tip-refabbr" class="sr-only">Refabbr — Small tool to abbreviate journal names in BibTeX.</span></a>
+  <a href="https://biomol51.github.io" data-tooltip="第51回生体分子科学討論会." aria-describedby="tip-biomol"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> BioMol51<span id="tip-biomol" class="sr-only">BioMol51 — 第51回生体分子科学討論会.</span></a>
+  <a href="https://jkt-bioinorgchem2024.github.io/" data-tooltip="Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024." aria-describedby="tip-jkt"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> JKT 2024<span id="tip-jkt" class="sr-only">JKT 2024 — Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024.</span></a>
   </section>
   <section id="Thanks">
     <h2>Thanks to</h2>
@@ -248,7 +346,7 @@
   </section>
   <footer>
     <p style="text-align: center; font-size: small;">
-      &copy; 2025 Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
+      &copy; 2022-2025 Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
     </p>
   </footer>
   </div>
