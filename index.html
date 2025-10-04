@@ -237,28 +237,31 @@
     [data-tooltip] {
       position: relative;
     }
-    [data-tooltip]::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: calc(100% + 8px);
+    /* Hide the old CSS pseudo tooltip (we'll render a fixed tooltip instead to avoid clipping) */
+    [data-tooltip]::after { display: none; }
+
+    /* Body-attached tooltip so it won't be clipped by overflow on ancestors */
+    .tooltip-popup {
+      position: fixed;
+      z-index: 9999;
       background: rgba(0,0,0,0.85);
       color: #fff;
-      padding: 6px 8px;
+      padding: 6px 10px;
       border-radius: 6px;
-      white-space: nowrap;
       font-size: 0.85rem;
       line-height: 1;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.12s ease;
-      z-index: 60;
+      white-space: nowrap;
+      pointer-events: none; /* let mouse events fall through to the target */
       box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform-origin: center bottom;
+      transition: opacity 0.12s ease, transform 0.12s ease;
+      visibility: hidden;
     }
-    [data-tooltip]:hover::after,
-    [data-tooltip]:focus-visible::after {
+    .tooltip-popup.show {
       opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
     }
     /* Publications formatting */
     .pub-list u { text-decoration: underline; font-weight: 600; }
@@ -329,7 +332,7 @@
       </li>
       <li>
         <u>Shijie Xu</u> and Akira Onoda*. "PsiPartition: Improved Site Partitioning for Genomic Data by Parameterized Sorting Indices and Bayesian Optimization." <em><a href="https://doi.org/10.1007/s00239-024-10215-7">Journal of Molecular Evolution</a></em> 92: 874-890, <strong>2024</strong>.
-        (<a href="https://www.hokudai.ac.jp/news/2024/12/post-1700.html">プレスリリース</a> | <a href="https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/">Press release</a>)
+        (<a href="https://www.hokudai.ac.jp/news/2024/12/post-1700.html">プレスリリース</a> | <a href="https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/">Press release</a> | <a href="https://vimeo.com/1042840720?share=copy">Video</a>)
       </li>
       <li>
         <u>Shijie Xu</u> and Akira Onoda*. "Accurate and Fast Prediction of Intrinsically Disordered Protein by Multiple Protein Language Models and Ensemble Learning." <em><a href="https://doi.org/10.1021/acs.jcim.3c01202">Journal of Chemical Information and Modeling</a></em> 64(7): 2901-2911, <strong>2023</strong>.
@@ -368,6 +371,85 @@
     // disable button
     document.querySelector("button[onclick='decodeEmail()']").disabled = true;
   }
+  </script>
+
+  <!-- Tooltip popup element (appended to body) -->
+  <div id="__tooltip_popup" class="tooltip-popup" aria-hidden="true"></div>
+
+  <script>
+  // Simple tooltip manager: shows a single fixed tooltip for elements with data-tooltip
+  (function() {
+    const tooltip = document.getElementById('__tooltip_popup');
+    let currentTarget = null;
+
+    function showTooltip(target) {
+      const text = target.getAttribute('data-tooltip');
+      if (!text) return;
+      tooltip.textContent = text;
+      tooltip.classList.add('show');
+      tooltip.setAttribute('aria-hidden', 'false');
+      positionTooltip(target);
+      currentTarget = target;
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove('show');
+      tooltip.setAttribute('aria-hidden', 'true');
+      currentTarget = null;
+    }
+
+    function positionTooltip(target) {
+      const rect = target.getBoundingClientRect();
+      const tipRect = tooltip.getBoundingClientRect();
+      const gap = 8; // gap between target and tooltip
+
+      // preferred center above the target
+      let left = rect.left + rect.width / 2 - tipRect.width / 2;
+      let top = rect.top - tipRect.height - gap;
+
+      // if not enough space above, place below
+      if (top < 8) {
+        top = rect.bottom + gap;
+      }
+
+      // clamp to viewport with small margin
+      const margin = 8;
+      left = Math.max(margin, Math.min(left, window.innerWidth - tipRect.width - margin));
+
+      // Apply
+      tooltip.style.left = left + 'px';
+      tooltip.style.top = top + 'px';
+    }
+
+    // Attach event listeners using event delegation
+    document.addEventListener('pointerenter', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (target) showTooltip(target);
+    }, {passive: true, capture: true});
+
+    document.addEventListener('pointerleave', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (target && target === currentTarget) hideTooltip();
+    }, {capture: true});
+
+    // keyboard accessibility
+    document.addEventListener('focusin', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (target) showTooltip(target);
+    });
+    document.addEventListener('focusout', (e) => {
+      const target = e.target.closest('[data-tooltip]');
+      if (target && target === currentTarget) hideTooltip();
+    });
+
+    // reposition on resize/scroll
+    window.addEventListener('scroll', () => {
+      if (currentTarget) positionTooltip(currentTarget);
+    }, {passive: true});
+    window.addEventListener('resize', () => {
+      if (currentTarget) positionTooltip(currentTarget);
+    });
+  })();
   </script>
 
 
