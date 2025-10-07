@@ -70,6 +70,7 @@ jobs:
 
       - name: Run citation updater
         run: |
+          cd data/
           python3 update_citations.py
 
       - name: Commit changes
