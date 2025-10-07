@@ -3,9 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master  # 或您使用的默认分支名称
+      - master
   schedule:
-    - cron: '0 6 * * *' # daily at 06:00 UTC (from previous update_pubs workflow)
+    - cron: '0 6 * * *' # daily at 06:00 UTC
   workflow_dispatch: {}
 
 permissions:
@@ -34,22 +34,29 @@ jobs:
   compile-cv:
     needs: check-changes
     runs-on: ubuntu-latest
-    if: needs.check-changes.outputs.cv == 'true'
+    # Always run this job so deploy waits for it; inside we conditionally do the heavy work
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Compile CV
+      - name: Check if CV changed
+        id: cv-check
+        run: |
+          echo "cv=${{ needs.check-changes.outputs.cv }}" >> "$GITHUB_OUTPUT"
+
+      - name: Compile CV (only if changed)
+        if: needs.check-changes.outputs.cv == 'true'
         uses: xu-cheng/texlive-action@v2
         with:
           scheme: full
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
 
-      - name: Upload CV build artifact
+      - name: Upload CV PDF artifact (only if changed)
+        if: needs.check-changes.outputs.cv == 'true'
         uses: actions/upload-artifact@v3
         with:
-          name: cv-build
-          path: cv-latex/build
+          name: cv-pdf
+          path: cv-latex/build/cv.pdf
 
   update-pubs:
     needs: check-changes
@@ -93,11 +100,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download CV build artifact (if any)
-        if: needs.compile-cv.result == 'success'
+      - name: Download CV PDF artifact (if CV changed)
+        if: needs.check-changes.outputs.cv == 'true'
         uses: actions/download-artifact@v3
         with:
-          name: cv-build
+          name: cv-pdf
           path: cv-latex/build
 
       - name: Upload artifact

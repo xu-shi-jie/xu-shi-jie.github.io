@@ -46,7 +46,7 @@ def fetch_crossref_count(doi, attempts=3):
     api = 'https://api.crossref.org/works/' + urllib.parse.quote(doi)
     headers = {
         'Accept': 'application/json',
-        'User-Agent': 'xu-shi-jie.github.io (mailto:shijie.xu@ees.hokudai.ac.jp)'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
     }
     for attempt in range(1, attempts+1):
         try:
