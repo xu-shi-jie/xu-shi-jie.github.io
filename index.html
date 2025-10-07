@@ -326,17 +326,8 @@
 
   <section id="pub">
   <h2>Publications</h2>
-    <ol class="pub-list">
-      <li>
-        <u>Shijie Xu</u> and Akira Onoda*. "Accurate and Rapid Prediction of Protein p<i>K</i><sub>a</sub>: Protein Language Models Reveal the Sequence-p<i>K</i><sub>a</sub> Relationship." <em><a href="https://doi.org/10.1021/acs.jctc.4c01288">Journal of Chemical Theory and Computation</a></em> 21(7): 3752–3764, <strong>2025</strong>.
-      </li>
-      <li>
-        <u>Shijie Xu</u> and Akira Onoda*. "PsiPartition: Improved Site Partitioning for Genomic Data by Parameterized Sorting Indices and Bayesian Optimization." <em><a href="https://doi.org/10.1007/s00239-024-10215-7">Journal of Molecular Evolution</a></em> 92: 874-890, <strong>2024</strong>.
-        (<a href="https://www.hokudai.ac.jp/news/2024/12/post-1700.html">プレスリリース</a> | <a href="https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/">Press release</a> | <a href="https://vimeo.com/1042840720?share=copy">Video</a>)
-      </li>
-      <li>
-        <u>Shijie Xu</u> and Akira Onoda*. "Accurate and Fast Prediction of Intrinsically Disordered Protein by Multiple Protein Language Models and Ensemble Learning." <em><a href="https://doi.org/10.1021/acs.jcim.3c01202">Journal of Chemical Information and Modeling</a></em> 64(7): 2901-2911, <strong>2023</strong>.
-      </li>
+    <ol id="pub-list" class="pub-list" aria-live="polite">
+      <!-- publications will be rendered here from data/pubs.json -->
     </ol>
   </section>
 
@@ -449,6 +440,88 @@
     window.addEventListener('resize', () => {
       if (currentTarget) positionTooltip(currentTarget);
     });
+  })();
+  </script>
+
+  <script>
+  (async function renderPubs(){
+    try {
+      const res = await fetch('/data/pubs.json', {cache: 'no-cache'});
+      if (!res.ok) throw new Error('Failed to load publications metadata');
+      const pubs = await res.json();
+      // load journal metadata (impact factor)
+      let journals = {};
+      try {
+        const jr = await fetch('/data/journals.json', {cache: 'no-cache'});
+        if (jr.ok) journals = await jr.json();
+      } catch (e) {
+        console.warn('Failed to load journals.json', e);
+      }
+      const list = document.getElementById('pub-list');
+      list.innerHTML = '';
+
+      for (const p of pubs) {
+        const li = document.createElement('li');
+        const authors = document.createElement('span');
+        authors.innerHTML = p.authors.join(', ') + ', ';
+        const title = document.createElement('span');
+        title.innerHTML = ' ' + '\u201C' + p.title + '\u201D' + ', ';
+        const journal = document.createElement('em');
+        const doiLink = p.links && p.links.doi ? p.links.doi : (p.doi ? ('https://doi.org/' + p.doi) : null);
+        // prefer journal abbreviation from journals metadata
+        const jmeta = journals[p.journal] || {};
+        const jlabel = jmeta.abbreviation || p.journal || '';
+        if (doiLink) {
+          journal.innerHTML = '<a href="' + doiLink + '">' + jlabel + '</a>';
+        } else {
+          journal.textContent = jlabel;
+        }
+
+        const meta = document.createElement('span');
+        const volIssue = p.volume ? p.volume + (p.issue ? ('(' + p.issue + ')') : '') : '';
+        const pages = p.pages ? (': ' + p.pages) : '';
+        meta.innerHTML = ' ' + volIssue + pages + ', <strong>' + (p.year || '') + '</strong>';
+
+        li.appendChild(authors);
+        li.appendChild(title);
+        li.appendChild(journal);
+        li.appendChild(meta);
+
+        if (p.others && typeof p.others === 'object') {
+          const othersEntries = Object.entries(p.others);
+          if (othersEntries.length) {
+            const othersSpan = document.createElement('span');
+            othersSpan.style.marginLeft = '0.5rem';
+            // build links like (Label1 | Label2)
+            const parts = othersEntries.map(([label, href]) => {
+              return '<a href="' + href + '">' + label + '</a>';
+            });
+            othersSpan.innerHTML = '(' + parts.join(' | ') + ')';
+            li.appendChild(othersSpan);
+          }
+        }
+
+        // show stored citation count if available
+        const cite = document.createElement('span');
+        cite.style.marginLeft = '0.5rem';
+        cite.style.opacity = '0.8';
+        if (typeof p.is_referenced_by_count !== 'undefined' && p.is_referenced_by_count !== null) {
+          const c = p.is_referenced_by_count;
+          const jf = journals[p.journal] && journals[p.journal]['impact factor'] ? journals[p.journal]['impact factor'] : null;
+          if (jf) {
+            cite.textContent = '(TC: ' + c + ', IF: ' + jf + ')';
+          } else {
+            cite.textContent = '(TC: ' + c + ')';
+          }
+        }
+        li.appendChild(cite);
+
+        list.appendChild(li);
+      }
+
+    } catch (err) {
+      console.error('Error rendering publications:', err);
+    }
   })();
   </script>
 
