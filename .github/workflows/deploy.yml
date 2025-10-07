@@ -13,6 +13,7 @@ permissions:
   pages: write
   id-token: write
 
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,22 +27,16 @@ jobs:
         with:
           scheme: full
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
-        
+
       - name: Update citations
         run: |
           cd data/
           python3 update_citations.py
-      
-      - name: Copy pubs/journals into docs
-        run: |
-          mkdir -p docs
-          cp data/pubs.json docs/pubs.json || true
-          cp data/journals.json docs/journals.json || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/
+          path: ./
 
       - name: Deploy to GitHub Pages
         id: deployment
