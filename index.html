@@ -446,13 +446,13 @@
   <script>
   (async function renderPubs(){
     try {
-  const res = await fetch('/docs/pubs.json', {cache: 'no-cache'});
+  const res = await fetch('/data/pubs.json', {cache: 'no-cache'});
       if (!res.ok) throw new Error('Failed to load publications metadata');
       const pubs = await res.json();
       // load journal metadata (impact factor)
       let journals = {};
       try {
-  const jr = await fetch('/docs/journals.json', {cache: 'no-cache'});
+  const jr = await fetch('/data/journals.json', {cache: 'no-cache'});
         if (jr.ok) journals = await jr.json();
       } catch (e) {
         console.warn('Failed to load journals.json', e);

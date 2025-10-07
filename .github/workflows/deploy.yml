@@ -22,7 +22,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Check if CV needs compiling
+        id: check_cv
+        run: |
+          if [ cv-latex/cv.tex -nt docs/resume.pdf ]; then
+            echo "NEED_COMPILE=true" >> $GITHUB_ENV
+          else
+            echo "NEED_COMPILE=false" >> $GITHUB_ENV
+          fi
+
       - name: Compile CV
+        if: env.NEED_COMPILE == 'true'
         uses: xu-cheng/texlive-action@v2
         with:
           scheme: full
