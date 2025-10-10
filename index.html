@@ -470,13 +470,32 @@
         title.innerHTML = ' ' + '\u201C' + p.title + '\u201D' + ', ';
         const journal = document.createElement('em');
         const doiLink = p.links && p.links.doi ? p.links.doi : (p.doi ? ('https://doi.org/' + p.doi) : null);
-        // prefer journal abbreviation from journals metadata
-        const jmeta = journals[p.journal] || {};
-        const jlabel = jmeta.abbreviation || p.journal || '';
-        if (doiLink) {
-          journal.innerHTML = '<a href="' + doiLink + '">' + jlabel + '</a>';
+        
+        const isPreprint = (p.journal && p.journal.toLowerCase().includes('biorxiv'));
+        if (isPreprint) {
+          // 显示 biorxiv.svg 图标
+          const img = document.createElement('img');
+          img.src = 'docs/biorxiv.svg';
+          img.alt = 'bioRxiv';
+          img.style.height = '1.2em';
+          img.style.verticalAlign = 'middle';
+          if (doiLink) {
+            const a = document.createElement('a');
+            a.href = doiLink;
+            a.appendChild(img);
+            journal.appendChild(a);
+          } else {
+            journal.appendChild(img);
+          }
         } else {
-          journal.textContent = jlabel;
+          // 显示期刊名
+          const jmeta = journals[p.journal] || {};
+          const jlabel = jmeta.abbreviation || p.journal || '';
+          if (doiLink) {
+            journal.innerHTML = '<a href="' + doiLink + '">' + jlabel + '</a>';
+          } else {
+            journal.textContent = jlabel;
+          }
         }
 
         const meta = document.createElement('span');
@@ -503,18 +522,21 @@
           }
         }
 
-        // show stored citation count if available
+        // show stored citation count if available (only if > 0)
         const cite = document.createElement('span');
         cite.style.marginLeft = '0.5rem';
         cite.style.opacity = '0.8';
-        if (typeof p.is_referenced_by_count !== 'undefined' && p.is_referenced_by_count !== null) {
-          const c = p.is_referenced_by_count;
-          const jf = journals[p.journal] && journals[p.journal]['impact factor'] ? journals[p.journal]['impact factor'] : null;
-          if (jf) {
-            cite.textContent = '(TC: ' + c + ', IF: ' + jf + ')';
-          } else {
-            cite.textContent = '(TC: ' + c + ')';
-          }
+        const c = p.is_referenced_by_count;
+        const jf = journals[p.journal] && journals[p.journal]['impact factor'] ? journals[p.journal]['impact factor'] : null;
+        const parts = [];
+        if (typeof c !== 'undefined' && c !== null && c > 0) {
+          parts.push('TC: ' + c);
+        }
+        if (jf) {
+          parts.push('IF: ' + jf);
+        }
+        if (parts.length > 0) {
+          cite.textContent = '(' + parts.join(', ') + ')';
         }
         li.appendChild(cite);
 

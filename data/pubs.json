@@ -4,6 +4,24 @@
       "<u>Shijie Xu</u>",
       "Akira Onoda*"
     ],
+    "title": "Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations",
+    "journal": "Biorxiv",
+    "doi": "10.1101/2025.10.04.680417",
+    "year": 2025,
+    "volume": "",
+    "issue": "",
+    "pages": "",
+    "type": "Preprint",
+    "links": {
+      "doi": "https://www.biorxiv.org/content/10.1101/2025.10.04.680417v1"
+    },
+    "is_referenced_by_count": 0
+  },
+  {
+    "authors": [
+      "<u>Shijie Xu</u>",
+      "Akira Onoda*"
+    ],
     "title": "Accurate and Rapid Prediction of Protein p<i>K</i><sub>a</sub>: Protein Language Models Reveal the Sequence-p<i>K</i><sub>a</sub> Relationship",
     "journal": "Journal of Chemical Theory and Computation",
     "doi": "10.1021/acs.jctc.4c01288",

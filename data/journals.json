@@ -5,10 +5,14 @@
     },
     "Journal of Molecular Evolution": {
         "abbreviation": "J. Mol. Evol.",
-        "impact factor": "1.8"
+        "impact factor": "1.1"
     },
     "Journal of Chemical Information and Modeling": {
         "abbreviation": "J. Chem. Inf. Model.",
         "impact factor": "5.3"
+    },
+    "Chemistry Letters": {
+        "abbreviation": "Chem. Lett.",
+        "impact factor": "1.1"
     }
 }
