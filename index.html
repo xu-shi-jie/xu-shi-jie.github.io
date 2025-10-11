@@ -266,6 +266,16 @@
     /* Publications formatting */
     .pub-list u { text-decoration: underline; font-weight: 600; }
   .pub-list a { word-break: break-word; overflow-wrap: anywhere; }
+    
+    /* BioRxiv icon color adjustment for dark mode */
+    .biorxiv-icon {
+      filter: none;
+      transition: filter 0.3s ease;
+    }
+    
+    [data-theme="dark"] .biorxiv-icon {
+      filter: invert(1) brightness(1.1);
+    }
   </style>
   <script>
     function toggleTheme() {
@@ -477,6 +487,7 @@
           const img = document.createElement('img');
           img.src = 'docs/biorxiv.svg';
           img.alt = 'bioRxiv';
+          img.className = 'biorxiv-icon';
           img.style.height = '1.2em';
           img.style.verticalAlign = 'middle';
           if (doiLink) {
