@@ -25,7 +25,7 @@ jobs:
       - name: Check if CV needs compiling
         id: check_cv
         run: |
-          if [ cv-latex/cv.tex -nt docs/resume.pdf ]; then
+          if [ ! -f docs/resume.pdf ] || [ cv-latex/cv.tex -nt docs/resume.pdf ]; then
             echo "NEED_COMPILE=true" >> $GITHUB_ENV
           else
             echo "NEED_COMPILE=false" >> $GITHUB_ENV
