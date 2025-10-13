@@ -9,7 +9,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write  # Changed from 'read' to allow git push
   pages: write
   id-token: write
 
@@ -21,6 +21,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Fetch all history for proper git operations
 
       - name: Check if CV needs compiling
         id: check_cv
@@ -51,10 +54,10 @@ jobs:
       - name: Commit CV to repository
         if: env.NEED_COMPILE == 'true'
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/resume.pdf
-          git commit -m "Update CV" || echo "No changes to commit"
+          git diff --staged --quiet || git commit -m "Update CV [skip ci]"
           git push
 
       - name: Deploy to GitHub Pages
