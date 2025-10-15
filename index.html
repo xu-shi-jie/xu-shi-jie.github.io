@@ -328,14 +328,14 @@
     <section id="bio">
         <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. His research focuses on bioinformatics, computational chemistry, and deep learning. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>   
         <p>
-          <strong>E-mail:</strong>
+          <strong><span id="email-label">E-mail (base64):</span></strong>
           <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()">Decode</button>
         </p>
         <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://researchmap.jp/xushijie"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
       </section>
 
   <section id="pub">
-  <h2>Publications</h2>
+  <h2>Publications & preprints</h2>
     <ol id="pub-list" class="pub-list" aria-live="polite">
       <!-- publications will be rendered here from data/pubs.json -->
     </ol>
@@ -371,6 +371,7 @@
     const encoded = "c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw";
     const decoded = atob(encoded);
     document.getElementById("email").textContent = decoded;
+    document.getElementById("email-label").textContent = "E-mail:";
     // disable button
     document.querySelector("button[onclick='decodeEmail()']").disabled = true;
   }
