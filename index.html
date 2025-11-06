@@ -163,14 +163,10 @@
       justify-content: center;
     }
     
-    .theme-toggle svg {
+    .theme-toggle img {
       width: 24px;
       height: 24px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+      transition: filter 0.3s ease;
     }
 
     .theme-toggle .moon {
@@ -187,6 +183,7 @@
 
     [data-theme="dark"] .theme-toggle .sun {
       display: block;
+      filter: invert(1) brightness(1.1);
     }
     
     .theme-toggle:hover {
@@ -349,20 +346,8 @@
     <div class="title-row">
       <h1>Shijie XU</h1>
       <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-        <svg class="moon" viewBox="0 0 24 24">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-        <svg class="sun" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
+        <img src="docs/moon.svg" alt="Dark mode" class="moon">
+        <img src="docs/sun.svg" alt="Light mode" class="sun">
       </button>
     </div>
   </header>
@@ -375,7 +360,7 @@
           <strong><span id="email-label">E-mail (base64):</span></strong>
           <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()">Decode</button>
         </p>
-        <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://www.researchgate.net/profile/Shijie-Xu-14" class="footer-link"><i class="fa-brands fa-researchgate fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://researchmap.jp/xushijie"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
+        <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link" title="ORCID"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://www.researchgate.net/profile/Shijie-Xu-14" class="footer-link" title="ResearchGate"><i class="fa-brands fa-researchgate fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link" title="GitHub"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://onodalab.ees.hokudai.ac.jp/" class="footer-link" title="Lab Server"><i class="fa-solid fa-server fa-xl"></i></a><a href="https://researchmap.jp/xushijie" title="ResearchMap"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
       </section>
 
   <section id="pub">
