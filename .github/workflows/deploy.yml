@@ -42,10 +42,13 @@ jobs:
           scheme: full
           run: bash ${GITHUB_WORKSPACE}/cv-latex/build
 
-      - name: Update citations
+      - name: Update citations and posts
         run: |
           cd data/
           python3 update_citations.py
+          pip install pyyaml markdown
+          cd ..
+          python3 ./posts/gen_posts.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

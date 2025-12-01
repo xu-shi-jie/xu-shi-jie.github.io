@@ -94,16 +94,31 @@
       padding: 0 1rem;
     }
 
+    .breadcrumb-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      padding: 0.4rem 0;
+      font-size: 0.95rem;
+      background: none;
+      border-bottom: 0.5px solid #000;
+    }
+
+    [data-theme="dark"] .breadcrumb-nav {
+      border-bottom: 0.5px solid #fff;
+    }
+
     header, section, footer { margin-bottom: 2rem; }
     header .title-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.25rem;
-      margin-top: 1.5rem;
+      margin-bottom: 1rem;
     }
-    
-    header h1 { 
+
+    header h1 {
       font-size: 3rem;
       margin: 0;
     }
@@ -151,7 +166,6 @@
       background: none;
       border: none;
       padding: 0;
-      margin-left: 0.5rem;
       cursor: pointer;
       color: var(--text-color);
       width: 2rem;
@@ -342,13 +356,18 @@
 <body>
   <div class="hero" role="banner"></div>
   <div class="content">
+  <nav class="breadcrumb-nav">
+    <div>
+      <span style="margin-right: 0.75rem;">&gt;</span><span style="font-weight: 700;">Home</span><span style="margin: 0 0.75rem;">&gt;</span><a href="/posts/html/posts.html">Posts</a>
+    </div>
+    <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <img src="docs/moon.svg" alt="Dark mode" class="moon">
+      <img src="docs/sun.svg" alt="Light mode" class="sun">
+    </button>
+  </nav>
   <header>
     <div class="title-row">
       <h1>Shijie XU</h1>
-      <button id="themeToggle" class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-        <img src="docs/moon.svg" alt="Dark mode" class="moon">
-        <img src="docs/sun.svg" alt="Light mode" class="sun">
-      </button>
     </div>
   </header>
 
@@ -358,7 +377,7 @@
         <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. His research focuses on bioinformatics, computational chemistry, and deep learning. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>   
         <p>
           <strong><span id="email-label">E-mail (base64):</span></strong>
-          <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()">Decode</button>
+          <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()" title="To avoid spam">Decode</button>
         </p>
         <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link" title="ORCID"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://www.researchgate.net/profile/Shijie-Xu-14" class="footer-link" title="ResearchGate"><i class="fa-brands fa-researchgate fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link" title="GitHub"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://onodalab.ees.hokudai.ac.jp/" class="footer-link" title="Lab Server"><i class="fa-solid fa-server fa-xl"></i></a><a href="https://researchmap.jp/xushijie" title="ResearchMap"><img src="https://researchmap.jp/img/logo_small.gif?1684478673" width=150px"/></a></p>
       </section>
