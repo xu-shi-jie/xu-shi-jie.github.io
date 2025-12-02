@@ -75,17 +75,19 @@
 
     nav {
       background: var(--nav-bg);
-      padding: 0.5rem 1rem;
+      padding: 0.25rem 1rem;
       margin-bottom: 2rem;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       border-bottom: 1px solid rgba(128, 128, 128, 0.1);
+      width: 100%;
+      box-sizing: border-box;
     }
     .hero {
       position: relative;
       width: 100%;
-      height: 200px;
+      height: 120px;
       background-image: url('docs/background-pkalm.jpg'); /* 替换成你的封面图路径 */
       background-size: cover;
       background-position: center;
@@ -98,12 +100,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 0.5rem;
+      margin-top: 0.25rem;
       margin-bottom: 1rem;
-      padding: 0.4rem 0;
+      padding: 0.25rem 1rem;
       font-size: 0.95rem;
       background: none;
       border-bottom: 0.5px solid #000;
+      margin-left: -1rem;
+      margin-right: -1rem;
+      width: calc(100% + 2rem);
     }
 
     [data-theme="dark"] .breadcrumb-nav {
@@ -171,24 +176,32 @@
       width: 2rem;
       height: 2rem;
       vertical-align: middle;
-      transition: transform 0.3s ease;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
+      will-change: transform;
     }
     
     .theme-toggle img {
       width: 24px;
       height: 24px;
-      transition: filter 0.3s ease;
+      transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: filter, transform;
     }
 
     .theme-toggle .moon {
       display: block;
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(0.9);
     }
 
     .theme-toggle .sun {
       display: none;
+    }
+
+    .theme-toggle:hover .moon {
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(1.1) drop-shadow(0 0 4px #3399cc) drop-shadow(0 0 8px #3399cc);
+      transform: scale(1.1);
     }
 
     [data-theme="dark"] .theme-toggle .moon {
@@ -197,7 +210,12 @@
 
     [data-theme="dark"] .theme-toggle .sun {
       display: block;
-      filter: invert(1) brightness(1.1);
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(0.95);
+    }
+
+    [data-theme="dark"] .theme-toggle:hover .sun {
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(1.1) drop-shadow(0 0 4px #dd8822) drop-shadow(0 0 8px #dd8822);
+      transform: scale(1.1);
     }
     
     .theme-toggle:hover {
@@ -402,6 +420,12 @@
   <a href="https://biomol51.github.io" data-tooltip="第51回生体分子科学討論会." aria-describedby="tip-biomol"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> BioMol51<span id="tip-biomol" class="sr-only">BioMol51 — 第51回生体分子科学討論会.</span></a>
   <a href="https://jkt-bioinorgchem2024.github.io/" data-tooltip="Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024." aria-describedby="tip-jkt"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> JKT 2024<span id="tip-jkt" class="sr-only">JKT 2024 — Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024.</span></a>
   </section>
+
+  <section id="academic-services">
+    <h2>Academic Services</h2>
+    <p><strong>(Co-)Reviewer:</strong> <i>J. Chem. Inf. Model.</i>, <i>J. Chem. Theory Comput.</i>, Appl. Math. Comput., Curr. Opin. Struct. Biol.</p>
+  </section>
+
   <section id="Thanks">
     <h2>Thanks to</h2>
     <p><a href="https://sites.google.com/eis.hokudai.ac.jp/exexphd-fellow/home">EXEX Fellowship</a> for supporting my research.
@@ -410,9 +434,11 @@
   </main>
   <footer>
     <p style="text-align: center; font-size: small;">
-       &copy; 2022-2025 Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>. <span id="sfcu59wwp37g979n925g4ud2g1dyh2paa3n"></span>
+       &copy; 2022-<span id="current-year"></span> Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>. <span id="sfcu59wwp37g979n925g4ud2g1dyh2paa3n"></span>
+       <span id="page-counter"></span>
     </p>
   </footer>
+  <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
   </div>
   <script>
   function decodeEmail() {
@@ -620,5 +646,10 @@
     gtag('config', 'G-F4QML3QF9Y');
   </script>
 
+  <script>
+    window.COUNTER_API_URL = 'https://page-counter-eight.vercel.app/api/counter';
+    window.COUNTER_PREFIX = 'Visitors: ';
+  </script>
+  <script src="https://page-counter-eight.vercel.app/counter.js"></script>
 </body>
 </html>
