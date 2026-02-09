@@ -2,6 +2,25 @@
   {
     "authors": [
       "<u>Shijie Xu</u>",
+      "Ke Xu",
+      "Akira Onoda*"
+    ],
+    "title": "Accurate Prediction of Enzymatic Degradation of Plastics by Language Models",
+    "journal": "Chemistry Letters",
+    "doi": "10.1093/chemle/upag022",
+    "year": 2026,
+    "volume": "",
+    "issue": "",
+    "pages": "",
+    "type": "article",
+    "links": {
+      "doi": "https://doi.org/10.1093/chemle/upag022"
+    },
+    "is_referenced_by_count": 0
+  },
+  {
+    "authors": [
+      "<u>Shijie Xu</u>",
       "Akira Onoda*"
     ],
     "title": "Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations",
