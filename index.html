@@ -234,48 +234,7 @@
     .footer-link svg path {
       fill: var(--text-color);
     }
-    /* Style software links as pill-shaped outline badges with transparent background */
-    #software a {
-      display: inline-flex;
-      align-items: center; /* vertically center icon and text */
-      gap: 0.35rem; /* spacing between icon and text */
-      margin: 0 0.5rem 0.5rem 0; /* right and bottom spacing for wrap */
-      padding: 0.25rem 0.9rem;
-      border-radius: 12px; /* moderate rounded corners */
-      background: transparent;
-      color: var(--text-color); /* keep text color consistent with surrounding text */
-      text-decoration: none;
-      border: 1.5px solid currentColor; /* border matches text color (black or white depending on theme) */
-      transition: background-color 0.12s ease, transform 0.08s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-      font-size: 0.8rem; /* smaller text */
-    }
 
-    #software a:hover {
-      transform: translateY(-1px);
-      background: rgba(0,0,0,0.03); /* subtle hover tint in light theme */
-    }
-
-    /* In dark theme make hover a bit lighter */
-    [data-theme="dark"] #software a:hover {
-      background: rgba(255,255,255,0.03);
-    }
-
-    #software a:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-    }
-
-    /* Focus ring for dark theme (lighter ring) */
-    [data-theme="dark"] #software a:focus {
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
-    }
-    /* Icon spacing inside software links */
-    #software a i {
-      font-size: 0.85em; /* smaller icon size */
-      line-height: 1; /* prevent extra height */
-      vertical-align: middle;
-      /* margin-right removed in favor of gap on the anchor */
-    }
     /* Accessible visually-hidden helper for screen readers */
     .sr-only {
       position: absolute !important;
@@ -423,21 +382,7 @@
     <p style="font-size: 0.85rem; color: #888; font-style: italic; margin-top: 0.5rem;">*Data sourced from Crossref and automatically updated via script.</p>
   </section>
 
-  <section id="software">
-    <h2>Software</h2>
-  <a href="https://huggingface.co/spaces/xushijie/DELM" data-tooltip="DELM web interface on Hugging Face." aria-describedby="tip-delm"><i class="fa-solid fa-globe" aria-hidden="true"></i> DELM<span id="tip-delm" class="sr-only">DELM — DELM web interface on Hugging Face.</span></a>
-  <a href="https://github.com/xu-shi-jie/prime"  data-tooltip="Protein metal-binding site prediction." aria-describedby="tip-prime"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> PRIME<span id="tip-prime" class="sr-only">PRIME — Protein metal-binding site prediction.</span></a>
-  <a href="https://github.com/xu-shi-jie/pKALM" data-tooltip="Fast and accurate prediction of protein pKa." aria-describedby="tip-pkalm"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> pKALM<span id="tip-pkalm" class="sr-only">pKALM — Fast and accurate prediction of protein pKa.</span></a>
-  <a href="https://github.com/xu-shi-jie/revPKAD2" data-tooltip="Revised protein pKa database based on PKAD2." aria-describedby="tip-revpkad2"><i class="fa-solid fa-database" aria-hidden="true"></i> revPKAD2<span id="tip-revpkad2" class="sr-only">revPKAD2 — Revised protein pKa database based on PKAD2.</span></a>
-  <a href="https://github.com/xu-shi-jie/PsiPartition" data-tooltip="More accurate partitioned models for phylogenetics." aria-describedby="tip-psipart"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> PsiPartition<span id="tip-psipart" class="sr-only">PsiPartition — More accurate partitioned models for phylogenetics.</span></a>
-  <a href="https://github.com/xu-shi-jie/idp-elm" data-tooltip="Fast and accurate prediction of intrinsically disordered proteins (IDPs)." aria-describedby="tip-idpelm"><i class="fa-solid fa-file-lines" aria-hidden="true"></i> IDP-ELM<span id="tip-idpelm" class="sr-only">IDP-ELM — Fast and accurate prediction of intrinsically disordered proteins (IDPs).</span></a>
-  <a href="https://github.com/xu-shi-jie/spam-guard" data-tooltip="Intelligent spam detection for Thunderbird using ML." aria-describedby="tip-spamguard"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Spam Guard<span id="tip-spamguard" class="sr-only">Spam Guard — Intelligent spam detection for Thunderbird using ML.</span></a>
-  <a href="https://github.com/xu-shi-jie/husync" data-tooltip="Real-time directory sync tool written in Rust." aria-describedby="tip-husync"><i class="fa-solid fa-wrench" aria-hidden="true"></i> HUSync<span id="tip-husync" class="sr-only">HUSync — Real-time directory sync tool written in Rust.</span></a>
-  <a href="https://github.com/xu-shi-jie/hokudai-dissertation" data-tooltip="Hokkaido University dissertation LaTeX template." aria-describedby="tip-dissertation"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Dissertation LaTeX<span id="tip-dissertation" class="sr-only">Dissertation LaTeX — Hokkaido University dissertation LaTeX template.</span></a>
-  <a href="https://github.com/xu-shi-jie/bib-journal-abbreviator" data-tooltip="Small tool to abbreviate journal names in BibTeX." aria-describedby="tip-refabbr"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Refabbr<span id="tip-refabbr" class="sr-only">Refabbr — Small tool to abbreviate journal names in BibTeX.</span></a>
-  <a href="https://biomol51.github.io" data-tooltip="第51回生体分子科学討論会." aria-describedby="tip-biomol"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> BioMol51<span id="tip-biomol" class="sr-only">BioMol51 — 第51回生体分子科学討論会.</span></a>
-  <a href="https://jkt-bioinorgchem2024.github.io/" data-tooltip="Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024." aria-describedby="tip-jkt"><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> JKT 2024<span id="tip-jkt" class="sr-only">JKT 2024 — Japan-Korea-Taiwan Bioinorganic Chemistry Symposium 2024.</span></a>
-  </section>
+
 
   <section id="academic-services">
     <h2>Academic Services</h2>
