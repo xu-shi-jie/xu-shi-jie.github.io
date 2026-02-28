@@ -52,7 +52,7 @@
     "links": {
       "doi": "https://doi.org/10.1021/acs.jctc.4c01288"
     },
-    "is_referenced_by_count": 2
+    "is_referenced_by_count": 3
   },
   {
     "authors": [
@@ -92,6 +92,6 @@
     "links": {
       "doi": "https://doi.org/10.1021/acs.jcim.3c01202"
     },
-    "is_referenced_by_count": 23
+    "is_referenced_by_count": 24
   }
 ]
