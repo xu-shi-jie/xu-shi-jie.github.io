@@ -48,15 +48,25 @@ def read_post(filepath):
     }
 
 def get_html_template(title, content, is_post=False):
-    """Generate HTML template with consistent styling."""
-    if is_post:
-        # Individual post page: Home is link, Posts is bold link
-        breadcrumb = '<span style="margin-right: 0.75rem;">&gt;</span><a href="/">Home</a><span style="margin: 0 0.75rem;">&gt;</span><a href="/posts/html/posts.html" style="font-weight: 700;">Posts</a>'
-    else:
-        # Posts list page: Home is link, Posts is bold text (current page)
-        breadcrumb = '<span style="margin-right: 0.75rem;">&gt;</span><a href="/">Home</a><span style="margin: 0 0.75rem;">&gt;</span><span style="font-weight: 700;">Posts</span>'
+  """Generate HTML template with consistent styling."""
+  if is_post:
+    # Individual post page: Home is link, Posts is bold link
+    breadcrumb = (
+      '<span style="margin-right: 0.75rem;">&gt;</span>'
+      '<a href="../../index.html">Home</a>'
+      '<span style="margin: 0 0.75rem;">&gt;</span>'
+      '<a href="posts.html" style="font-weight: 700;">Posts</a>'
+    )
+  else:
+    # Posts list page: Home is link, Posts is bold text (current page)
+    breadcrumb = (
+      '<span style="margin-right: 0.75rem;">&gt;</span>'
+      '<a href="../../index.html">Home</a>'
+      '<span style="margin: 0 0.75rem;">&gt;</span>'
+      '<span style="font-weight: 700;">Posts</span>'
+    )
 
-    return f'''<!doctype html>
+  return f'''<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -67,7 +77,7 @@ def get_html_template(title, content, is_post=False):
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <title>{title} - Shijie Xu</title>
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/x-icon" href="../../favicon.ico">
 
   <style>
     :root {{
@@ -91,7 +101,6 @@ def get_html_template(title, content, is_post=False):
     body {{
       font-family: 'Roboto', -apple-system, BlinkMacSystemFont, segoe ui, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
       font-size: 18px;
-      max-width: 800px;
       margin: 0 auto;
       line-height: 1.6;
       color: var(--text-color);
@@ -110,13 +119,15 @@ def get_html_template(title, content, is_post=False):
       position: relative;
       width: 100%;
       height: 120px;
-      background-image: url('/docs/background-pkalm.jpg');
+      background-image: url('../../docs/background-pkalm.jpg');
       background-size: cover;
       background-position: center;
     }}
 
     .content {{
       padding: 0 1rem;
+      max-width: 800px;
+      margin: 0 auto;
     }}
 
     .breadcrumb-nav {{
@@ -125,18 +136,33 @@ def get_html_template(title, content, is_post=False):
       align-items: center;
       margin-top: 0.25rem;
       margin-bottom: 1rem;
-      padding: 0.25rem 1rem;
+      padding: 0.25rem 0;
       font-size: 0.95rem;
       background: none;
-      border-bottom: 0.5px solid #000;
-      margin-left: -1rem;
-      margin-right: -1rem;
-      width: calc(100% + 2rem);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      width: 100%;
       box-sizing: border-box;
+    }}
+    
+    .breadcrumb-content {{
+      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+    }}
+    
+    .breadcrumb-nav button {{
+      padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+    }}
+    
+    @media (max-width: 600px) {{
+      .breadcrumb-content {{
+        padding-left: 1rem;
+      }}
+      .breadcrumb-nav button {{
+        padding-right: 1rem;
+      }}
     }}
 
     [data-theme="dark"] .breadcrumb-nav {{
-      border-bottom: 0.5px solid #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }}
 
     h1 {{
@@ -175,18 +201,15 @@ def get_html_template(title, content, is_post=False):
       color: var(--text-color);
       width: 2rem;
       height: 2rem;
-      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       display: flex;
       align-items: center;
       justify-content: center;
-      will-change: transform;
     }}
 
     .theme-toggle img {{
       width: 24px;
       height: 24px;
       transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      will-change: filter, transform;
     }}
 
     .theme-toggle .moon {{
@@ -214,10 +237,6 @@ def get_html_template(title, content, is_post=False):
 
     [data-theme="dark"] .theme-toggle:hover .sun {{
       filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(1.1) drop-shadow(0 0 4px #dd8822) drop-shadow(0 0 8px #dd8822);
-      transform: scale(1.1);
-    }}
-
-    .theme-toggle:hover {{
       transform: scale(1.1);
     }}
 
@@ -323,23 +342,24 @@ def get_html_template(title, content, is_post=False):
 </head>
 <body>
   <div class="hero" role="banner"></div>
+  <nav class="breadcrumb-nav">
+    <div class="breadcrumb-content">
+      {breadcrumb}
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+      <img src="../../docs/moon.svg" alt="Dark mode" class="moon">
+      <img src="../../docs/sun.svg" alt="Light mode" class="sun">
+    </button>
+  </nav>
   <div class="content">
-    <nav class="breadcrumb-nav">
-      <div>
-        {breadcrumb}
-      </div>
-      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
-        <img src="/docs/moon.svg" alt="Dark mode" class="moon">
-        <img src="/docs/sun.svg" alt="Light mode" class="sun">
-      </button>
-    </nav>
 
     {content}
 
     <footer>
-      <p>&copy; 2022-2025 Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.</p>
+      <p>&copy; 2022-<span id="current-year"></span> Shijie Xu. Hosted via <a href="https://docs.github.com/en/pages">GitHub Pages</a>.</p>
     </footer>
   </div>
+  <script>document.getElementById('current-year').textContent = new Date().getFullYear();</script>
 </body>
 </html>'''
 
