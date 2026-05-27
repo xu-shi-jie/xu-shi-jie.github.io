@@ -1,4 +1,215 @@
-cd cv-latex
-pdflatex cv.tex
-rm -f cv.aux cv.log cv.out cv.fls cv.fdb_latexmk
-mv cv.pdf ../docs/resume.pdf
+#!/usr/bin/env python3
+"""
+Build the CV.
+
+1. Regenerate the Publications and Presentations sections of cv.tex from
+   ../data/pubs.json and ../data/presentations.json, replacing the blocks
+   between the "% BEGIN <NAME>" / "% END <NAME>" marker comments.
+2. Compile cv.tex with pdflatex.
+3. Move the result to ../docs/resume.pdf and clean up aux files.
+
+Usage (run from anywhere; paths are resolved relative to this script):
+    python3 cv-latex/build                  # regenerate + compile
+    python3 cv-latex/build --generate-only  # regenerate cv.tex only, no pdflatex
+"""
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
+PUBS_PATH = os.path.join(ROOT, 'data', 'pubs.json')
+PRES_PATH = os.path.join(ROOT, 'data', 'presentations.json')
+TEX_PATH = os.path.join(HERE, 'cv.tex')
+PDF_OUT = os.path.join(ROOT, 'docs', 'resume.pdf')
+
+# The data JSON now uses researchmap's plain-text fields. The only typographic
+# special case in these titles is "pKa", which the CV renders with the \pKa
+# macro (p + italic K + subscript a).
+OWNER = 'Shijie Xu'  # author name underlined in the CV
+MONTHS_EN = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+             'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+PRES_LABEL = {'oral_presentation': 'Oral', 'invited_oral_presentation': 'Oral (Invited)',
+              'keynote_oral_presentation': 'Oral (Keynote)', 'poster_presentation': 'Poster'}
+
+
+def to_tex(text):
+    """Plain researchmap text -> LaTeX. Maps the 'pKa' token to the \\pKa macro."""
+    return (text or '').replace('pKa', r'\pKa{}')
+
+
+def author_name(entry):
+    name = entry['name'] if isinstance(entry, dict) else str(entry)
+    tex = to_tex(name)
+    return f'\\underbar{{{tex}}}' if name.rstrip('*') == OWNER else tex
+
+
+def join_authors(entries):
+    """Render an author list with an Oxford 'and' before the last name."""
+    names = [author_name(e) for e in entries]
+    if len(names) == 1:
+        return names[0]
+    if len(names) == 2:
+        return f'{names[0]} and {names[1]}'
+    return ', '.join(names[:-1]) + f', and {names[-1]}'
+
+
+def en(field):
+    """Pick the English value of a researchmap multilingual {en, ja} field."""
+    if isinstance(field, dict):
+        return field.get('en') or field.get('ja') or ''
+    return field or ''
+
+
+def ordinal(day):
+    if 10 <= day % 100 <= 20:
+        suf = 'th'
+    else:
+        suf = {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
+    return f'{day}{suf}'
+
+
+def format_event_dates(frm, to):
+    """('2026-05-14', '2026-05-16') -> '14th May - 16th May 2026'."""
+    def parts(s):
+        y, m, d = (s.split('-') + ['', ''])[:3]
+        return int(y), int(m) if m else 0, int(d) if d else 0
+    fy, fm, fd = parts(frm)
+    if not to or to == frm:
+        return f'{ordinal(fd)} {MONTHS_EN[fm]} {fy}'
+    ty, tm, td = parts(to)
+    left = f'{ordinal(fd)} {MONTHS_EN[fm]}'
+    right = f'{ordinal(td)} {MONTHS_EN[tm]} {ty}'
+    return f'{left} - {right}'
+
+
+def render_pub(p):
+    """One \\item for the Publications enumerate, from a researchmap-schema entry."""
+    line = f"\\item {join_authors(p['authors']['en'])}. ``{to_tex(en(p['paper_title']))}.''"
+
+    journal = to_tex(en(p['publication_name']))
+    is_preprint = ('biorxiv' in journal.lower()) or (p.get('referee') is False)
+    line += f' \\textit{{{journal}}}'
+    if is_preprint:
+        line += ' (Preprint)'
+
+    volume = str(p.get('volume') or '')
+    number = str(p.get('number') or '')
+    start = str(p.get('starting_page') or '')
+    end = str(p.get('ending_page') or '')
+    pages = f'{start}--{end}' if (start and end) else start
+    if volume:
+        line += f' {volume}'
+        if number:
+            line += f'({number})'
+        if pages:
+            line += f': {pages}'
+    elif pages:
+        line += f': {pages}'
+
+    year = str(p.get('publication_date') or '')[:4]
+    line += f', \\textbf{{{year}}}'
+
+    dois = (p.get('identifiers') or {}).get('doi') or []
+    if dois:
+        line += f', \\emph{{DOI:}} \\url{{https://doi.org/{dois[0]}}}'
+    else:
+        line += '.'
+    return line
+
+
+def render_pres(p):
+    """One \\item for the Presentations itemize, from a researchmap-schema entry."""
+    authors = ' and '.join(author_name(e) for e in p['presenters']['en'])
+    line = f"\\item {authors}, ``{to_tex(en(p['presentation_title']))}'', {en(p['event'])}"
+    dates = format_event_dates(p.get('from_event_date', ''), p.get('to_event_date', ''))
+    if dates:
+        line += f', {dates}'
+    if en(p.get('location')):
+        line += f", {en(p['location'])}"
+    line += '.'
+    label = PRES_LABEL.get(p.get('presentation_type', ''))
+    if label:
+        line += f' [{label}]'
+    return line
+
+
+def build_block(name, source, env, items):
+    """Assemble a marker-delimited LaTeX block for the given list environment."""
+    lines = [
+        f'% BEGIN {name} (auto-generated)',
+        f'% Do not edit by hand: regenerated from {source} at build time.',
+        f'\\begin{{{env}}}',
+    ]
+    lines += ['    ' + item for item in items]
+    lines += [f'\\end{{{env}}}', f'% END {name}']
+    return '\n'.join(lines)
+
+
+def replace_block(tex, name, block):
+    pattern = re.compile(
+        r'% BEGIN ' + re.escape(name) + r'\b.*?% END ' + re.escape(name),
+        re.DOTALL,
+    )
+    m = pattern.search(tex)
+    if not m:
+        sys.exit(f'[error] markers for {name!r} not found in cv.tex')
+    # Slice rather than re.sub: avoids backslash-escaping surprises in the
+    # LaTeX replacement string.
+    return tex[: m.start()] + block + tex[m.end():]
+
+
+def update_cv():
+    with open(PUBS_PATH, encoding='utf-8') as f:
+        pubs = json.load(f)
+    with open(PRES_PATH, encoding='utf-8') as f:
+        presentations = json.load(f)
+    with open(TEX_PATH, encoding='utf-8') as f:
+        tex = f.read()
+
+    new_tex = replace_block(
+        tex, 'PUBLICATIONS',
+        build_block('PUBLICATIONS', '../data/pubs.json', 'enumerate',
+                    [render_pub(p) for p in pubs]),
+    )
+    new_tex = replace_block(
+        new_tex, 'PRESENTATIONS',
+        build_block('PRESENTATIONS', '../data/presentations.json', 'itemize',
+                    [render_pres(p) for p in presentations]),
+    )
+
+    if new_tex != tex:
+        with open(TEX_PATH, 'w', encoding='utf-8') as f:
+            f.write(new_tex)
+        print(f'Updated cv.tex: {len(pubs)} publications, {len(presentations)} presentations')
+    else:
+        print('cv.tex already up to date')
+
+
+def compile_pdf():
+    subprocess.run(
+        ['pdflatex', '-interaction=nonstopmode', 'cv.tex'],
+        cwd=HERE, check=True,
+    )
+    for ext in ('aux', 'log', 'out', 'fls', 'fdb_latexmk'):
+        try:
+            os.remove(os.path.join(HERE, f'cv.{ext}'))
+        except FileNotFoundError:
+            pass
+    os.makedirs(os.path.dirname(PDF_OUT), exist_ok=True)
+    shutil.move(os.path.join(HERE, 'cv.pdf'), PDF_OUT)
+    print(f'Wrote {PDF_OUT}')
+
+
+def main():
+    update_cv()
+    if '--generate-only' not in sys.argv:
+        compile_pdf()
+
+
+if __name__ == '__main__':
+    main()

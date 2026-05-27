@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch is-referenced-by-count from Crossref for DOIs in data/pubs.json
-and update the JSON file in-place. Creates a backup at data/pubs.json.bak.
+and update the JSON file in-place.
 
 Usage: python3 update_citations.py
 Run in repository root.
@@ -15,7 +15,6 @@ import os
 from datetime import datetime
 
 PUBS_PATH = 'pubs.json'
-BACKUP_PATH = PUBS_PATH + '.bak'
 
 def load_pubs(path):
     with open(path, 'r', encoding='utf-8') as f:
@@ -26,18 +25,10 @@ def save_pubs(path, pubs):
         json.dump(pubs, f, ensure_ascii=False, indent=2)
 
 def normalize_doi(entry):
-    doi = entry.get('doi')
-    if doi:
-        return doi.strip()
-    links = entry.get('links') or {}
-    doi_url = links.get('doi')
-    if doi_url:
-        try:
-            p = urllib.parse.urlparse(doi_url)
-            return p.path.lstrip('/')
-        except Exception:
-            parts = doi_url.rstrip('/').split('/')
-            return parts[-1]
+    # researchmap schema: identifiers.doi is a list of DOI strings.
+    dois = (entry.get('identifiers') or {}).get('doi') or []
+    if dois:
+        return dois[0].strip()
     return None
 
 def fetch_crossref_count(doi, attempts=3):
@@ -68,13 +59,6 @@ def main():
         sys.exit(1)
 
     pubs = load_pubs(PUBS_PATH)
-
-    # backup
-    try:
-        save_pubs(BACKUP_PATH, pubs)
-        print(f'Backup written to {BACKUP_PATH}')
-    except Exception as e:
-        print('Failed to write backup:', e, file=sys.stderr)
 
     changed = False
     report = []

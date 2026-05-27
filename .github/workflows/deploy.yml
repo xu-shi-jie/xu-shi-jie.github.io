@@ -28,8 +28,9 @@ jobs:
       - name: Check if CV needs compiling
         id: check_cv
         run: |
-          # Check if cv.tex has changed since last commit
-          if git diff --quiet HEAD~1 HEAD -- cv-latex/cv.tex 2>/dev/null; then
+          # cv.tex is generated from the JSON data + the build script, so
+          # recompile whenever any CV source changed since the last commit.
+          if git diff --quiet HEAD~1 HEAD -- cv-latex/ data/pubs.json data/presentations.json 2>/dev/null; then
             echo "NEED_COMPILE=false" >> $GITHUB_ENV
           else
             echo "NEED_COMPILE=true" >> $GITHUB_ENV
@@ -40,7 +41,11 @@ jobs:
         uses: xu-cheng/texlive-action@v2
         with:
           scheme: full
-          run: bash ${GITHUB_WORKSPACE}/cv-latex/build
+          # build is a Python script (regenerates cv.tex from data/*.json, then
+          # runs pdflatex). The texlive image is Alpine, so install python3 first.
+          run: |
+            apk add --no-cache python3
+            python3 ${GITHUB_WORKSPACE}/cv-latex/build
 
       - name: Update citations
         run: |

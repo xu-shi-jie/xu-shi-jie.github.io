@@ -1,0 +1,146 @@
+[
+  {
+    "presentation_title": {
+      "en": "Accurate and Fast Prediction of Metal-binding Sites in Proteins Using Deep Learning Methods",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "52nd Biomolecule Science Symposium", "ja": "" },
+    "presentation_type": "oral_presentation",
+    "from_event_date": "2026-05-14",
+    "to_event_date": "2026-05-16",
+    "invited": false,
+    "location": { "en": "Himeji, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate and Fast Prediction of Protein pKa by A Protein Language Model",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "the 19th Symposium on Biorelevant Chemistry", "ja": "" },
+    "presentation_type": "poster_presentation",
+    "from_event_date": "2025-09-02",
+    "to_event_date": "2025-09-04",
+    "invited": false,
+    "location": { "en": "Kyoto, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate and Fast Prediction of Protein pKa by Protein Language Model",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "51st Biomolecule Science Symposium", "ja": "" },
+    "presentation_type": "oral_presentation",
+    "from_event_date": "2025-06-26",
+    "to_event_date": "2025-06-27",
+    "invited": false,
+    "location": { "en": "Sapporo, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate and Fast Prediction of Protein pKa by Protein Language Model",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "8th ICReDD International Symposium", "ja": "" },
+    "presentation_type": "poster_presentation",
+    "from_event_date": "2024-10-22",
+    "to_event_date": "2024-10-24",
+    "invited": false,
+    "location": { "en": "Sapporo, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate Prediction of Intrinsically Disordered Protein by Protein Language Models",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "the 24th Annual Meeting of the Protein Science Society of Japan", "ja": "" },
+    "presentation_type": "poster_presentation",
+    "from_event_date": "2024-07-11",
+    "to_event_date": "2024-07-13",
+    "invited": false,
+    "location": { "en": "Sapporo, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate Prediction of Protein pKa by Geometric Deep Learning",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "the 104th CSJ annual meeting", "ja": "" },
+    "presentation_type": "oral_presentation",
+    "from_event_date": "2024-03-18",
+    "to_event_date": "2024-03-21",
+    "invited": false,
+    "location": { "en": "Funabashi, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Accurate Prediction of Intrinsically Disordered Protein by Protein Language Models",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "the 17th Biorelevant Chemistry Symposium", "ja": "" },
+    "presentation_type": "poster_presentation",
+    "from_event_date": "2023-09-08",
+    "to_event_date": "2023-09-10",
+    "invited": false,
+    "location": { "en": "Chiba, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  },
+  {
+    "presentation_title": {
+      "en": "Fast and Accurate Prediction of Intrinsically Disordered Protein by Protein Language Model",
+      "ja": ""
+    },
+    "presenters": {
+      "en": [{ "name": "Shijie Xu" }, { "name": "Akira Onoda" }],
+      "ja": []
+    },
+    "event": { "en": "the 103rd CSJ annual meeting", "ja": "" },
+    "presentation_type": "oral_presentation",
+    "from_event_date": "2023-03-22",
+    "to_event_date": "2023-03-25",
+    "invited": false,
+    "location": { "en": "Chiba, Japan", "ja": "" },
+    "address_country": "JPN",
+    "languages": ["eng"]
+  }
+]

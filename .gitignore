@@ -1,0 +1,17 @@
+# Local secrets — never commit
+.env
+
+# researchmap automation debug output
+rm-debug/
+
+# Python
+__pycache__/
+*.pyc
+
+# LaTeX build artifacts
+cv-latex/*.aux
+cv-latex/*.log
+cv-latex/*.out
+cv-latex/*.fls
+cv-latex/*.fdb_latexmk
+cv-latex/cv.pdf

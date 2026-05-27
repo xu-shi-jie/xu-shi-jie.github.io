@@ -518,16 +518,26 @@
       const list = document.getElementById('pub-list');
       list.innerHTML = '';
 
+      // researchmap stores plain text; restore the pKa typography for the web.
+      const OWNER = 'Shijie Xu';
+      const fmt = (s) => (s || '').replace(/pKa/g, 'p<i>K</i><sub>a</sub>');
+      const lang = (f) => (f && typeof f === 'object') ? (f.en || f.ja || '') : (f || '');
+      const authorsHTML = (people) => (people || [])
+        .map(a => a.name.replace(/\*$/, '') === OWNER ? ('<u>' + a.name + '</u>') : a.name)
+        .join(', ');
+
       for (const p of pubs) {
         const li = document.createElement('li');
+        const journalName = lang(p.publication_name);
+        const doi = (p.identifiers && p.identifiers.doi && p.identifiers.doi[0]) || null;
         const authors = document.createElement('span');
-        authors.innerHTML = p.authors.join(', ') + ', ';
+        authors.innerHTML = authorsHTML(p.authors && p.authors.en) + ', ';
         const title = document.createElement('span');
-        title.innerHTML = ' ' + '\u201C' + p.title + '\u201D' + ', ';
+        title.innerHTML = ' ' + '\u201C' + fmt(lang(p.paper_title)) + '\u201D' + ', ';
         const journal = document.createElement('em');
-        const doiLink = p.links && p.links.doi ? p.links.doi : (p.doi ? ('https://doi.org/' + p.doi) : null);
-        
-        const isPreprint = (p.journal && p.journal.toLowerCase().includes('biorxiv'));
+        const doiLink = doi ? ('https://doi.org/' + doi) : null;
+
+        const isPreprint = (journalName && journalName.toLowerCase().includes('biorxiv'));
         if (isPreprint) {
           // 显示 biorxiv.svg 图标
           const img = document.createElement('img');
@@ -546,8 +556,8 @@
           }
         } else {
           // 显示期刊名
-          const jmeta = journals[p.journal] || {};
-          const jlabel = jmeta.abbreviation || p.journal || '';
+          const jmeta = journals[journalName] || {};
+          const jlabel = jmeta.abbreviation || journalName || '';
           if (doiLink) {
             journal.innerHTML = '<a href="' + doiLink + '">' + jlabel + '</a>';
           } else {
@@ -556,9 +566,11 @@
         }
 
         const meta = document.createElement('span');
-        const volIssue = p.volume ? p.volume + (p.issue ? ('(' + p.issue + ')') : '') : '';
-        const pages = p.pages ? (': ' + p.pages) : '';
-        meta.innerHTML = ' ' + volIssue + pages + ', <strong>' + (p.year || '') + '</strong>';
+        const volIssue = p.volume ? p.volume + (p.number ? ('(' + p.number + ')') : '') : '';
+        const pageRange = p.starting_page ? (p.ending_page ? (p.starting_page + '-' + p.ending_page) : p.starting_page) : '';
+        const pages = pageRange ? (': ' + pageRange) : '';
+        const year = (p.publication_date || '').toString().slice(0, 4);
+        meta.innerHTML = ' ' + volIssue + pages + ', <strong>' + year + '</strong>';
 
         li.appendChild(authors);
         li.appendChild(title);
@@ -584,7 +596,7 @@
         cite.style.marginLeft = '0.5rem';
         cite.style.opacity = '0.8';
         const c = p.is_referenced_by_count;
-        const jf = journals[p.journal] && journals[p.journal]['impact factor'] ? journals[p.journal]['impact factor'] : null;
+        const jf = journals[journalName] && journals[journalName]['impact factor'] ? journals[journalName]['impact factor'] : null;
         const parts = [];
         if (typeof c !== 'undefined' && c !== null && c > 0) {
           parts.push('TC: ' + c);
