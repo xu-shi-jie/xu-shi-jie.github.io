@@ -150,6 +150,19 @@
       padding: 0; 
     }
     .pub-list li, .talk-list li { margin-bottom: 0.5rem; }
+    .copy-btn {
+      margin-left: 0.5rem;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-color);
+      opacity: 0.55;
+      font-size: 0.95em;
+      vertical-align: baseline;
+      transition: opacity 0.15s;
+    }
+    .copy-btn:hover { opacity: 1; }
     .pub-list li { 
       margin-bottom: 0.5rem;
       line-height: 1.6;
@@ -329,20 +342,39 @@
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Shijie Xu",
+    "givenName": "Shijie",
+    "familyName": "Xu",
     "url": "https://xu-shi-jie.github.io/",
     "image": "https://xu-shi-jie.github.io/docs/background-pkalm.jpg",
+    "description": "Shijie Xu is a postdoctoral researcher at Hokkaido University, specializing in bioinformatics, computational chemistry, protein structure prediction, and deep learning for metal binding sites.",
     "jobTitle": "Postdoctoral Researcher",
+    "identifier": {
+      "@type": "PropertyValue",
+      "propertyID": "ORCID",
+      "value": "0000-0001-6974-353X"
+    },
     "worksFor": {
-      "@type": "Organization",
+      "@type": "CollegeOrUniversity",
       "name": "Hokkaido University",
       "url": "https://www.global.hokudai.ac.jp/"
     },
-    "alumniOf": "Hokkaido University",
-    "knowsAbout": ["Bioinformatics", "Computational Chemistry", "Deep Learning", "Protein Structure Prediction", "Metal Binding Sites"],
+    "affiliation": {
+      "@type": "ResearchOrganization",
+      "name": "Onoda Lab, Hokkaido University",
+      "url": "https://onoda-lab.jp/"
+    },
+    "alumniOf": {
+      "@type": "CollegeOrUniversity",
+      "name": "Hokkaido University",
+      "url": "https://www.global.hokudai.ac.jp/"
+    },
+    "knowsAbout": ["Bioinformatics", "Computational Chemistry", "Deep Learning", "Protein Structure Prediction", "Metal Binding Sites", "Protein Language Models", "pKa Prediction"],
     "sameAs": [
       "https://orcid.org/0000-0001-6974-353X",
       "https://github.com/xu-shi-jie",
-      "https://researchmap.jp/xushijie"
+      "https://researchmap.jp/xushijie",
+      "https://www.researchgate.net/profile/Shijie-Xu-14",
+      "https://huggingface.co/xushijie"
     ]
   }
   </script>
@@ -370,8 +402,8 @@
         <h2 class="sr-only">About</h2>
         <p>Since April 2025, Shijie Xu is a postdoctoral researcher in <a href="https://onoda-lab.jp/">Onoda Lab</a> at <a href="https://www.global.hokudai.ac.jp/">Hokkaido University</a>. His research focuses on bioinformatics, computational chemistry, and deep learning. Check his <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>.</p>   
         <p>
-          <strong><span id="email-label">E-mail (base64):</span></strong>
-          <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span>  <button onclick="decodeEmail()" title="To avoid spam">Decode</button>
+          <strong><span id="email-label">E-mail:</span></strong>
+          <span id="email">c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw</span> <button id="email-decode" class="copy-btn" onclick="decodeEmail()" title="Click to decode (anti-spam)"><i class="fa-solid fa-lock"></i></button>
         </p>
         <p><a href="https://orcid.org/0000-0001-6974-353X" class="footer-link" title="ORCID"><i class="fa-brands fa-orcid fa-xl"></i></a><a href="https://www.researchgate.net/profile/Shijie-Xu-14" class="footer-link" title="ResearchGate"><i class="fa-brands fa-researchgate fa-xl"></i></a><a href="https://github.com/xu-shi-jie" class="footer-link" title="GitHub"><i class="fa-brands fa-github fa-xl"></i></a><a href="https://huggingface.co/xushijie" class="footer-link" title="Hugging Face"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M15.0216 12.9067C15.1542 12.6053 15.1672 12.266 15.0594 11.9588C15.1666 11.6895 15.1835 11.3879 15.1109 11.1077C15.073 10.9629 15.0125 10.8286 14.9325 10.7088C15.062 10.2511 14.9293 9.76178 14.6096 9.41217C14.4835 9.27426 14.3319 9.17171 14.1684 9.10376C14.2677 8.65557 14.3201 8.18997 14.3201 7.71255C14.3201 4.19004 11.4753 1.3313 7.96213 1.3313C4.449 1.3313 1.60422 4.19004 1.60422 7.71255C1.60422 8.2011 1.65902 8.67732 1.76291 9.13516C1.62551 9.20206 1.49836 9.29437 1.39062 9.41217C1.11172 9.71715 0.970218 10.1156 1.02972 10.5294C1.0386 10.5911 1.05139 10.651 1.06778 10.7088C0.987687 10.8286 0.927261 10.9629 0.889378 11.1077C0.816118 11.3874 0.833871 11.69 0.940828 11.9588C0.833048 12.266 0.845995 12.6053 0.978628 12.9067C1.21674 13.4476 1.77038 13.7844 2.53035 14.0869C3.37522 14.4232 4.30846 14.669 5.2641 14.669C6.03595 14.669 6.70689 14.4811 7.19679 14.048C7.44786 14.0783 7.70328 14.0938 7.96213 14.0938C8.24393 14.0938 8.52162 14.0753 8.79408 14.0396C9.2845 14.4785 9.9591 14.669 10.7361 14.669C11.6956 14.669 12.6219 14.4245 13.4699 14.0869C14.2298 13.7844 14.7835 13.4475 15.0216 12.9067ZM13.2948 13.6471C14.0459 13.3481 14.4327 13.0695 14.5883 12.716C14.6978 12.4671 14.6784 12.18 14.5326 11.9505C14.7261 11.6538 14.689 11.3658 14.6529 11.2275C14.6067 11.0511 14.5112 10.9044 14.3815 10.7991C14.443 10.6965 14.4842 10.5856 14.5019 10.462C14.5523 10.1118 14.363 9.73198 14.0467 9.56892C13.9043 9.49529 13.74 9.46502 13.5786 9.48087C13.6273 9.32464 13.6698 9.16565 13.7056 9.00412C13.7979 8.58845 13.8467 8.15618 13.8467 7.71255C13.8467 4.44972 11.2121 1.80469 7.96213 1.80469C4.71221 1.80469 2.07761 4.44972 2.07761 7.71255C2.07761 8.15775 2.12667 8.59151 2.21966 9.00861C2.255 9.16715 2.29669 9.32322 2.34445 9.47668C2.11872 9.47489 1.89314 9.56403 1.73991 9.73172C1.54674 9.94289 1.46094 10.2024 1.4983 10.462C1.51607 10.5856 1.55722 10.6965 1.61873 10.7991C1.48904 10.9044 1.39352 11.0511 1.34735 11.2275C1.3112 11.3658 1.27415 11.6538 1.46762 11.9505C1.3218 12.18 1.30238 12.4671 1.41189 12.716C1.56755 13.0695 1.95433 13.3481 2.70542 13.6471C3.51574 13.9696 4.38761 14.1956 5.2641 14.1956C6.0583 14.1956 6.6509 13.9775 7.02942 13.5466C7.3332 13.5952 7.64475 13.6204 7.96213 13.6204C8.30268 13.6204 8.63651 13.5913 8.96129 13.5356C9.33929 13.9738 9.93526 14.1956 10.7361 14.1956C11.6163 14.1956 12.4813 13.9709 13.2948 13.6471Z"/>
@@ -414,11 +446,10 @@
   <script>
   function decodeEmail() {
     const encoded = "c2hpamllLnh1QGVlcy5ob2t1ZGFpLmFjLmpw";
-    const decoded = atob(encoded);
-    document.getElementById("email").textContent = decoded;
-    document.getElementById("email-label").textContent = "E-mail:";
-    // disable button
-    document.querySelector("button[onclick='decodeEmail()']").disabled = true;
+    document.getElementById("email").textContent = atob(encoded);
+    // hide the "(base64)" toggle once decoded
+    const btn = document.getElementById("email-decode");
+    if (btn) btn.style.display = "none";
   }
   </script>
 
@@ -609,7 +640,67 @@
         }
         li.appendChild(cite);
 
+        // copy-citation button (plain-text reference -> clipboard)
+        const citeAuthors = (p.authors && p.authors.en || []).map(a => a.name).join(', ');
+        const citeVol = p.volume ? (p.volume + (p.number ? ('(' + p.number + ')') : '')) : '';
+        const citePages = p.starting_page ? (p.ending_page ? (p.starting_page + '-' + p.ending_page) : p.starting_page) : '';
+        let citation = citeAuthors + '. "' + lang(p.paper_title) + '." ' + journalName;
+        if (citeVol) citation += ' ' + citeVol;
+        if (citePages) citation += ': ' + citePages;
+        if (year) citation += ', ' + year;
+        citation += '.';
+        if (doi) citation += ' https://doi.org/' + doi;
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.type = 'button';
+        copyBtn.title = 'Copy citation';
+        copyBtn.setAttribute('aria-label', 'Copy citation');
+        copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(citation).then(() => {
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => { copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i>'; }, 1500);
+          });
+        });
+        li.appendChild(copyBtn);
+
         list.appendChild(li);
+      }
+
+      // Emit ScholarlyArticle JSON-LD so each publication is indexable (kept in sync with pubs.json).
+      try {
+        const articles = pubs.map(p => {
+          const doi = (p.identifiers && p.identifiers.doi && p.identifiers.doi[0]) || null;
+          const node = {
+            "@context": "https://schema.org",
+            "@type": "ScholarlyArticle",
+            "headline": lang(p.paper_title),
+            "name": lang(p.paper_title),
+            "author": (p.authors && p.authors.en || []).map(a => ({
+              "@type": "Person",
+              "name": a.name.replace(/\*$/, '')
+            })),
+            "datePublished": (p.publication_date || '').toString().slice(0, 4),
+            "isPartOf": {
+              "@type": "Periodical",
+              "name": lang(p.publication_name)
+            }
+          };
+          if (doi) {
+            node.identifier = { "@type": "PropertyValue", "propertyID": "DOI", "value": doi };
+            node.sameAs = 'https://doi.org/' + doi;
+            node.url = 'https://doi.org/' + doi;
+          }
+          if (p.volume) node.isPartOf.volumeNumber = p.volume;
+          return node;
+        });
+        const ld = document.createElement('script');
+        ld.type = 'application/ld+json';
+        ld.textContent = JSON.stringify(articles);
+        document.head.appendChild(ld);
+      } catch (e) {
+        console.warn('Failed to emit publication structured data', e);
       }
 
     } catch (err) {

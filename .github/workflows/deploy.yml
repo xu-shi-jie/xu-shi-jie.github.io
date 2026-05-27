@@ -52,6 +52,11 @@ jobs:
           cd data/
           python3 update_citations.py
 
+      - name: Update sitemap (SEO metadata)
+        run: |
+          cd data/
+          python3 update_sitemap.py
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
