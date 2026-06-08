@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Blog — Shijie Xu</title>
+  <meta name="description" content="Posts by Shijie Xu on bioinformatics, computational chemistry, deep learning, and mathematics.">
+  <meta name="author" content="Shijie Xu">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://xu-shi-jie.github.io/blogs/">
+  <link rel="alternate" type="application/atom+xml" title="Shijie Xu — Blog" href="https://xu-shi-jie.github.io/blogs/feed.xml">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shijie Xu">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Blog — Shijie Xu">
+  <meta property="og:description" content="Posts by Shijie Xu on bioinformatics, computational chemistry, deep learning, and mathematics.">
+  <meta property="og:url" content="https://xu-shi-jie.github.io/blogs/">
+  <meta property="og:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog — Shijie Xu">
+  <meta name="twitter:description" content="Posts by Shijie Xu on bioinformatics, computational chemistry, deep learning, and mathematics.">
+  <meta name="twitter:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Shijie Xu — Blog","url":"https://xu-shi-jie.github.io/blogs/","author":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"blogPost":[{"@type":"BlogPosting","headline":"2026 年高考数学压轴题：函数与集合 D(x₀)","url":"https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html","datePublished":"2026-06-08","inLanguage":"zh-CN"}]}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    :root {
+      --text-color: #222;
+      --bg-color: #fff;
+      --link-color: #0645ad;
+      --nav-bg: #fafafa;
+      --code-bg: #f5f5f5;
+      --border: rgba(0, 0, 0, 0.1);
+      --muted: #888;
+    }
+    [data-theme="dark"] {
+      --text-color: #eee;
+      --bg-color: #1a1a1a;
+      --link-color: #6ea8fe;
+      --nav-bg: #252525;
+      --code-bg: #2a2a2a;
+      --border: rgba(255, 255, 255, 0.1);
+      --muted: #999;
+    }
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, segoe ui, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+      font-size: 18px;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: var(--text-color);
+      background: var(--bg-color);
+      transition: color 0.3s, background-color 0.3s;
+    }
+    .hero {
+      width: 100%;
+      height: 120px;
+      background-image: url('/docs/background-pkalm.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .breadcrumb-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      padding: 0.25rem 0;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .breadcrumb-content {
+      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+    }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); }
+    @media (max-width: 600px) {
+      .breadcrumb-content { padding-left: 1rem; }
+      .breadcrumb-nav button { padding-right: 1rem; }
+    }
+    .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+      border-bottom: 1px solid var(--text-color);
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+    a:hover { opacity: 1; }
+    .theme-toggle {
+      background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--text-color); width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle img {
+      width: 24px; height: 24px;
+      transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .theme-toggle .moon {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(0.9);
+    }
+    .theme-toggle .sun { display: none; }
+    .theme-toggle:hover .moon {
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(1.1) drop-shadow(0 0 4px #3399cc) drop-shadow(0 0 8px #3399cc);
+      transform: scale(1.1);
+    }
+    [data-theme="dark"] .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(0.95);
+    }
+    [data-theme="dark"] .theme-toggle:hover .sun {
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(1.1) drop-shadow(0 0 4px #dd8822) drop-shadow(0 0 8px #dd8822);
+      transform: scale(1.1);
+    }
+
+    /* Post list (index) — simple date + title directory */
+    .post-list { list-style: none; padding: 0; }
+    .post-list li {
+      display: flex; gap: 1rem; align-items: baseline;
+      padding: 0.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .post-date {
+      color: var(--muted); font-size: 0.9rem;
+      font-variant-numeric: tabular-nums; white-space: nowrap;
+      flex: 0 0 6.5rem;
+    }
+    .post-list a { border-bottom: none; font-size: 1.05rem; }
+    @media (max-width: 480px) {
+      .post-list li { flex-direction: column; gap: 0.1rem; }
+    }
+
+    /* Article body */
+    article h1 { font-size: 2.4rem; margin: 0 0 0.25rem; line-height: 1.2; }
+    article h2 { font-size: 1.7rem; margin-top: 2rem; }
+    article h3 { font-size: 1.3rem; margin-top: 1.5rem; }
+    article img { max-width: 100%; height: auto; }
+    /* Left-aligned, not justified: with CJK text + inline formulas, justify
+       stretches the spaces around math into large ugly gaps. */
+    article p { text-align: left; }
+    article blockquote {
+      margin: 1rem 0; padding: 0.25rem 1rem;
+      border-left: 3px solid var(--border); color: var(--muted);
+    }
+    article pre {
+      background: var(--code-bg); padding: 1rem; border-radius: 6px;
+      overflow-x: auto; font-size: 0.85rem;
+    }
+    article code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: var(--code-bg); padding: 0.1rem 0.35rem; border-radius: 4px;
+      font-size: 0.85em;
+    }
+    article pre code { background: none; padding: 0; }
+    article table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    article th, article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
+    article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  </style>
+  <script>
+    // Keep the Utterances comment widget (if present) in sync with the theme.
+    function syncUtterancesTheme(theme) {
+      const frame = document.querySelector('.utterances-frame');
+      if (!frame) return;
+      frame.contentWindow.postMessage(
+        { type: 'set-theme', theme: theme === 'dark' ? 'github-dark' : 'github-light' },
+        'https://utteranc.es');
+    }
+    function toggleTheme() {
+      const el = document.documentElement;
+      const next = el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      el.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      syncUtterancesTheme(next);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    });
+  </script>
+</head>
+<body>
+  <div class="hero" role="banner"></div>
+  <nav class="breadcrumb-nav">
+    <div class="breadcrumb-content"><span style="margin-right:0.75rem;">&gt;</span><a href="/">Home</a><span style="margin:0 0.75rem;">&gt;</span><span style="font-weight:700;">Blog</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+      <img src="/docs/sun.svg" alt="Light mode" class="sun">
+      <img src="/docs/moon.svg" alt="Dark mode" class="moon">
+    </button>
+  </nav>
+  <div class="content">
+    <header><h1 style="font-size:2.6rem; margin:0.5rem 0 1.5rem;">Blog</h1></header>
+    <ul class="post-list">
+      <li>
+        <time class="post-date" datetime="2026-06-08">2026-06-08</time>
+        <a href="/blogs/2026-gaokao-math.html">2026 年高考数学压轴题：函数与集合 D(x₀)</a>
+      </li>
+    </ul>
+  </div>
+  <footer style="text-align:center; font-size:small; color:var(--muted); padding:2rem 1rem;">
+    &copy; 2022-<span id="y"></span> Shijie Xu. Hosted via
+    <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
+    <span id="page-counter"></span>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <!-- Visitor counter (shared with index.html) -->
+  <script>
+    window.COUNTER_API_URL = 'https://page-counter-eight.vercel.app/api/counter-neon';
+    window.COUNTER_PREFIX = 'Visitors: ';
+  </script>
+  <script src="https://page-counter-eight.vercel.app/counter.js"></script>
+</body>
+</html>

@@ -11,6 +11,7 @@ Lives in data/ alongside the other update_*.py scripts; writes sitemap.xml
 at the repository root. Run from anywhere (paths resolve via __file__).
 """
 
+import re
 import subprocess
 import datetime
 from pathlib import Path
@@ -50,12 +51,34 @@ def last_modified(sources) -> str:
     return newest or today()
 
 
+def blog_pages():
+    """Discover generated blog pages so each post is indexed.
+
+    The blog index plus one entry per posts/*.md (its lastmod follows the
+    Markdown source). Returns the same 4-tuple shape as PAGES.
+    """
+    pages = []
+    posts_dir = ROOT / "posts"
+    if (ROOT / "blogs" / "index.html").exists():
+        sources = ["blogs/index.html"] + (
+            [str(p.relative_to(ROOT)) for p in posts_dir.glob("*.md")]
+            if posts_dir.exists() else [])
+        pages.append(("/blogs/", "weekly", "0.7", sources))
+    for src in sorted(posts_dir.glob("*.md")) if posts_dir.exists() else []:
+        slug = re.sub(r"[^a-z0-9]+", "-", src.stem.lower()).strip("-") or "post"
+        if (ROOT / "blogs" / f"{slug}.html").exists():
+            pages.append((f"/blogs/{slug}.html", "monthly", "0.6",
+                          [f"posts/{src.name}"]))
+    return pages
+
+
 def main() -> None:
     lines = [
         '<?xml version="1.0" encoding="UTF-8"?>',
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
     ]
-    for path, changefreq, priority, sources in PAGES:
+    all_pages = PAGES + blog_pages()
+    for path, changefreq, priority, sources in all_pages:
         lines += [
             "  <url>",
             f"    <loc>{BASE_URL}{path}</loc>",
@@ -66,7 +89,7 @@ def main() -> None:
         ]
     lines.append("</urlset>")
     (ROOT / "sitemap.xml").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    print(f"Wrote sitemap.xml with {len(PAGES)} URLs.")
+    print(f"Wrote sitemap.xml with {len(all_pages)} URLs.")
 
 
 if __name__ == "__main__":

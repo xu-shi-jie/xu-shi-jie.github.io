@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Shijie Xu — Blog</title>
+  <subtitle>Bioinformatics, computational chemistry, deep learning, and mathematics.</subtitle>
+  <link href="https://xu-shi-jie.github.io/blogs/feed.xml" rel="self"/>
+  <link href="https://xu-shi-jie.github.io/blogs/"/>
+  <id>https://xu-shi-jie.github.io/blogs/</id>
+  <updated>2026-06-08T00:00:00Z</updated>
+  <author><name>Shijie Xu</name></author>
+  <entry>
+    <title>2026 年高考数学压轴题：函数与集合 D(x₀)</title>
+    <link href="https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html"/>
+    <id>https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html</id>
+    <published>2026-06-08T00:00:00Z</published>
+    <updated>2026-06-08T00:00:00Z</updated>
+    <summary>2026 年高考数学卷最后一题。已知 f(x) 在 R 上有定义、x&lt;0 时 f(x)=2^x，围绕集合 D(x₀) 证明 f(0)≥1 以及 f 在 [0,+∞) 上单调递增。</summary>
+  </entry>
+</feed>

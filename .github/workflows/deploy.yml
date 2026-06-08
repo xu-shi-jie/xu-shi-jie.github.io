@@ -52,6 +52,11 @@ jobs:
           cd data/
           python3 update_citations.py
 
+      - name: Build blog (posts/ -> blogs/)
+        run: |
+          pip install --quiet markdown pymdown-extensions
+          python3 data/build_blog.py
+
       - name: Update sitemap (SEO metadata)
         run: |
           cd data/

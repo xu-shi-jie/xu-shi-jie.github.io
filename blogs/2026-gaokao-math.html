@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <title>2026 年高考数学压轴题：函数与集合 D(x₀) — Shijie Xu</title>
+  <meta name="description" content="2026 年高考数学卷最后一题。已知 f(x) 在 R 上有定义、x&lt;0 时 f(x)=2^x，围绕集合 D(x₀) 证明 f(0)≥1 以及 f 在 [0,+∞) 上单调递增。">
+  <meta name="author" content="Shijie Xu">
+  <meta name="keywords" content="2026高考数学, 高考压轴题, 函数与集合, 单调递增证明, 反证法, 2^x, 数学竞赛, Shijie Xu">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html">
+  <link rel="alternate" type="application/atom+xml" title="Shijie Xu — Blog" href="https://xu-shi-jie.github.io/blogs/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Shijie Xu">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="2026 年高考数学压轴题：函数与集合 D(x₀) — Shijie Xu">
+  <meta property="og:description" content="2026 年高考数学卷最后一题。已知 f(x) 在 R 上有定义、x&lt;0 时 f(x)=2^x，围绕集合 D(x₀) 证明 f(0)≥1 以及 f 在 [0,+∞) 上单调递增。">
+  <meta property="og:url" content="https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html">
+  <meta property="og:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026 年高考数学压轴题：函数与集合 D(x₀) — Shijie Xu">
+  <meta name="twitter:description" content="2026 年高考数学卷最后一题。已知 f(x) 在 R 上有定义、x&lt;0 时 f(x)=2^x，围绕集合 D(x₀) 证明 f(0)≥1 以及 f 在 [0,+∞) 上单调递增。">
+  <meta name="twitter:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
+  <meta property="article:published_time" content="2026-06-08">
+  <meta property="article:author" content="Shijie Xu">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"2026 年高考数学压轴题：函数与集合 D(x₀)","description":"2026 年高考数学卷最后一题。已知 f(x) 在 R 上有定义、x<0 时 f(x)=2^x，围绕集合 D(x₀) 证明 f(0)≥1 以及 f 在 [0,+∞) 上单调递增。","datePublished":"2026-06-08","dateModified":"2026-06-08","inLanguage":"zh-CN","author":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"publisher":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html"},"image":"https://xu-shi-jie.github.io/docs/background-pkalm.jpg","url":"https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html"}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    :root {
+      --text-color: #222;
+      --bg-color: #fff;
+      --link-color: #0645ad;
+      --nav-bg: #fafafa;
+      --code-bg: #f5f5f5;
+      --border: rgba(0, 0, 0, 0.1);
+      --muted: #888;
+    }
+    [data-theme="dark"] {
+      --text-color: #eee;
+      --bg-color: #1a1a1a;
+      --link-color: #6ea8fe;
+      --nav-bg: #252525;
+      --code-bg: #2a2a2a;
+      --border: rgba(255, 255, 255, 0.1);
+      --muted: #999;
+    }
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, segoe ui, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+      font-size: 18px;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: var(--text-color);
+      background: var(--bg-color);
+      transition: color 0.3s, background-color 0.3s;
+    }
+    .hero {
+      width: 100%;
+      height: 120px;
+      background-image: url('/docs/background-pkalm.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+    .breadcrumb-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      padding: 0.25rem 0;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .breadcrumb-content {
+      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+    }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); }
+    @media (max-width: 600px) {
+      .breadcrumb-content { padding-left: 1rem; }
+      .breadcrumb-nav button { padding-right: 1rem; }
+    }
+    .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+      border-bottom: 1px solid var(--text-color);
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+    a:hover { opacity: 1; }
+    .theme-toggle {
+      background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--text-color); width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle img {
+      width: 24px; height: 24px;
+      transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .theme-toggle .moon {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(0.9);
+    }
+    .theme-toggle .sun { display: none; }
+    .theme-toggle:hover .moon {
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(1.1) drop-shadow(0 0 4px #3399cc) drop-shadow(0 0 8px #3399cc);
+      transform: scale(1.1);
+    }
+    [data-theme="dark"] .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(0.95);
+    }
+    [data-theme="dark"] .theme-toggle:hover .sun {
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(1.1) drop-shadow(0 0 4px #dd8822) drop-shadow(0 0 8px #dd8822);
+      transform: scale(1.1);
+    }
+
+    /* Post list (index) — simple date + title directory */
+    .post-list { list-style: none; padding: 0; }
+    .post-list li {
+      display: flex; gap: 1rem; align-items: baseline;
+      padding: 0.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .post-date {
+      color: var(--muted); font-size: 0.9rem;
+      font-variant-numeric: tabular-nums; white-space: nowrap;
+      flex: 0 0 6.5rem;
+    }
+    .post-list a { border-bottom: none; font-size: 1.05rem; }
+    @media (max-width: 480px) {
+      .post-list li { flex-direction: column; gap: 0.1rem; }
+    }
+
+    /* Article body */
+    article h1 { font-size: 2.4rem; margin: 0 0 0.25rem; line-height: 1.2; }
+    article h2 { font-size: 1.7rem; margin-top: 2rem; }
+    article h3 { font-size: 1.3rem; margin-top: 1.5rem; }
+    article img { max-width: 100%; height: auto; }
+    /* Left-aligned, not justified: with CJK text + inline formulas, justify
+       stretches the spaces around math into large ugly gaps. */
+    article p { text-align: left; }
+    article blockquote {
+      margin: 1rem 0; padding: 0.25rem 1rem;
+      border-left: 3px solid var(--border); color: var(--muted);
+    }
+    article pre {
+      background: var(--code-bg); padding: 1rem; border-radius: 6px;
+      overflow-x: auto; font-size: 0.85rem;
+    }
+    article code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: var(--code-bg); padding: 0.1rem 0.35rem; border-radius: 4px;
+      font-size: 0.85em;
+    }
+    article pre code { background: none; padding: 0; }
+    article table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    article th, article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
+    article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+  </style>
+  <script>
+    // Keep the Utterances comment widget (if present) in sync with the theme.
+    function syncUtterancesTheme(theme) {
+      const frame = document.querySelector('.utterances-frame');
+      if (!frame) return;
+      frame.contentWindow.postMessage(
+        { type: 'set-theme', theme: theme === 'dark' ? 'github-dark' : 'github-light' },
+        'https://utteranc.es');
+    }
+    function toggleTheme() {
+      const el = document.documentElement;
+      const next = el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      el.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      syncUtterancesTheme(next);
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+    });
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <div class="hero" role="banner"></div>
+  <nav class="breadcrumb-nav">
+    <div class="breadcrumb-content"><span style="margin-right:0.75rem;">&gt;</span><a href="/">Home</a><span style="margin:0 0.75rem;">&gt;</span><a href="/blogs/">Blog</a><span style="margin:0 0.75rem;">&gt;</span><span style="font-weight:700;">2026 年高考数学压轴题：函数与集合 D(x₀)</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+      <img src="/docs/sun.svg" alt="Light mode" class="sun">
+      <img src="/docs/moon.svg" alt="Dark mode" class="moon">
+    </button>
+  </nav>
+  <div class="content">
+    <article>
+      <h1>2026 年高考数学压轴题：函数与集合 D(x₀)</h1>
+      <div class="article-meta"><time datetime="2026-06-08">2026-06-08</time></div>
+<p>本题是 <strong>2026 年高考数学卷的最后一题（压轴题）</strong>。</p>
+<blockquote>
+<p><strong>说明：</strong> 原题分为多问，本文只讨论 <strong>第(3)问</strong>，前两问从略。</p>
+</blockquote>
+<h2 id="_1">题目</h2>
+<p>已知函数 <span class="arithmatex">\(f(x)\)</span> 的定义域为 <span class="arithmatex">\(\mathbb{R}\)</span>，且当 <span class="arithmatex">\(x &lt; 0\)</span> 时，<span class="arithmatex">\(f(x) = 2^x\)</span>。对任意 <span class="arithmatex">\(x_0 \in \mathbb{R}\)</span>，定义集合</p>
+<div class="arithmatex">\[
+D(x_0) = \{\, d \in \mathbb{R} \mid f(x_0 + d) &gt; f(x_0) \,\}.
+\]</div>
+<p>（3）若 <span class="arithmatex">\(f(x)\)</span> 满足以下两个条件：</p>
+<p><strong>(a)</strong> 当 <span class="arithmatex">\(f(x_1) \le f(x_2)\)</span> 时，有 <span class="arithmatex">\(D(x_2) \subseteq D(x_1)\)</span>；</p>
+<p><strong>(b)</strong> 当 <span class="arithmatex">\(0 &lt; x &lt; 1\)</span> 时，<span class="arithmatex">\(f(x) &lt; f(0)\)</span>。</p>
+<p>求证：</p>
+<p><strong>(i)</strong> <span class="arithmatex">\(f(0) \ge 1\)</span>；</p>
+<p><strong>(ii)</strong> <span class="arithmatex">\(f(x)\)</span> 在 <span class="arithmatex">\((0, +\infty)\)</span> 上单调递增。</p>
+<h2 id="_2">解答</h2>
+<p>整个证明反复用到一个事实：<strong>对任意负数 <span class="arithmatex">\(w\)</span>，集合 <span class="arithmatex">\(D(w)\)</span> 含有任意小的正数。</strong> 这是因为当 <span class="arithmatex">\(d &gt; 0\)</span> 充分小、<span class="arithmatex">\(w + d &lt; 0\)</span> 时，</p>
+<div class="arithmatex">\[
+f(w + d) = 2^{w+d} &gt; 2^{w} = f(w),
+\]</div>
+<p>即这样的 <span class="arithmatex">\(d \in D(w)\)</span>。换言之，<span class="arithmatex">\(f\)</span> 在每个负点的右侧邻域内都是递增的。把这一性质通过条件(a) “搬运”到目标点上，就是下面两问的核心。</p>
+<h3 id="if0-ge-1">第(i)问：<span class="arithmatex">\(f(0) \ge 1\)</span></h3>
+<p>用反证法。假设 <span class="arithmatex">\(f(0) &lt; 1\)</span>。</p>
+<p>由于当 <span class="arithmatex">\(x &lt; 0\)</span> 时 <span class="arithmatex">\(f(x) = 2^x\)</span>，而 <span class="arithmatex">\(2^x \to 1\ (x \to 0^-)\)</span>，故存在负数 <span class="arithmatex">\(w\)</span> 使得</p>
+<div class="arithmatex">\[
+f(0) &lt; f(w) = 2^{w} &lt; 1 ,
+\]</div>
+<p>于是 <span class="arithmatex">\(f(w) &gt; f(0)\)</span>，即 <span class="arithmatex">\(w \in D(0)\)</span>。</p>
+<p>另一方面，由条件(b)，对任意 <span class="arithmatex">\(x \in (0,1)\)</span> 有 <span class="arithmatex">\(f(x) &lt; f(0)\)</span>。对 <span class="arithmatex">\(f(x) \le f(0)\)</span> 用条件(a)得 <span class="arithmatex">\(D(0) \subseteq D(x)\)</span>，故 <span class="arithmatex">\(w \in D(x)\)</span>，即</p>
+<div class="arithmatex">\[
+f(x + w) &gt; f(x) \quad (x + w &lt; x),
+\]</div>
+<p>这说明 <span class="arithmatex">\(f\)</span> 在 <span class="arithmatex">\((0,1)\)</span> 上是<strong>下降</strong>的。</p>
+<p>又因 <span class="arithmatex">\(f(x) &lt; f(0) &lt; f(w)\)</span>，即 <span class="arithmatex">\(f(x) \le f(w)\)</span>，再用条件(a)得 <span class="arithmatex">\(D(w) \subseteq D(x)\)</span>。而 <span class="arithmatex">\(w &lt; 0\)</span>，由开头的事实，<span class="arithmatex">\(D(w)\)</span> 含有任意小的正数，于是 <span class="arithmatex">\(D(x)\)</span> 也含有任意小的正数<span style="font-family:'Noto Sans CJK SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Heiti SC', sans-serif">——</span>即存在任意小的正数 <span class="arithmatex">\(d\)</span> 使 <span class="arithmatex">\(f(x + d) &gt; f(x)\)</span>，这说明 <span class="arithmatex">\(f\)</span> 在 <span class="arithmatex">\(x\)</span> 附近是<strong>递增</strong>的。</p>
+<p>“下降”与“递增”互相矛盾，故假设不成立，即 <span class="arithmatex">\(f(0) \ge 1\)</span>。</p>
+<h3 id="iif-0-infty">第(ii)问：<span class="arithmatex">\(f\)</span> 在 <span class="arithmatex">\((0, +\infty)\)</span> 上单调递增</h3>
+<p>同样用反证法。假设 <span class="arithmatex">\(f\)</span> 在 <span class="arithmatex">\((0,+\infty)\)</span> 上<strong>不</strong>单调递增，则存在 <span class="arithmatex">\(0&lt;x&lt;y\)</span> 使 <span class="arithmatex">\(f(x)&gt;f(y)\)</span>。按 <span class="arithmatex">\(f(x)\)</span>、<span class="arithmatex">\(f(y)\)</span> 与 <span class="arithmatex">\(0\)</span> 的大小关系分三种情况讨论。</p>
+<p><strong>情形 1：<span class="arithmatex">\(f(x)&gt;f(y)&gt;0\)</span>。</strong>
+由 <span class="arithmatex">\(f(y)&gt;0\)</span>，可取负数 <span class="arithmatex">\(w\)</span> 使 <span class="arithmatex">\(0&lt;f(w)&lt;f(y)\)</span>，于是 <span class="arithmatex">\(f(w)\le f(y)\)</span>，由条件(a)得 <span class="arithmatex">\(D(y)\subseteq D(w)\)</span>。又 <span class="arithmatex">\(x-y&lt;0\)</span> 且 <span class="arithmatex">\(f\big(y+(x-y)\big)=f(x)&gt;f(y)\)</span>，故 <span class="arithmatex">\(x-y\in D(y)\subseteq D(w)\)</span>。但 <span class="arithmatex">\(D(w)\)</span> 不含任何负数：当 <span class="arithmatex">\(d&lt;0\)</span> 时 <span class="arithmatex">\(w+d&lt;w&lt;0\)</span>，<span class="arithmatex">\(f(w+d)=2^{w+d}&lt;2^{w}=f(w)\)</span>，即 <span class="arithmatex">\(d\notin D(w)\)</span>。这与 <span class="arithmatex">\(x-y\in D(w)\)</span> 矛盾。</p>
+<p><strong>情形 2：<span class="arithmatex">\(0&gt;f(x)&gt;f(y)\)</span>。</strong>
+对任意负数 <span class="arithmatex">\(w\)</span> 有 <span class="arithmatex">\(f(w)=2^{w}&gt;0&gt;f(x)\)</span>，即 <span class="arithmatex">\(f(x)\le f(w)\)</span>，由条件(a)得 <span class="arithmatex">\(D(w)\subseteq D(x)\)</span>。注意当 <span class="arithmatex">\(0&lt;d&lt;-w\)</span> 时 <span class="arithmatex">\(w+d&lt;0\)</span>，<span class="arithmatex">\(f(w+d)=2^{w+d}&gt;2^{w}=f(w)\)</span>，故 <span class="arithmatex">\((0,-w)\subseteq D(w)\)</span>；令 <span class="arithmatex">\(w\to-\infty\)</span> 可知 <span class="arithmatex">\(D(x)\)</span> 包含任意给定的正数。特别地，取 <span class="arithmatex">\(w&lt;x-y\)</span>，则 <span class="arithmatex">\(y-x\in(0,-w)\subseteq D(w)\subseteq D(x)\)</span>。然而 <span class="arithmatex">\(f\big(x+(y-x)\big)=f(y)&lt;f(x)\)</span>，即 <span class="arithmatex">\(y-x\notin D(x)\)</span>，矛盾。</p>
+<p><strong>情形 3：<span class="arithmatex">\(f(x)\ge 0\ge f(y)\)</span>。</strong>
+任取 <span class="arithmatex">\(d\in(x,y)\)</span>。由情形 1、2 的论证，<span class="arithmatex">\(f(d)\)</span> 既不能为正、也不能为负，故只能 <span class="arithmatex">\(f(d)=0\)</span>；也就是说 <span class="arithmatex">\(f\)</span> 在 <span class="arithmatex">\((x,y)\)</span> 上恒为 <span class="arithmatex">\(0\)</span>。于是对任意 <span class="arithmatex">\(d_1,d_2\in(x,y)\)</span> 有 <span class="arithmatex">\(f(d_1)=f(d_2)\)</span>，由条件(a)（两个方向同时成立）得 <span class="arithmatex">\(D(d_1)=D(d_2)\)</span>，即各点的 <span class="arithmatex">\(D\)</span> 集合完全相同。又因 <span class="arithmatex">\(f(d)=0&lt;f(w)\)</span> 对任意负数 <span class="arithmatex">\(w\)</span> 成立，由条件(a)得 <span class="arithmatex">\(D(w)\subseteq D(d)\)</span>，故 <span class="arithmatex">\(D(d)\)</span> 含有任意小的正数。但当 <span class="arithmatex">\(\varepsilon&gt;0\)</span> 充分小时 <span class="arithmatex">\(d+\varepsilon\in(x,y)\)</span>，从而 <span class="arithmatex">\(f(d+\varepsilon)=0=f(d)\)</span>，即 <span class="arithmatex">\(\varepsilon\notin D(d)\)</span>；这对一切充分小的 <span class="arithmatex">\(\varepsilon&gt;0\)</span> 都成立，说明 <span class="arithmatex">\(D(d)\)</span> 不含任意小的正数，矛盾。</p>
+<p>三种情况均导出矛盾，故假设不成立，即 <span class="arithmatex">\(f(x)\)</span> 在 <span class="arithmatex">\((0,+\infty)\)</span> 上单调递增。<span class="arithmatex">\(\blacksquare\)</span></p>
+<h2 id="_3">结语</h2>
+<p>本题中的集合 <span class="arithmatex">\(D(x_0)\)</span> 是按<strong>函数值的大小</strong>来定义的<span style="font-family:'Noto Sans CJK SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Heiti SC', sans-serif">——</span>它收集所有使 <span class="arithmatex">\(f(x_0 + d) &gt; f(x_0)\)</span> 成立的位移 <span class="arithmatex">\(d\)</span>。这与 Lebesgue 积分的思想颇为相通，即两者都不着眼于定义域的结构，而是通过比较函数值来刻画。因此，破题的关键始终落在<strong>函数值之间的大小关系</strong>上，而非定义域的形状。</p>
+    </article>
+    <p style="margin-top:3rem;"><a href="/blogs/">← All posts</a></p>
+    <section id="comments" style="margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+      <h2 style="font-size:1.4rem; margin-bottom:1rem;">Comments</h2>
+      <script>
+        (function () {
+          var dark = (localStorage.getItem('theme') || 'light') === 'dark';
+          document.write(
+            '<script src="https://utteranc.es/client.js" '
+            + 'repo="xu-shi-jie/comments" issue-term="pathname" label="comment" '
+            + 'theme="' + (dark ? 'github-dark' : 'github-light') + '" '
+            + 'crossorigin="anonymous" async><' + '/script>'
+          );
+        })();
+      </script>
+    </section>
+
+  </div>
+  <footer style="text-align:center; font-size:small; color:var(--muted); padding:2rem 1rem;">
+    &copy; 2022-<span id="y"></span> Shijie Xu. Hosted via
+    <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
+    <span id="page-counter"></span>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <!-- Visitor counter (shared with index.html) -->
+  <script>
+    window.COUNTER_API_URL = 'https://page-counter-eight.vercel.app/api/counter-neon';
+    window.COUNTER_PREFIX = 'Visitors: ';
+  </script>
+  <script src="https://page-counter-eight.vercel.app/counter.js"></script>
+</body>
+</html>
