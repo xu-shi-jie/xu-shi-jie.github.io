@@ -602,7 +602,8 @@
         const pageRange = p.starting_page ? (p.ending_page ? (p.starting_page + '-' + p.ending_page) : p.starting_page) : '';
         const pages = pageRange ? (': ' + pageRange) : '';
         const year = (p.publication_date || '').toString().slice(0, 4);
-        meta.innerHTML = ' ' + volIssue + pages + ', <strong>' + year + '</strong>';
+        const inPress = p.in_press ? ' <em>(in press)</em>' : '';
+        meta.innerHTML = ' ' + volIssue + pages + inPress + ', <strong>' + year + '</strong>';
 
         li.appendChild(authors);
         li.appendChild(title);
@@ -648,6 +649,7 @@
         let citation = citeAuthors + '. "' + lang(p.paper_title) + '." ' + journalName;
         if (citeVol) citation += ' ' + citeVol;
         if (citePages) citation += ': ' + citePages;
+        if (p.in_press) citation += ' (in press)';
         if (year) citation += ', ' + year;
         citation += '.';
         if (doi) citation += ' https://doi.org/' + doi;

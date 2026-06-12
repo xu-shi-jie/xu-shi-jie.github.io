@@ -96,6 +96,8 @@ def render_pub(p):
     line += f' \\textit{{{journal}}}'
     if is_preprint:
         line += ' (Preprint)'
+    elif p.get('in_press'):
+        line += ' (in press)'
 
     volume = str(p.get('volume') or '')
     number = str(p.get('number') or '')
