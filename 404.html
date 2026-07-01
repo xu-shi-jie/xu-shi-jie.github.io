@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page Not Found | Shijie Xu</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://xu-shi-jie.github.io/404.html">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script>
+    // Set theme synchronously (before paint) to avoid a white flash in dark mode.
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+  </script>
+  <style>
+    :root {
+      --text-color: #222;
+      --bg-color: #fff;
+      --link-color: #0645ad;
+      --muted: #888;
+    }
+    [data-theme="dark"] {
+      --text-color: #eee;
+      --bg-color: #1a1a1a;
+      --link-color: #6ea8fe;
+      --muted: #999;
+    }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, segoe ui, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+      color: var(--text-color);
+      background: var(--bg-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.6;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    .wrap { max-width: 32rem; }
+    .code {
+      font-size: clamp(4rem, 18vw, 8rem);
+      font-weight: 700;
+      line-height: 1;
+      margin: 0;
+      letter-spacing: 0.02em;
+    }
+    h1 { font-size: 1.5rem; margin: 0.5rem 0 0.75rem; }
+    p { color: var(--muted); margin: 0 0 1.75rem; }
+    a { color: var(--link-color); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .links {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: 1.05rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="code">404</p>
+    <h1>Page not found</h1>
+    <p>The page you're looking for doesn't exist or may have moved.</p>
+    <div class="links">
+      <a href="/">← Home</a>
+      <a href="/blogs/">Blog</a>
+      <a href="https://xu-shi-jie.github.io/docs/resume.pdf">CV</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -38,6 +38,7 @@ import re
 import subprocess
 import datetime
 from pathlib import Path
+from urllib.parse import quote
 
 import markdown
 
@@ -109,7 +110,7 @@ SHARED_HEAD = """\
     .hero {
       width: 100%;
       height: 120px;
-      background-image: url('/docs/background-pkalm.jpg');
+      background-image: url('/docs/background-pkalm.webp');
       background-size: cover;
       background-position: center;
     }
@@ -127,8 +128,15 @@ SHARED_HEAD = """\
     }
     .breadcrumb-content {
       padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      /* Fill the row (minus the toggle) and clip a long post title with an
+         ellipsis instead of letting it collide with the theme button. */
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); flex: 0 0 auto; }
     @media (max-width: 600px) {
       .breadcrumb-content { padding-left: 1rem; }
       .breadcrumb-nav button { padding-right: 1rem; }
@@ -191,6 +199,20 @@ SHARED_HEAD = """\
     article h2 { font-size: 1.7rem; margin-top: 2rem; }
     article h3 { font-size: 1.3rem; margin-top: 1.5rem; }
     article img { max-width: 100%; height: auto; }
+    article video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+    article figure { margin: 1.5rem 0; }
+    article figure img { display: block; margin: 0 auto; }
+    article figcaption {
+      font-size: 0.8rem; line-height: 1.5; color: var(--muted);
+      margin-top: 0.6rem;
+    }
+    /* Footnotes / references — small, muted, Wikipedia-style endnotes. */
+    article .footnote { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; }
+    article .footnote hr { display: none; }
+    article .footnote ol { padding-left: 1.2rem; }
+    article .footnote li { margin: 0.35rem 0; }
+    article .footnote li::marker { color: var(--muted); }
+    sup.footnote-ref a, .footnote-backref { border-bottom: none; }
     /* Left-aligned, not justified: with CJK text + inline formulas, justify
        stretches the spaces around math into large ugly gaps. */
     article p { text-align: left; }
@@ -212,6 +234,106 @@ SHARED_HEAD = """\
     article th, article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
     article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
     .article-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    /* Collapsible byline: closed shows the summary line, open reveals the
+       revision log. Multiple history entries are supported. */
+    details.article-meta > summary {
+      cursor: pointer; list-style: none; display: inline;
+    }
+    details.article-meta > summary::-webkit-details-marker { display: none; }
+    details.article-meta > summary::after {
+      content: "▾"; margin-left: 0.35rem; font-size: 0.75rem;
+      display: inline-block; transition: transform 0.15s;
+    }
+    details.article-meta[open] > summary::after { transform: rotate(180deg); }
+    .article-meta .rev-log {
+      list-style: none; margin: 0.75rem 0 0; padding: 0.75rem 0 0 0;
+      border-top: 1px solid rgba(128,128,128,0.2);
+    }
+    .article-meta .rev-log li { margin: 0 0 0.4rem; line-height: 1.5; }
+    .article-meta .rev-log time { font-weight: 700; color: var(--text-color); opacity: 0.85; }
+    /* Previous / next post navigation (older reads left, newer right). */
+    .post-nav {
+      display: flex; justify-content: space-between; gap: 1.5rem;
+      margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .post-nav-cell {
+      display: flex; flex-direction: column; gap: 0.15rem;
+      max-width: 48%; border-bottom: none;
+    }
+    .post-nav-right { margin-left: auto; text-align: right; align-items: flex-end; }
+    .post-nav-label { font-size: 0.8rem; color: var(--muted); }
+    .post-nav-title { font-size: 1.02rem; }
+    @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Floating action buttons (share + go-to-top), bottom-right. */
+    .float-btn {
+      position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;
+      border-radius: 50%; border: 1px solid var(--border);
+      background: var(--nav-bg); color: var(--text-color); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; line-height: 1; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+      transition: opacity 0.25s ease, transform 0.15s ease; opacity: 0.85; z-index: 50;
+    }
+    .float-btn:hover { opacity: 1; transform: translateY(-2px); }
+    #share-btn { bottom: 1.5rem; }
+    #top-btn { bottom: 5rem; opacity: 0; pointer-events: none; }
+    #top-btn.show { opacity: 0.85; pointer-events: auto; }
+    #top-btn.show:hover { opacity: 1; }
+    /* Share menu: a grid of platform icons that pops up to the left of the
+       share button. */
+    .share-menu {
+      position: fixed; right: 5rem; bottom: 1.5rem; z-index: 50;
+      display: grid; grid-template-columns: repeat(2, 2.6rem); gap: 0.5rem;
+      padding: 0.6rem; border-radius: 14px;
+      background: var(--nav-bg); border: 1px solid var(--border);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+    .share-menu[hidden] { display: none; }
+    .share-opt {
+      width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--bg-color);
+      color: var(--text-color); cursor: pointer; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; opacity: 0.92;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+    .share-opt:hover { opacity: 1; transform: translateY(-2px); }
+    #share-toast {
+      position: fixed; right: 1.5rem; bottom: 8rem; z-index: 51;
+      background: var(--text-color); color: var(--bg-color);
+      padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.8rem;
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #share-toast.show { opacity: 0.95; }
+    /* WeChat QR modal. */
+    .qr-modal {
+      position: fixed; inset: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .qr-modal[hidden] { display: none; }
+    .qr-card {
+      background: var(--bg-color); color: var(--text-color);
+      padding: 1.25rem; border-radius: 14px; text-align: center;
+      border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+    .qr-card img {
+      display: block; width: 200px; height: 200px;
+      background: #fff; padding: 8px; border-radius: 8px;
+    }
+    .qr-card p { margin: 0.75rem 0; font-size: 0.85rem; color: var(--muted); }
+    .qr-close {
+      border: 1px solid var(--border); background: var(--nav-bg);
+      color: var(--text-color); border-radius: 6px; padding: 0.3rem 1rem;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    @media (max-width: 600px) {
+      .float-btn { right: 1rem; }
+      #share-btn { bottom: 1rem; }
+      #top-btn { bottom: 4.5rem; }
+      .share-menu { right: 4.5rem; bottom: 1rem; }
+      #share-toast { right: 1rem; bottom: 7.5rem; }
+    }
   </style>
   <script>
     // Keep the Utterances comment widget (if present) in sync with the theme.
@@ -229,9 +351,11 @@ SHARED_HEAD = """\
       localStorage.setItem('theme', next);
       syncUtterancesTheme(next);
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-    });
+    // Apply the saved theme synchronously, before the browser paints. This
+    // script sits in <head>, so setting data-theme here (rather than on
+    // DOMContentLoaded, which fires after the first paint) avoids the
+    // flash of light theme when navigating between pages in dark mode.
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
   </script>
 """
 
@@ -277,6 +401,127 @@ MATHJAX = """\
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 """
+
+# Font Awesome 6 (free, solid set) for the floating-button icons. Loaded only
+# on post pages, alongside FLOAT_UI.
+FONTAWESOME = (
+    '  <link rel="stylesheet" '
+    'href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" '
+    'crossorigin="anonymous" referrerpolicy="no-referrer">\n'
+)
+
+# Floating share + go-to-top buttons (post pages only). The share button opens
+# a small menu of social platforms (links built per-post from the canonical URL
+# + title); WeChat shows a scannable QR of the page; Copy falls back to the
+# clipboard. The go-to-top button fades in once the reader scrolls past the
+# fold. Platforms follow lilianweng.github.io's set (X, LinkedIn, Reddit,
+# Facebook, WhatsApp, Telegram) plus Line, WeChat, Email and Copy.
+
+# Social platforms: (label, Font Awesome icon class, intent-URL template with
+# {u}=encoded URL and {t}=encoded title). WeChat/Copy are handled in JS, not
+# here, because they don't have a simple share URL.
+SHARE_PLATFORMS = [
+    ("X", "fa-brands fa-x-twitter", "https://twitter.com/intent/tweet?url={u}&text={t}"),
+    ("LinkedIn", "fa-brands fa-linkedin-in", "https://www.linkedin.com/sharing/share-offsite/?url={u}"),
+    ("Reddit", "fa-brands fa-reddit-alien", "https://www.reddit.com/submit?url={u}&title={t}"),
+    ("Facebook", "fa-brands fa-facebook-f", "https://www.facebook.com/sharer/sharer.php?u={u}"),
+    ("WhatsApp", "fa-brands fa-whatsapp", "https://api.whatsapp.com/send?text={t}%20{u}"),
+    ("Telegram", "fa-brands fa-telegram", "https://t.me/share/url?url={u}&text={t}"),
+    ("Line", "fa-brands fa-line", "https://social-plugins.line.me/lineit/share?url={u}"),
+    ("Email", "fa-solid fa-envelope", "mailto:?subject={t}&body={u}"),
+]
+
+# Plain string (not an f-string) so the JS braces need no escaping.
+FLOAT_JS = """\
+    <script>
+      function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      function closeShareMenu() { document.getElementById('share-menu').hidden = true; }
+      function toggleShareMenu() {
+        var m = document.getElementById('share-menu');
+        m.hidden = !m.hidden;
+      }
+      function showShareToast(msg) {
+        var t = document.getElementById('share-toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(function () { t.classList.remove('show'); }, 1800);
+      }
+      function copyLink() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(location.href)
+            .then(function () { showShareToast('Link copied'); })
+            .catch(function () { showShareToast(location.href); });
+        } else {
+          showShareToast(location.href);
+        }
+        closeShareMenu();
+      }
+      function showWeChatQR() {
+        var img = document.getElementById('wechat-qr-img');
+        if (!img.getAttribute('src')) {
+          img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data='
+            + encodeURIComponent(location.href);
+        }
+        document.getElementById('wechat-qr').hidden = false;
+        closeShareMenu();
+      }
+      function hideWeChatQR() { document.getElementById('wechat-qr').hidden = true; }
+      (function () {
+        var top = document.getElementById('top-btn');
+        function onScroll() { top.classList.toggle('show', window.scrollY > 400); }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        // Close the share menu on outside click or Escape.
+        document.addEventListener('click', function (e) {
+          var wrap = document.getElementById('share-wrap');
+          var menu = document.getElementById('share-menu');
+          if (menu && !menu.hidden && wrap && !wrap.contains(e.target)) menu.hidden = true;
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') { closeShareMenu(); hideWeChatQR(); }
+        });
+        // Clicking any share option (open a network, email) also dismisses the menu.
+        document.getElementById('share-menu').addEventListener('click', function (e) {
+          if (e.target.closest('a')) this.hidden = true;
+        });
+      })();
+    </script>
+"""
+
+
+def render_float_ui(share_url: str, title: str) -> str:
+    """Floating share menu + go-to-top button for a post page."""
+    u = quote(share_url, safe="")
+    t = quote(title, safe="")
+    links = "\n".join(
+        f'        <a class="share-opt" href="{tmpl.format(u=u, t=t)}" target="_blank" '
+        f'rel="noopener noreferrer" title="Share on {label}" aria-label="Share on {label}">'
+        f'<i class="{icon}" aria-hidden="true"></i></a>'
+        for label, icon, tmpl in SHARE_PLATFORMS
+    )
+    return f"""\
+    <div id="share-wrap">
+      <div id="share-menu" class="share-menu" hidden>
+{links}
+        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat"><i class="fa-brands fa-weixin" aria-hidden="true"></i></button>
+        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+      </div>
+      <button id="share-btn" class="float-btn" onclick="toggleShareMenu()" title="Share" aria-label="Share this post" aria-haspopup="true">
+        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+      </button>
+    </div>
+    <button id="top-btn" class="float-btn" onclick="scrollToTop()" title="Go to top" aria-label="Go to top">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+    <span id="share-toast" role="status" aria-live="polite"></span>
+    <div id="wechat-qr" class="qr-modal" hidden onclick="hideWeChatQR()">
+      <div class="qr-card" onclick="event.stopPropagation()">
+        <img id="wechat-qr-img" alt="WeChat QR code" width="200" height="200">
+        <p>Scan with WeChat to open / share</p>
+        <button class="qr-close" onclick="hideWeChatQR()">Close</button>
+      </div>
+    </div>
+{FLOAT_JS}"""
 
 NAV = """\
   <div class="hero" role="banner"></div>
@@ -329,7 +574,9 @@ def parse_front_matter(text: str):
 
     Returns (meta: dict, body: str). The mini-parser handles `key: value`
     lines only — enough for title/date/description/tags without pulling in a
-    YAML dependency.
+    YAML dependency. The `update:` key is special: it may repeat, and each
+    occurrence is collected (in order) into the list `meta["updates"]`. Each
+    value is `YYYY-MM-DD | changelog text` (the `| text` part is optional).
     """
     meta = {}
     if text.startswith("---"):
@@ -342,7 +589,12 @@ def parse_front_matter(text: str):
                 if not line or line.startswith("#") or ":" not in line:
                     continue
                 key, val = line.split(":", 1)
-                meta[key.strip().lower()] = val.strip().strip('"\'')
+                key = key.strip().lower()
+                val = val.strip().strip('"\'')
+                if key == "update":
+                    meta.setdefault("updates", []).append(val)
+                else:
+                    meta[key] = val
             return meta, body
     return meta, text
 
@@ -377,7 +629,7 @@ def tidy_quotes(text: str) -> str:
         masked.append(m.group(0))
         return f"\x00{len(masked) - 1}\x00"
 
-    prot = re.compile(r"```.*?```|``.*?``|`[^`\n]*`|\$\$.*?\$\$|\$[^$\n]*\$", re.DOTALL)
+    prot = re.compile(r"```.*?```|``.*?``|`[^`\n]*`|\$\$.*?\$\$|\$[^$\n]*\$|<[^>]+>", re.DOTALL)
     text = prot.sub(_mask, text)
     text = re.sub(r'"([^"\n]*)"', "\u201c\\1\u201d", text)
     text = re.sub(r"'([^'\n]*)'", "\u2018\\1\u2019", text)
@@ -426,11 +678,98 @@ def wrap_cjk_dash(html_text: str) -> str:
         html_text)
 
 
+def add_image_dimensions(html_body: str) -> str:
+    """Add intrinsic width/height to local <img> tags that lack them.
+
+    Browsers use the attributes to reserve space before the image loads,
+    preventing layout shift (CLS). Reads sizes with Pillow; if Pillow is
+    missing or the file can't be read, the tag is left unchanged.
+    """
+    try:
+        from PIL import Image
+    except ImportError:
+        return html_body
+
+    def repl(m):
+        tag = m.group(0)
+        if "width=" in tag or "height=" in tag:
+            return tag
+        src_m = re.search(r'src="([^"]+)"', tag)
+        if not src_m:
+            return tag
+        src = src_m.group(1)
+        if src.startswith(("http://", "https://", "data:")):
+            return tag
+        try:
+            with Image.open(ROOT / src.lstrip("/")) as im:
+                w, h = im.size
+        except Exception:
+            return tag
+        return tag[:-1] + f' width="{w}" height="{h}">'
+
+    return re.sub(r"<img\b[^>]*>", repl, html_body)
+
+
 def make_excerpt(html_body: str, limit: int = 200) -> str:
     """Plain-text excerpt from rendered HTML, for the index + meta tags."""
     text = re.sub(r"<[^>]+>", "", html_body)
     text = html.unescape(re.sub(r"\s+", " ", text)).strip()
     return (text[:limit].rstrip() + "…") if len(text) > limit else text
+
+
+def pretty_date(d: str) -> str:
+    """'2026-06-16' -> 'June 16, 2026'; falls back to the raw string."""
+    try:
+        dt = datetime.datetime.strptime(d, "%Y-%m-%d")
+    except ValueError:
+        return d
+    return f'{dt.strftime("%B")} {dt.day}, {dt.year}'
+
+
+def parse_revisions(raw, write_date: str):
+    """Turn raw `update:` values into a newest-first list of (date, log) pairs.
+
+    Each raw entry is `YYYY-MM-DD | changelog text` (the log is optional).
+    Entries without a valid date, or dated on/before the write date, are
+    dropped so the history reflects genuine post-publication edits.
+    """
+    revisions = []
+    for entry in (raw or []):
+        date_part, _, log = entry.partition("|")
+        date_part = date_part.strip()
+        try:
+            datetime.datetime.strptime(date_part, "%Y-%m-%d")
+        except ValueError:
+            continue
+        if date_part <= write_date:
+            continue
+        revisions.append((date_part, log.strip()))
+    revisions.sort(key=lambda r: r[0], reverse=True)
+    return revisions
+
+
+def reading_minutes(html_body: str) -> int:
+    """Rough reading time: Latin words + CJK characters at ~200 units/min."""
+    text = html.unescape(re.sub(r"<[^>]+>", "", html_body))
+    words = len(re.findall(r"[A-Za-z0-9]+", text))
+    cjk = len(re.findall(rf"[{_CJK}]", text))
+    return max(1, round((words + cjk) / 200))
+
+
+def crumb_title(title: str, limit: int = 48) -> str:
+    """Shorten a long title for the breadcrumb, breaking on a word boundary.
+
+    The full title still appears in the page <h1> and <title>; only the
+    breadcrumb is clipped so it never crowds the theme toggle.
+    """
+    t = title.strip()
+    if len(t) <= limit:
+        return html.escape(t)
+    cut = t[:limit].rstrip()
+    sp = cut.rfind(" ")
+    if sp > limit // 2:
+        cut = cut[:sp].rstrip()
+    return html.escape(cut) + "…"
 
 
 class Post:
@@ -449,14 +788,36 @@ class Post:
                            md.convert(body), count=1, flags=re.DOTALL)
         self.html = space_han_math(self.html)
         self.html = wrap_cjk_dash(self.html)
+        self.html = add_image_dimensions(self.html)
         self.slug = slugify(meta.get("slug") or path.stem)
         self.title = meta.get("title") or first_heading(body) or path.stem
         self.date = meta.get("date") or git_date(path)
-        self.updated = max(self.date, git_date(path))  # for dateModified
+        # Revision history: repeated `update:` lines, each `DATE | log`. Parsed
+        # into (date, log) pairs, sorted newest-first, and only kept when dated
+        # after the write date (editorial intent, not git noise).
+        self.revisions = parse_revisions(meta.get("updates"), self.date)
+        # `updated` (SEO dateModified): newest declared revision, else the file's
+        # last git-commit date; never earlier than the write date.
+        newest_rev = self.revisions[0][0] if self.revisions else ""
+        self.updated = max(self.date, newest_rev or git_date(path))
         self.description = meta.get("description") or make_excerpt(self.html)
         self.lang = meta.get("lang", "en")        # content language (SEO)
         self.keywords = meta.get("keywords", "")  # optional <meta keywords>
         self.url = f"/blogs/{self.slug}.html"
+        # Optional per-post social-share cover (frontmatter `image:`,
+        # site-root-relative e.g. /docs/foo.jpg). Use a raster (JPEG/PNG) for
+        # broad scraper support (WeChat/Line dislike WebP). Falls back to the
+        # site default background. `image_alt:` overrides the alt text.
+        img = meta.get("image")
+        if img:
+            self.image = (img if img.startswith(("http://", "https://"))
+                          else f"{BASE_URL}/{img.lstrip('/')}")
+            self.image_alt = meta.get("image_alt") or self.title
+            self.image_w, self.image_h = og_image_dims(img)
+        else:
+            self.image = _OG_IMAGE
+            self.image_alt = _OG_IMAGE_ALT
+            self.image_w, self.image_h = _OG_IMAGE_W, _OG_IMAGE_H
 
 
 # --------------------------------------------------------------------------- #
@@ -465,6 +826,18 @@ class Post:
 _OG_LOCALE = {"en": "en_US", "zh": "zh_CN", "zh-cn": "zh_CN", "zh-CN": "zh_CN",
               "ja": "ja_JP"}
 _OG_IMAGE = f"{BASE_URL}/docs/background-pkalm.jpg"
+_OG_IMAGE_W, _OG_IMAGE_H = "1188", "904"
+_OG_IMAGE_ALT = "Shijie Xu — research background"
+
+
+def og_image_dims(site_path: str):
+    """(width, height) strings for a local site-root image, ('','') if unknown."""
+    try:
+        from PIL import Image
+        with Image.open(ROOT / site_path.lstrip("/")) as im:
+            return str(im.size[0]), str(im.size[1])
+    except Exception:
+        return "", ""
 
 
 def jsonld_script(obj: dict) -> str:
@@ -476,8 +849,11 @@ def jsonld_script(obj: dict) -> str:
 def page(title: str, description: str, nav_breadcrumb: str, body: str,
          canonical: str, *, lang: str = "en", og_type: str = "website",
          keywords: str = "", published: str = "", jsonld: dict = None,
-         extra_head: str = "") -> str:
+         extra_head: str = "", image: str = _OG_IMAGE,
+         image_w: str = _OG_IMAGE_W, image_h: str = _OG_IMAGE_H,
+         image_alt: str = _OG_IMAGE_ALT) -> str:
     t, d = html.escape(title), html.escape(description)
+    img, img_alt = html.escape(image), html.escape(image_alt)
     locale = _OG_LOCALE.get(lang, "en_US")
     head = [
         f'  <title>{t}</title>',
@@ -493,11 +869,15 @@ def page(title: str, description: str, nav_breadcrumb: str, body: str,
         f'  <meta property="og:title" content="{t}">',
         f'  <meta property="og:description" content="{d}">',
         f'  <meta property="og:url" content="{canonical}">',
-        f'  <meta property="og:image" content="{_OG_IMAGE}">',
+        f'  <meta property="og:image" content="{img}">',
+        *([f'  <meta property="og:image:width" content="{image_w}">',
+           f'  <meta property="og:image:height" content="{image_h}">'] if image_w and image_h else []),
+        f'  <meta property="og:image:alt" content="{img_alt}">',
         '  <meta name="twitter:card" content="summary_large_image">',
         f'  <meta name="twitter:title" content="{t}">',
         f'  <meta name="twitter:description" content="{d}">',
-        f'  <meta name="twitter:image" content="{_OG_IMAGE}">',
+        f'  <meta name="twitter:image" content="{img}">',
+        f'  <meta name="twitter:image:alt" content="{img_alt}">',
     ]
     if keywords:
         head.insert(3, f'  <meta name="keywords" content="{html.escape(keywords)}">')
@@ -562,22 +942,72 @@ def render_index(posts) -> str:
                 og_type="website", jsonld=blog_ld)
 
 
-def render_post(p: Post) -> str:
+def post_nav(older, newer) -> str:
+    """Bottom-of-post links to the chronologically adjacent posts.
+
+    Posts are ordered newest-first, so `older` reads left (back in time) and
+    `newer` reads right. Either side may be absent (first/last post); the
+    empty cell still anchors the present one to its edge via space-between.
+    """
+    if not older and not newer:
+        return ""
+
+    def cell(post, side, label):
+        if not post:
+            return '<span class="post-nav-cell"></span>'
+        arrow = "←" if side == "left" else "→"
+        lbl = f"{arrow} {label}" if side == "left" else f"{label} {arrow}"
+        return (f'<a class="post-nav-cell post-nav-{side}" href="{post.url}">'
+                f'<span class="post-nav-label">{lbl}</span>'
+                f'<span class="post-nav-title">{html.escape(post.title)}</span></a>')
+
+    return (f'    <nav class="post-nav" aria-label="Adjacent posts">'
+            f'{cell(older, "left", "Older post")}'
+            f'{cell(newer, "right", "Newer post")}'
+            f'</nav>\n')
+
+
+def render_article_meta(p: Post, meta_line: str) -> str:
+    """The byline block. Plain when the post has no revisions; a collapsible
+    `<details>` (summary = byline, body = revision log) when it does."""
+    if not p.revisions:
+        return f'      <div class="article-meta">{meta_line}</div>'
+    items = "\n".join(
+        f'          <li><time datetime="{d}">{pretty_date(d)}</time>'
+        f'{(" — " + html.escape(log)) if log else ""}</li>'
+        for d, log in p.revisions
+    )
+    return f"""\
+      <details class="article-meta revisions">
+        <summary title="Revision history">{meta_line}</summary>
+        <ul class="rev-log">
+{items}
+        </ul>
+      </details>"""
+
+
+def render_post(p: Post, older: "Post" = None, newer: "Post" = None) -> str:
+    meta_line = (
+        f'Date: <time datetime="{p.date}">{pretty_date(p.date)}</time>'
+        f' | Estimated Reading Time: {reading_minutes(p.html)} min'
+        ' | Author: Shijie Xu'
+    )
+    meta_html = render_article_meta(p, meta_line)
     body = f"""\
     <article>
       <h1>{html.escape(p.title)}</h1>
-      <div class="article-meta"><time datetime="{p.date}">{p.date}</time></div>
+{meta_html}
 {p.html}
     </article>
-    <p style="margin-top:3rem;"><a href="/blogs/">← All posts</a></p>
-{COMMENTS}"""
+{post_nav(older, newer)}    <p style="margin-top:2rem;"><a href="/blogs/">← All posts</a></p>
+{COMMENTS}{render_float_ui(f"{BASE_URL}{p.url}", p.title)}"""
     breadcrumb = (
         '<span style="margin-right:0.75rem;">&gt;</span>'
         '<a href="/">Home</a>'
         '<span style="margin:0 0.75rem;">&gt;</span>'
         '<a href="/blogs/">Blog</a>'
         '<span style="margin:0 0.75rem;">&gt;</span>'
-        f'<span style="font-weight:700;">{html.escape(p.title)}</span>'
+        f'<span style="font-weight:700;" title="{html.escape(p.title)}">{crumb_title(p.title)}</span>'
     )
     post_ld = {
         "@context": "https://schema.org",
@@ -590,13 +1020,15 @@ def render_post(p: Post) -> str:
         "author": {"@type": "Person", "name": "Shijie Xu", "url": f"{BASE_URL}/"},
         "publisher": {"@type": "Person", "name": "Shijie Xu", "url": f"{BASE_URL}/"},
         "mainEntityOfPage": {"@type": "WebPage", "@id": f"{BASE_URL}{p.url}"},
-        "image": _OG_IMAGE,
+        "image": p.image,
         "url": f"{BASE_URL}{p.url}",
     }
     return page(f"{p.title} — Shijie Xu", p.description, breadcrumb, body,
                 f"{BASE_URL}{p.url}", lang=p.lang, og_type="article",
                 keywords=p.keywords, published=p.date, jsonld=post_ld,
-                extra_head=MATHJAX)
+                extra_head=MATHJAX + FONTAWESOME,
+                image=p.image, image_w=p.image_w, image_h=p.image_h,
+                image_alt=p.image_alt)
 
 
 def render_feed(posts) -> str:
@@ -640,8 +1072,12 @@ def main() -> None:
         if old.name not in keep:
             old.unlink()
 
-    for p in posts:
-        (BLOGS_DIR / f"{p.slug}.html").write_text(render_post(p), encoding="utf-8")
+    # posts is newest-first: index i-1 is newer, i+1 is older.
+    for i, p in enumerate(posts):
+        newer = posts[i - 1] if i > 0 else None
+        older = posts[i + 1] if i + 1 < len(posts) else None
+        (BLOGS_DIR / f"{p.slug}.html").write_text(
+            render_post(p, older=older, newer=newer), encoding="utf-8")
     (BLOGS_DIR / "index.html").write_text(render_index(posts), encoding="utf-8")
     (BLOGS_DIR / "feed.xml").write_text(render_feed(posts), encoding="utf-8")
 

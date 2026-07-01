@@ -14,11 +14,15 @@
   <meta property="og:description" content="Posts by Shijie Xu on bioinformatics, computational chemistry, deep learning, and mathematics.">
   <meta property="og:url" content="https://xu-shi-jie.github.io/blogs/">
   <meta property="og:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
+  <meta property="og:image:width" content="1188">
+  <meta property="og:image:height" content="904">
+  <meta property="og:image:alt" content="Shijie Xu — research background">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Blog — Shijie Xu">
   <meta name="twitter:description" content="Posts by Shijie Xu on bioinformatics, computational chemistry, deep learning, and mathematics.">
   <meta name="twitter:image" content="https://xu-shi-jie.github.io/docs/background-pkalm.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Shijie Xu — Blog","url":"https://xu-shi-jie.github.io/blogs/","author":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"blogPost":[{"@type":"BlogPosting","headline":"2026 年高考数学压轴题：函数与集合 D(x₀)","url":"https://xu-shi-jie.github.io/blogs/2026-gaokao-math.html","datePublished":"2026-06-08","inLanguage":"zh-CN"}]}</script>
+  <meta name="twitter:image:alt" content="Shijie Xu — research background">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Shijie Xu — Blog","url":"https://xu-shi-jie.github.io/blogs/","author":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"blogPost":[{"@type":"BlogPosting","headline":"2026 年高考数学压轴题：函数与集合 D(x₀)","url":"https://xu-shi-jie.github.io/blogs/2026-06-08-gaokao-math.html","datePublished":"2026-06-08","inLanguage":"zh-CN"}]}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +61,7 @@
     .hero {
       width: 100%;
       height: 120px;
-      background-image: url('/docs/background-pkalm.jpg');
+      background-image: url('/docs/background-pkalm.webp');
       background-size: cover;
       background-position: center;
     }
@@ -75,8 +79,15 @@
     }
     .breadcrumb-content {
       padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      /* Fill the row (minus the toggle) and clip a long post title with an
+         ellipsis instead of letting it collide with the theme button. */
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); flex: 0 0 auto; }
     @media (max-width: 600px) {
       .breadcrumb-content { padding-left: 1rem; }
       .breadcrumb-nav button { padding-right: 1rem; }
@@ -139,6 +150,20 @@
     article h2 { font-size: 1.7rem; margin-top: 2rem; }
     article h3 { font-size: 1.3rem; margin-top: 1.5rem; }
     article img { max-width: 100%; height: auto; }
+    article video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+    article figure { margin: 1.5rem 0; }
+    article figure img { display: block; margin: 0 auto; }
+    article figcaption {
+      font-size: 0.8rem; line-height: 1.5; color: var(--muted);
+      margin-top: 0.6rem;
+    }
+    /* Footnotes / references — small, muted, Wikipedia-style endnotes. */
+    article .footnote { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; }
+    article .footnote hr { display: none; }
+    article .footnote ol { padding-left: 1.2rem; }
+    article .footnote li { margin: 0.35rem 0; }
+    article .footnote li::marker { color: var(--muted); }
+    sup.footnote-ref a, .footnote-backref { border-bottom: none; }
     /* Left-aligned, not justified: with CJK text + inline formulas, justify
        stretches the spaces around math into large ugly gaps. */
     article p { text-align: left; }
@@ -160,6 +185,106 @@
     article th, article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
     article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
     .article-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    /* Collapsible byline: closed shows the summary line, open reveals the
+       revision log. Multiple history entries are supported. */
+    details.article-meta > summary {
+      cursor: pointer; list-style: none; display: inline;
+    }
+    details.article-meta > summary::-webkit-details-marker { display: none; }
+    details.article-meta > summary::after {
+      content: "▾"; margin-left: 0.35rem; font-size: 0.75rem;
+      display: inline-block; transition: transform 0.15s;
+    }
+    details.article-meta[open] > summary::after { transform: rotate(180deg); }
+    .article-meta .rev-log {
+      list-style: none; margin: 0.75rem 0 0; padding: 0.75rem 0 0 0;
+      border-top: 1px solid rgba(128,128,128,0.2);
+    }
+    .article-meta .rev-log li { margin: 0 0 0.4rem; line-height: 1.5; }
+    .article-meta .rev-log time { font-weight: 700; color: var(--text-color); opacity: 0.85; }
+    /* Previous / next post navigation (older reads left, newer right). */
+    .post-nav {
+      display: flex; justify-content: space-between; gap: 1.5rem;
+      margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .post-nav-cell {
+      display: flex; flex-direction: column; gap: 0.15rem;
+      max-width: 48%; border-bottom: none;
+    }
+    .post-nav-right { margin-left: auto; text-align: right; align-items: flex-end; }
+    .post-nav-label { font-size: 0.8rem; color: var(--muted); }
+    .post-nav-title { font-size: 1.02rem; }
+    @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Floating action buttons (share + go-to-top), bottom-right. */
+    .float-btn {
+      position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;
+      border-radius: 50%; border: 1px solid var(--border);
+      background: var(--nav-bg); color: var(--text-color); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; line-height: 1; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+      transition: opacity 0.25s ease, transform 0.15s ease; opacity: 0.85; z-index: 50;
+    }
+    .float-btn:hover { opacity: 1; transform: translateY(-2px); }
+    #share-btn { bottom: 1.5rem; }
+    #top-btn { bottom: 5rem; opacity: 0; pointer-events: none; }
+    #top-btn.show { opacity: 0.85; pointer-events: auto; }
+    #top-btn.show:hover { opacity: 1; }
+    /* Share menu: a grid of platform icons that pops up to the left of the
+       share button. */
+    .share-menu {
+      position: fixed; right: 5rem; bottom: 1.5rem; z-index: 50;
+      display: grid; grid-template-columns: repeat(2, 2.6rem); gap: 0.5rem;
+      padding: 0.6rem; border-radius: 14px;
+      background: var(--nav-bg); border: 1px solid var(--border);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+    .share-menu[hidden] { display: none; }
+    .share-opt {
+      width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--bg-color);
+      color: var(--text-color); cursor: pointer; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; opacity: 0.92;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+    .share-opt:hover { opacity: 1; transform: translateY(-2px); }
+    #share-toast {
+      position: fixed; right: 1.5rem; bottom: 8rem; z-index: 51;
+      background: var(--text-color); color: var(--bg-color);
+      padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.8rem;
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #share-toast.show { opacity: 0.95; }
+    /* WeChat QR modal. */
+    .qr-modal {
+      position: fixed; inset: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .qr-modal[hidden] { display: none; }
+    .qr-card {
+      background: var(--bg-color); color: var(--text-color);
+      padding: 1.25rem; border-radius: 14px; text-align: center;
+      border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+    .qr-card img {
+      display: block; width: 200px; height: 200px;
+      background: #fff; padding: 8px; border-radius: 8px;
+    }
+    .qr-card p { margin: 0.75rem 0; font-size: 0.85rem; color: var(--muted); }
+    .qr-close {
+      border: 1px solid var(--border); background: var(--nav-bg);
+      color: var(--text-color); border-radius: 6px; padding: 0.3rem 1rem;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    @media (max-width: 600px) {
+      .float-btn { right: 1rem; }
+      #share-btn { bottom: 1rem; }
+      #top-btn { bottom: 4.5rem; }
+      .share-menu { right: 4.5rem; bottom: 1rem; }
+      #share-toast { right: 1rem; bottom: 7.5rem; }
+    }
   </style>
   <script>
     // Keep the Utterances comment widget (if present) in sync with the theme.
@@ -177,9 +302,11 @@
       localStorage.setItem('theme', next);
       syncUtterancesTheme(next);
     }
-    document.addEventListener('DOMContentLoaded', () => {
-      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
-    });
+    // Apply the saved theme synchronously, before the browser paints. This
+    // script sits in <head>, so setting data-theme here (rather than on
+    // DOMContentLoaded, which fires after the first paint) avoids the
+    // flash of light theme when navigating between pages in dark mode.
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
   </script>
 </head>
 <body>
@@ -196,7 +323,7 @@
     <ul class="post-list">
       <li>
         <time class="post-date" datetime="2026-06-08">2026-06-08</time>
-        <a href="/blogs/2026-gaokao-math.html">2026 年高考数学压轴题：函数与集合 D(x₀)</a>
+        <a href="/blogs/2026-06-08-gaokao-math.html">2026 年高考数学压轴题：函数与集合 D(x₀)</a>
       </li>
     </ul>
   </div>
