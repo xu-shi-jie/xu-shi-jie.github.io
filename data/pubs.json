@@ -1,6 +1,35 @@
 [
   {
     "paper_title": {
+      "en": "Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations",
+      "ja": ""
+    },
+    "authors": {
+      "en": [
+        { "name": "Shijie Xu" },
+        { "name": "Akira Onoda*" }
+      ],
+      "ja": []
+    },
+    "publication_name": { "en": "Nature Communications", "ja": "" },
+    "publisher": { "en": "", "ja": "" },
+    "volume": "",
+    "number": "",
+    "starting_page": "",
+    "ending_page": "",
+    "publication_date": "2026",
+    "identifiers": { "doi": ["10.1038/s41467-026-74657-x"] },
+    "published_paper_type": "scientific_journal",
+    "referee": true,
+    "invited": false,
+    "is_international_journal": true,
+    "in_press": false,
+    "languages": ["eng"],
+    "is_referenced_by_count": 0,
+    "others": {}
+  },
+  {
+    "paper_title": {
       "en": "Accurate Prediction of Enzymatic Degradation of Plastics by Language Models",
       "ja": ""
     },
@@ -24,35 +53,6 @@
     "referee": true,
     "invited": false,
     "is_international_journal": true,
-    "languages": ["eng"],
-    "is_referenced_by_count": 0,
-    "others": {}
-  },
-  {
-    "paper_title": {
-      "en": "Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations",
-      "ja": ""
-    },
-    "authors": {
-      "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Akira Onoda*" }
-      ],
-      "ja": []
-    },
-    "publication_name": { "en": "Nature Communications", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
-    "volume": "",
-    "number": "",
-    "starting_page": "",
-    "ending_page": "",
-    "publication_date": "2026",
-    "identifiers": { "doi": ["10.1101/2025.10.04.680417"] },
-    "published_paper_type": "scientific_journal",
-    "referee": true,
-    "invited": false,
-    "is_international_journal": true,
-    "in_press": true,
     "languages": ["eng"],
     "is_referenced_by_count": 0,
     "others": {}

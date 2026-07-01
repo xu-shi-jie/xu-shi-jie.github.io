@@ -52,9 +52,13 @@ jobs:
           cd data/
           python3 update_citations.py
 
+      - name: Render publications into index.html (static SEO)
+        run: |
+          python3 data/render_pubs.py
+
       - name: Build blog (posts/ -> blogs/)
         run: |
-          pip install --quiet markdown pymdown-extensions
+          pip install --quiet markdown pymdown-extensions Pillow
           python3 data/build_blog.py
 
       - name: Update sitemap (SEO metadata)
