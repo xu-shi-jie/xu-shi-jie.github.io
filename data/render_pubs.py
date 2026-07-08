@@ -55,6 +55,37 @@ def authors_html(people):
     return ", ".join(out)
 
 
+def tc_badge_html(total, by_year):
+    """'TC: N' badge; with a hover per-year bar chart when citations_by_year exists.
+
+    Mirrors the tcBadge() JS in index.html so the static (SEO) render and the
+    client-side render produce identical markup.
+    """
+    years = sorted(int(y) for y in (by_year or {}) if str(y).isdigit())
+    if not years:
+        return f'<span class="tc">TC: {total}</span>'
+    counts = {int(y): int(c) for y, c in by_year.items() if str(y).isdigit()}
+    mx = max(counts.values()) or 1
+    bars, aria = [], []
+    for y in range(years[0], years[-1] + 1):
+        n = counts.get(y, 0)
+        h = max(round(n / mx * 100), 8) if n else 0
+        cnt = f'<span class="tc-cnt">{n}</span>' if n else ""
+        bars.append(
+            f'<span class="tc-bar" style="height:{h}%" title="{y}: {n}">'
+            f'{cnt}<span class="tc-yr">’{str(y)[2:]}</span></span>'
+        )
+        if n:
+            aria.append(f"{y}: {n}")
+    aria_txt = html.escape("Citations per year — " + ", ".join(aria))
+    return (
+        f'<span class="tc" tabindex="0">TC: {total}'
+        f'<span class="tc-pop" role="img" aria-label="{aria_txt}">'
+        f'<span class="tc-pop-h">Citations per year</span>'
+        f'<span class="tc-plot">{"".join(bars)}</span></span></span>'
+    )
+
+
 def render_li(p, journals):
     journal_name = lang(p.get("publication_name"))
     dois = (p.get("identifiers") or {}).get("doi") or []
@@ -100,16 +131,17 @@ def render_li(p, journals):
         )
         parts.append(f'<span style="margin-left:0.5rem">({links})</span>')
 
-    # citation count / impact factor
+    # citation count (with hover per-year chart) / impact factor
     tc = p.get("is_referenced_by_count")
+    by_year = p.get("citations_by_year") or {}
     jf = (journals.get(journal_name) or {}).get("impact factor")
     badges = []
     if isinstance(tc, int) and tc > 0:
-        badges.append(f"TC: {tc}")
+        badges.append(tc_badge_html(tc, by_year))
     if jf:
-        badges.append(f"IF: {jf}")
+        badges.append(f"IF: {html.escape(str(jf))}")
     if badges:
-        parts.append(f'<span style="margin-left:0.5rem;opacity:0.8">({html.escape(", ".join(badges))})</span>')
+        parts.append(f'<span class="pub-badges" style="margin-left:0.5rem">({", ".join(badges)})</span>')
 
     return "      <li>" + "".join(parts) + "</li>"
 

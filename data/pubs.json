@@ -6,27 +6,44 @@
     },
     "authors": {
       "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Akira Onoda*" }
+        {
+          "name": "Shijie Xu"
+        },
+        {
+          "name": "Akira Onoda*"
+        }
       ],
       "ja": []
     },
-    "publication_name": { "en": "Nature Communications", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
+    "publication_name": {
+      "en": "Nature Communications",
+      "ja": ""
+    },
+    "publisher": {
+      "en": "",
+      "ja": ""
+    },
     "volume": "",
     "number": "",
     "starting_page": "",
     "ending_page": "",
     "publication_date": "2026",
-    "identifiers": { "doi": ["10.1038/s41467-026-74657-x"] },
+    "identifiers": {
+      "doi": [
+        "10.1038/s41467-026-74657-x"
+      ]
+    },
     "published_paper_type": "scientific_journal",
     "referee": true,
     "invited": false,
     "is_international_journal": true,
     "in_press": false,
-    "languages": ["eng"],
+    "languages": [
+      "eng"
+    ],
     "is_referenced_by_count": 0,
-    "others": {}
+    "others": {},
+    "citations_by_year": {}
   },
   {
     "paper_title": {
@@ -35,27 +52,46 @@
     },
     "authors": {
       "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Ke Xu" },
-        { "name": "Akira Onoda*" }
+        {
+          "name": "Shijie Xu"
+        },
+        {
+          "name": "Ke Xu"
+        },
+        {
+          "name": "Akira Onoda*"
+        }
       ],
       "ja": []
     },
-    "publication_name": { "en": "Chemistry Letters", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
+    "publication_name": {
+      "en": "Chemistry Letters",
+      "ja": ""
+    },
+    "publisher": {
+      "en": "",
+      "ja": ""
+    },
     "volume": "55",
     "number": "2",
     "starting_page": "upag022",
     "ending_page": "",
     "publication_date": "2026",
-    "identifiers": { "doi": ["10.1093/chemle/upag022"] },
+    "identifiers": {
+      "doi": [
+        "10.1093/chemle/upag022"
+      ]
+    },
     "published_paper_type": "scientific_journal",
     "referee": true,
     "invited": false,
     "is_international_journal": true,
-    "languages": ["eng"],
+    "languages": [
+      "eng"
+    ],
     "is_referenced_by_count": 0,
-    "others": {}
+    "others": {},
+    "citations_by_year": {}
   },
   {
     "paper_title": {
@@ -64,26 +100,46 @@
     },
     "authors": {
       "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Akira Onoda*" }
+        {
+          "name": "Shijie Xu"
+        },
+        {
+          "name": "Akira Onoda*"
+        }
       ],
       "ja": []
     },
-    "publication_name": { "en": "Journal of Chemical Theory and Computation", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
+    "publication_name": {
+      "en": "Journal of Chemical Theory and Computation",
+      "ja": ""
+    },
+    "publisher": {
+      "en": "",
+      "ja": ""
+    },
     "volume": "21",
     "number": "7",
     "starting_page": "3752",
     "ending_page": "3764",
     "publication_date": "2025",
-    "identifiers": { "doi": ["10.1021/acs.jctc.4c01288"] },
+    "identifiers": {
+      "doi": [
+        "10.1021/acs.jctc.4c01288"
+      ]
+    },
     "published_paper_type": "scientific_journal",
     "referee": true,
     "invited": false,
     "is_international_journal": true,
-    "languages": ["eng"],
+    "languages": [
+      "eng"
+    ],
     "is_referenced_by_count": 5,
-    "others": {}
+    "others": {},
+    "citations_by_year": {
+      "2026": 4,
+      "2025": 1
+    }
   },
   {
     "paper_title": {
@@ -92,30 +148,47 @@
     },
     "authors": {
       "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Akira Onoda*" }
+        {
+          "name": "Shijie Xu"
+        },
+        {
+          "name": "Akira Onoda*"
+        }
       ],
       "ja": []
     },
-    "publication_name": { "en": "Journal of Molecular Evolution", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
+    "publication_name": {
+      "en": "Journal of Molecular Evolution",
+      "ja": ""
+    },
+    "publisher": {
+      "en": "",
+      "ja": ""
+    },
     "volume": "92",
     "number": "",
     "starting_page": "874",
     "ending_page": "890",
     "publication_date": "2024",
-    "identifiers": { "doi": ["10.1007/s00239-024-10215-7"] },
+    "identifiers": {
+      "doi": [
+        "10.1007/s00239-024-10215-7"
+      ]
+    },
     "published_paper_type": "scientific_journal",
     "referee": true,
     "invited": false,
     "is_international_journal": true,
-    "languages": ["eng"],
+    "languages": [
+      "eng"
+    ],
     "is_referenced_by_count": 0,
     "others": {
       "プレスリリース": "https://www.hokudai.ac.jp/news/2024/12/post-1700.html",
       "Press release": "https://www.global.hokudai.ac.jp/blog/streamlining-genetic-analysis-for-phylogenetic-studies/",
       "Video": "https://vimeo.com/1042840720?share=copy"
-    }
+    },
+    "citations_by_year": {}
   },
   {
     "paper_title": {
@@ -124,25 +197,46 @@
     },
     "authors": {
       "en": [
-        { "name": "Shijie Xu" },
-        { "name": "Akira Onoda*" }
+        {
+          "name": "Shijie Xu"
+        },
+        {
+          "name": "Akira Onoda*"
+        }
       ],
       "ja": []
     },
-    "publication_name": { "en": "Journal of Chemical Information and Modeling", "ja": "" },
-    "publisher": { "en": "", "ja": "" },
+    "publication_name": {
+      "en": "Journal of Chemical Information and Modeling",
+      "ja": ""
+    },
+    "publisher": {
+      "en": "",
+      "ja": ""
+    },
     "volume": "64",
     "number": "7",
     "starting_page": "2901",
     "ending_page": "2911",
     "publication_date": "2024",
-    "identifiers": { "doi": ["10.1021/acs.jcim.3c01202"] },
+    "identifiers": {
+      "doi": [
+        "10.1021/acs.jcim.3c01202"
+      ]
+    },
     "published_paper_type": "scientific_journal",
     "referee": true,
     "invited": false,
     "is_international_journal": true,
-    "languages": ["eng"],
+    "languages": [
+      "eng"
+    ],
     "is_referenced_by_count": 25,
-    "others": {}
+    "others": {},
+    "citations_by_year": {
+      "2026": 4,
+      "2025": 16,
+      "2024": 5
+    }
   }
 ]
