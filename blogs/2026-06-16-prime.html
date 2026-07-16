@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>How does a protein catch a metal? Teaching a computer to find the spot — in seconds — Shijie Xu</title>
+  <meta name="description" content="How PRIME, our deep-learning method, finds protein metal-binding sites by scattering virtual probes — accurate across 14 metal ions, in ~11 seconds each.">
+  <meta name="author" content="Shijie Xu">
+  <meta name="keywords" content="PRIME, metal-binding sites, deep learning, protein language model, ESM, AlphaFold, metalloproteins, structural biology, bioinformatics, Shijie Xu">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html">
+  <link rel="alternate" type="application/atom+xml" title="Shijie Xu — Blog" href="https://xu-shi-jie.github.io/blogs/feed.xml">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Shijie Xu">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="How does a protein catch a metal? Teaching a computer to find the spot — in seconds — Shijie Xu">
+  <meta property="og:description" content="How PRIME, our deep-learning method, finds protein metal-binding sites by scattering virtual probes — accurate across 14 metal ions, in ~11 seconds each.">
+  <meta property="og:url" content="https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html">
+  <meta property="og:image" content="https://xu-shi-jie.github.io/docs/prime-kcsa-og.jpg">
+  <meta property="og:image:width" content="1600">
+  <meta property="og:image:height" content="800">
+  <meta property="og:image:alt" content="PRIME predicts the column of potassium ions threading the KcsA channel selectivity filter.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How does a protein catch a metal? Teaching a computer to find the spot — in seconds — Shijie Xu">
+  <meta name="twitter:description" content="How PRIME, our deep-learning method, finds protein metal-binding sites by scattering virtual probes — accurate across 14 metal ions, in ~11 seconds each.">
+  <meta name="twitter:image" content="https://xu-shi-jie.github.io/docs/prime-kcsa-og.jpg">
+  <meta name="twitter:image:alt" content="PRIME predicts the column of potassium ions threading the KcsA channel selectivity filter.">
+  <meta property="article:published_time" content="2026-06-16">
+  <meta property="article:author" content="Shijie Xu">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"How does a protein catch a metal? Teaching a computer to find the spot — in seconds","description":"How PRIME, our deep-learning method, finds protein metal-binding sites by scattering virtual probes — accurate across 14 metal ions, in ~11 seconds each.","datePublished":"2026-06-16","dateModified":"2026-06-30","inLanguage":"en","author":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"publisher":{"@type":"Person","name":"Shijie Xu","url":"https://xu-shi-jie.github.io/"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html"},"image":"https://xu-shi-jie.github.io/docs/prime-kcsa-og.jpg","url":"https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html"}</script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    :root {
+      --text-color: #222;
+      --bg-color: #fff;
+      --link-color: #0645ad;
+      --nav-bg: #fafafa;
+      --code-bg: #f5f5f5;
+      --border: rgba(0, 0, 0, 0.1);
+      --muted: #888;
+    }
+    [data-theme="dark"] {
+      --text-color: #eee;
+      --bg-color: #1a1a1a;
+      --link-color: #6ea8fe;
+      --nav-bg: #252525;
+      --code-bg: #2a2a2a;
+      --border: rgba(255, 255, 255, 0.1);
+      --muted: #999;
+    }
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, segoe ui, Oxygen, Ubuntu, Cantarell, open sans, helvetica neue, sans-serif;
+      font-size: 18px;
+      margin: 0 auto;
+      line-height: 1.6;
+      color: var(--text-color);
+      background: var(--bg-color);
+      transition: color 0.3s, background-color 0.3s;
+    }
+    .hero {
+      width: 100%;
+      height: 120px;
+      background-image: url('/docs/background-pkalm.webp');
+      background-size: cover;
+      background-position: center;
+    }
+    .breadcrumb-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+      padding: 0.25rem 0;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--border);
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .breadcrumb-content {
+      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      /* Fill the row (minus the toggle) and clip a long post title with an
+         ellipsis instead of letting it collide with the theme button. */
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); flex: 0 0 auto; }
+    @media (max-width: 600px) {
+      .breadcrumb-content { padding-left: 1rem; }
+      .breadcrumb-nav button { padding-right: 1rem; }
+    }
+    .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+      border-bottom: 1px solid var(--text-color);
+      opacity: 0.8;
+      transition: opacity 0.2s ease;
+    }
+    a:hover { opacity: 1; }
+    .theme-toggle {
+      background: none; border: none; padding: 0; cursor: pointer;
+      color: var(--text-color); width: 2rem; height: 2rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theme-toggle img {
+      width: 24px; height: 24px;
+      transition: filter 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .theme-toggle .moon {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(0.9);
+    }
+    .theme-toggle .sun { display: none; }
+    .theme-toggle:hover .moon {
+      filter: brightness(0) saturate(100%) invert(45%) sepia(90%) saturate(600%) hue-rotate(180deg) brightness(1.1) drop-shadow(0 0 4px #3399cc) drop-shadow(0 0 8px #3399cc);
+      transform: scale(1.1);
+    }
+    [data-theme="dark"] .theme-toggle .moon { display: none; }
+    [data-theme="dark"] .theme-toggle .sun {
+      display: block;
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(0.95);
+    }
+    [data-theme="dark"] .theme-toggle:hover .sun {
+      filter: brightness(0) saturate(100%) invert(55%) sepia(90%) saturate(600%) hue-rotate(360deg) brightness(1.1) drop-shadow(0 0 4px #dd8822) drop-shadow(0 0 8px #dd8822);
+      transform: scale(1.1);
+    }
+
+    /* Post list (index) — simple date + title directory */
+    .post-list { list-style: none; padding: 0; }
+    .post-list li {
+      display: flex; gap: 1rem; align-items: baseline;
+      padding: 0.4rem 0; border-bottom: 1px solid var(--border);
+    }
+    .post-date {
+      color: var(--muted); font-size: 0.9rem;
+      font-variant-numeric: tabular-nums; white-space: nowrap;
+      flex: 0 0 6.5rem;
+    }
+    .post-list a { border-bottom: none; font-size: 1.05rem; }
+    @media (max-width: 480px) {
+      .post-list li { flex-direction: column; gap: 0.1rem; }
+    }
+
+    /* Article body */
+    article h1 { font-size: 2.4rem; margin: 0 0 0.25rem; line-height: 1.2; }
+    article h2 { font-size: 1.7rem; margin-top: 2rem; }
+    article h3 { font-size: 1.3rem; margin-top: 1.5rem; }
+    article img { max-width: 100%; height: auto; }
+    article video { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+    article figure { margin: 1.5rem 0; }
+    article figure img { display: block; margin: 0 auto; }
+    article figcaption {
+      font-size: 0.8rem; line-height: 1.5; color: var(--muted);
+      margin-top: 0.6rem;
+    }
+    /* Footnotes / references — small, muted, Wikipedia-style endnotes. */
+    article .footnote { font-size: 0.8rem; color: var(--muted); margin-top: 1rem; }
+    article .footnote hr { display: none; }
+    article .footnote ol { padding-left: 1.2rem; }
+    article .footnote li { margin: 0.35rem 0; }
+    article .footnote li::marker { color: var(--muted); }
+    sup.footnote-ref a, .footnote-backref { border-bottom: none; }
+    /* Left-aligned, not justified: with CJK text + inline formulas, justify
+       stretches the spaces around math into large ugly gaps. */
+    article p { text-align: left; }
+    article blockquote {
+      margin: 1rem 0; padding: 0.25rem 1rem;
+      border-left: 3px solid var(--border); color: var(--muted);
+    }
+    article pre {
+      background: var(--code-bg); padding: 1rem; border-radius: 6px;
+      overflow-x: auto; font-size: 0.85rem;
+    }
+    article code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      background: var(--code-bg); padding: 0.1rem 0.35rem; border-radius: 4px;
+      font-size: 0.85em;
+    }
+    article pre code { background: none; padding: 0; }
+    article table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+    article th, article td { border: 1px solid var(--border); padding: 0.4rem 0.6rem; }
+    article hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .article-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+    /* Collapsible byline: closed shows the summary line, open reveals the
+       revision log. Multiple history entries are supported. */
+    details.article-meta > summary {
+      cursor: pointer; list-style: none; display: inline;
+    }
+    details.article-meta > summary::-webkit-details-marker { display: none; }
+    details.article-meta > summary::after {
+      content: "▾"; margin-left: 0.35rem; font-size: 0.75rem;
+      display: inline-block; transition: transform 0.15s;
+    }
+    details.article-meta[open] > summary::after { transform: rotate(180deg); }
+    .article-meta .rev-log {
+      list-style: none; margin: 0.75rem 0 0; padding: 0.75rem 0 0 0;
+      border-top: 1px solid rgba(128,128,128,0.2);
+    }
+    .article-meta .rev-log li { margin: 0 0 0.4rem; line-height: 1.5; }
+    .article-meta .rev-log time { font-weight: 700; color: var(--text-color); opacity: 0.85; }
+    /* Previous / next post navigation (older reads left, newer right). */
+    .post-nav {
+      display: flex; justify-content: space-between; gap: 1.5rem;
+      margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+    }
+    .post-nav-cell {
+      display: flex; flex-direction: column; gap: 0.15rem;
+      max-width: 48%; border-bottom: none;
+    }
+    .post-nav-right { margin-left: auto; text-align: right; align-items: flex-end; }
+    .post-nav-label { font-size: 0.8rem; color: var(--muted); }
+    .post-nav-title { font-size: 1.02rem; }
+    @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Floating action buttons (share + go-to-top), bottom-right. */
+    .float-btn {
+      position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;
+      border-radius: 50%; border: 1px solid var(--border);
+      background: var(--nav-bg); color: var(--text-color); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; line-height: 1; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+      transition: opacity 0.25s ease, transform 0.15s ease; opacity: 0.85; z-index: 50;
+    }
+    .float-btn:hover { opacity: 1; transform: translateY(-2px); }
+    #share-btn { bottom: 1.5rem; }
+    #top-btn { bottom: 5rem; opacity: 0; pointer-events: none; }
+    #top-btn.show { opacity: 0.85; pointer-events: auto; }
+    #top-btn.show:hover { opacity: 1; }
+    /* Share menu: a grid of platform icons that pops up to the left of the
+       share button. */
+    .share-menu {
+      position: fixed; right: 5rem; bottom: 1.5rem; z-index: 50;
+      display: grid; grid-template-columns: repeat(2, 2.6rem); gap: 0.5rem;
+      padding: 0.6rem; border-radius: 14px;
+      background: var(--nav-bg); border: 1px solid var(--border);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    }
+    .share-menu[hidden] { display: none; }
+    .share-opt {
+      width: 2.6rem; height: 2.6rem; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--bg-color);
+      color: var(--text-color); cursor: pointer; font-size: 1.05rem;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; opacity: 0.92;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+    .share-opt:hover { opacity: 1; transform: translateY(-2px); }
+    #share-toast {
+      position: fixed; right: 1.5rem; bottom: 8rem; z-index: 51;
+      background: var(--text-color); color: var(--bg-color);
+      padding: 0.4rem 0.75rem; border-radius: 6px; font-size: 0.8rem;
+      white-space: nowrap; opacity: 0; pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    #share-toast.show { opacity: 0.95; }
+    /* WeChat QR modal. */
+    .qr-modal {
+      position: fixed; inset: 0; z-index: 60;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .qr-modal[hidden] { display: none; }
+    .qr-card {
+      background: var(--bg-color); color: var(--text-color);
+      padding: 1.25rem; border-radius: 14px; text-align: center;
+      border: 1px solid var(--border); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+    .qr-card img {
+      display: block; width: 200px; height: 200px;
+      background: #fff; padding: 8px; border-radius: 8px;
+    }
+    .qr-card p { margin: 0.75rem 0; font-size: 0.85rem; color: var(--muted); }
+    .qr-close {
+      border: 1px solid var(--border); background: var(--nav-bg);
+      color: var(--text-color); border-radius: 6px; padding: 0.3rem 1rem;
+      cursor: pointer; font-size: 0.85rem;
+    }
+    @media (max-width: 600px) {
+      .float-btn { right: 1rem; }
+      #share-btn { bottom: 1rem; }
+      #top-btn { bottom: 4.5rem; }
+      .share-menu { right: 4.5rem; bottom: 1rem; }
+      #share-toast { right: 1rem; bottom: 7.5rem; }
+    }
+  </style>
+  <script>
+    // Keep the Utterances comment widget (if present) in sync with the theme.
+    function syncUtterancesTheme(theme) {
+      const frame = document.querySelector('.utterances-frame');
+      if (!frame) return;
+      frame.contentWindow.postMessage(
+        { type: 'set-theme', theme: theme === 'dark' ? 'github-dark' : 'github-light' },
+        'https://utteranc.es');
+    }
+    function toggleTheme() {
+      const el = document.documentElement;
+      const next = el.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      el.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      syncUtterancesTheme(next);
+    }
+    // Apply the saved theme synchronously, before the browser paints. This
+    // script sits in <head>, so setting data-theme here (rather than on
+    // DOMContentLoaded, which fires after the first paint) avoids the
+    // flash of light theme when navigating between pages in dark mode.
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+<body>
+  <div class="hero" role="banner"></div>
+  <nav class="breadcrumb-nav">
+    <div class="breadcrumb-content"><span style="margin-right:0.75rem;">&gt;</span><a href="/">Home</a><span style="margin:0 0.75rem;">&gt;</span><a href="/blogs/">Blog</a><span style="margin:0 0.75rem;">&gt;</span><span style="font-weight:700;" title="How does a protein catch a metal? Teaching a computer to find the spot — in seconds">How does a protein catch a metal? Teaching a…</span></div>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+      <img src="/docs/sun.svg" alt="Light mode" class="sun">
+      <img src="/docs/moon.svg" alt="Dark mode" class="moon">
+    </button>
+  </nav>
+  <div class="content">
+    <article>
+      <h1>How does a protein catch a metal? Teaching a computer to find the spot — in seconds</h1>
+      <details class="article-meta revisions">
+        <summary title="Revision history">Date: <time datetime="2026-06-16">June 16, 2026</time> | Estimated Reading Time: 7 min | Author: Shijie Xu</summary>
+        <ul class="rev-log">
+          <li><time datetime="2026-06-30">June 30, 2026</time> — Nature Communications paper now published — updated the DOI and dropped the &quot;in press&quot; tag.</li>
+        </ul>
+      </details>
+<p><em>Metal ions sit at the heart of countless proteins, yet pinpointing exactly where they bind has stayed slow and unreliable. We built PRIME<sup id="fnref:prime"><a class="footnote-ref" href="#fn:prime">1</a></sup>, a deep-learning method that drops virtual “probes” onto a protein to find its metal-binding sites — accurately, and in about 11 seconds.</em></p>
+<figure>
+  <video controls preload="none" playsinline poster="/docs/prime-architecture-poster.jpg" width="1280" height="720">
+    <source src="/docs/prime-architecture.mp4" type="video/mp4">
+    Your browser can't play this video. <a href="/docs/prime-architecture.mp4">Download it instead.</a>
+  </video>
+  <figcaption><strong>Figure 1.</strong> PRIME end to end, on human carbonic anhydrase II: scatter virtual probes across the protein, screen for the ones whose 3D neighbourhood could hold a metal, and the surviving probe lands on the experimental zinc site — the whole prediction in about 11 seconds.</figcaption>
+</figure>
+
+<h2 id="why-this-matters">Why this matters</h2>
+<p>Roughly a third of all proteins need a metal ion to do their job. Zinc helps enzymes cut other molecules, iron carries oxygen in our blood, calcium relays signals inside our cells, and potassium flows through channels that keep our hearts beating. Whether you want to understand such a protein or redesign it as a new enzyme or drug, one basic question is surprisingly hard to answer: <em>where, exactly, does the metal bind?</em></p>
+<p>The difficulty is chemistry. Some metals are picky: zinc and copper grip a few specific amino acids, usually histidine or cysteine, leaving a clear fingerprint. Others are casual: calcium, sodium, and potassium bind loosely, almost anywhere the local chemistry is roughly right. (Chemists call the first group <em>transition metals</em> and the second <em>non-transition metals</em>.) Telling the true binding spots from the many places that merely <em>look</em> right is exactly where existing tools struggle.</p>
+<h2 id="what-we-did">What we did</h2>
+<p>We did not start with the method we ended up with. Our first attempt read only a protein&rsquo;s sequence — its string of amino acids — using a <em>protein language model</em> called ESM<sup id="fnref:esm"><a class="footnote-ref" href="#fn:esm">2</a></sup>: a kind of AI trained on millions of sequences, much as a chatbot is trained on text. (Sequence-only metal-site predictors such as LMetalSite<sup id="fnref:lmetalsite"><a class="footnote-ref" href="#fn:lmetalsite">3</a></sup> and M-Ionic<sup id="fnref:mionic"><a class="footnote-ref" href="#fn:mionic">4</a></sup> take this same route.) For metals with plenty of data, zinc above all, it worked remarkably well. But the moment we turned to the metals biochemists really care about, like copper and iron, and to trickier cases such as ion channels, it fell short — and, reading only the sequence, it could never tell us <em>where in 3D</em> the metal actually sat.</p>
+<p>That pointed clearly to structure. With AlphaFold<sup id="fnref:alphafold"><a class="footnote-ref" href="#fn:alphafold">5</a></sup> now making 3D protein structures easy to obtain, a structure-aware predictor looked like the missing piece. Yet when we added structure, the gains were smaller than we hoped. The reason was scale: a protein is enormous next to a single ion, so searching it for one tiny binding spot is a needle-in-a-haystack problem — slow, and easy to get wrong. Existing structure-based tools, whether built on geometric rules (such as BioMetAll<sup id="fnref:biometall"><a class="footnote-ref" href="#fn:biometall">6</a></sup>) or on deep learning (such as Metal3D<sup id="fnref:metal3d"><a class="footnote-ref" href="#fn:metal3d">7</a></sup>, and its successor AllMetal3D<sup id="fnref:allmetal3d"><a class="footnote-ref" href="#fn:allmetal3d">8</a></sup>), all hit this same wall, especially for the many metals with little training data.</p>
+<p>The way out came from an unexpected place: computer vision. Years ago, software faced the same “huge space, tiny target” problem when learning to spot objects in photos. A well-known family of methods (R-CNN<sup id="fnref:rcnn"><a class="footnote-ref" href="#fn:rcnn">9</a></sup>) cracked it with a two-stage trick — first quickly propose a short list of promising regions, then look hard at each one. We built the protein-chemistry version of that idea, and it gives our method its name: <strong>PRIME</strong> works by scattering virtual <strong>probes</strong> — tiny markers that each ask, <em>“could a metal sit here?”</em></p>
+<p>The trick is proposing that short list well, and here we lean on evolution. Over millions of years, evolution preserves the parts of a protein it cannot afford to change — including many of the spots that hold metals — and leaves a trace of them in the sequences we see today. The same protein language model from our first attempt reads this trace directly and cheaply, letting us shrink the search from a whole protein down to a few hundred candidate spots while still catching about 99% of the real ones. Around those candidates we then scatter the probes with a fast, GPU-friendly geometric step (a stripped-down version of an idea from BioMetAll), so this stage stays quick.</p>
+<p>Finally, a second deep-learning model examines the 3D neighbourhood of each surviving probe and decides whether a metal truly belongs there. Propose, then examine — the same two-stage shape that worked for computer vision, now applied to metals.</p>
+<p>The payoff is both accuracy and speed. Across <strong>14 different metal ions</strong>, PRIME was more accurate than established structure-based methods — and finished in about <strong>11 seconds per protein</strong>, where others can take minutes. That combination is what makes it practical to screen proteins by the thousand, rather than one at a time.</p>
+<figure>
+  <img src="/docs/prime-kcsa.webp" alt="PRIME correctly predicts the column of potassium ions threading the selectivity filter of the KcsA potassium channel, coordinated by backbone carbonyl oxygens." width="1600" height="800">
+  <figcaption><strong>Figure 2.</strong> PRIME correctly predicts the column of potassium ions (violet) threading the selectivity filter of the KcsA potassium channel — a textbook case of loosely-bound, hard-to-spot non-transition-metal sites. The four channel subunits are shown as coloured cartoons; the coordinating backbone carbonyl oxygens are in red.</figcaption>
+</figure>
+
+<h2 id="what-it-means-and-whats-next">What it means, and what&rsquo;s next</h2>
+<p>The most exciting part of a fast, accurate predictor is what it unlocks. Because PRIME runs in seconds and covers both the “picky” transition metals and the “casual” ones like calcium and potassium, it can be pointed at large protein collections — every protein in an organism, or the millions of structures now coming from tools like AlphaFold — to map metal chemistry on a scale that was impractical before.</p>
+<p>PRIME is not the last word, though, and two limits are worth being honest about. First, it reasons about a <em>static</em> structure: it reads the protein exactly as it is given, so the prediction leans heavily on how accurate that input structure is. A small change near a binding site — or the shape shift a protein undergoes when a metal actually arrives, which an empty (apo) structure cannot show — can be enough to throw it off. Second, we still do not know how well it holds up on the very rarest metals. The rare-earth elements that matter so much in modern industry, for instance, are something we have not yet studied properly — and that is high on our list for future work.</p>
+<p>Looking further ahead (and here I‘ll allow myself to speculate beyond what our data strictly prove): a reliable map of <em>where</em> metals bind is a stepping stone toward <em>designing</em> metal sites on purpose. That could mean engineering new metalloenzymes, finding drug targets that hijack a protein’s metal chemistry, or building screening pipelines that combine structure prediction with binding-site prediction end to end. Metals are everywhere in biology; the better we get at reading them, the more of that chemistry we can put to work.</p>
+<h2 id="references">References</h2>
+<div class="footnote">
+<hr>
+<ol>
+<li id="fn:prime">
+<p>Xu, S. &amp; Onoda, A. Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations. <em>Nat. Commun.</em> 2026. <a href="https://doi.org/10.1038/s41467-026-74657-x">https://doi.org/10.1038/s41467-026-74657-x</a>&#160;<a class="footnote-backref" href="#fnref:prime" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:esm">
+<p>Lin, Z. et al. Evolutionary-scale prediction of atomic-level protein structure with a language model (ESM-2). <em>Science</em> <strong>379</strong>, 1123–1130 (2023). <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>&#160;<a class="footnote-backref" href="#fnref:esm" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:lmetalsite">
+<p>Yuan, Q. et al. Alignment-free metal ion-binding site prediction from protein sequence through pretrained language model and multi-task learning (LMetalSite). <em>Brief. Bioinform.</em> <strong>23</strong>, bbac444 (2022). <a href="https://doi.org/10.1093/bib/bbac444">https://doi.org/10.1093/bib/bbac444</a>&#160;<a class="footnote-backref" href="#fnref:lmetalsite" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:mionic">
+<p>Shenoy, A., Kalakoti, Y., Sundar, D. &amp; Elofsson, A. M-Ionic: prediction of metal-ion-binding sites from sequence using residue embeddings. <em>Bioinformatics</em> <strong>40</strong>, btad782 (2024). <a href="https://doi.org/10.1093/bioinformatics/btad782">https://doi.org/10.1093/bioinformatics/btad782</a>&#160;<a class="footnote-backref" href="#fnref:mionic" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:alphafold">
+<p>Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold. <em>Nature</em> <strong>596</strong>, 583–589 (2021). <a href="https://doi.org/10.1038/s41586-021-03819-2">https://doi.org/10.1038/s41586-021-03819-2</a>&#160;<a class="footnote-backref" href="#fnref:alphafold" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:biometall">
+<p>Sánchez-Aparicio, J.-E. et al. BioMetAll: Identifying Metal-Binding Sites in Proteins from Backbone Preorganization. <em>J. Chem. Inf. Model.</em> <strong>61</strong>, 311–323 (2021). <a href="https://doi.org/10.1021/acs.jcim.0c00827">https://doi.org/10.1021/acs.jcim.0c00827</a>&#160;<a class="footnote-backref" href="#fnref:biometall" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:metal3d">
+<p>Dürr, S. L., Levy, A. &amp; Rothlisberger, U. Metal3D: a general deep learning framework for accurate metal ion location prediction in proteins. <em>Nat. Commun.</em> <strong>14</strong>, 2713 (2023). <a href="https://doi.org/10.1038/s41467-023-37870-6">https://doi.org/10.1038/s41467-023-37870-6</a>&#160;<a class="footnote-backref" href="#fnref:metal3d" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+<li id="fn:allmetal3d">
+<p>Dürr, S. L. &amp; Rothlisberger, U. AllMetal3D: joint prediction of localization, identity and coordination geometry of common metal ions in proteins. <em>bioRxiv</em> (2025). <a href="https://doi.org/10.1101/2025.02.05.636627">https://doi.org/10.1101/2025.02.05.636627</a>&#160;<a class="footnote-backref" href="#fnref:allmetal3d" title="Jump back to footnote 8 in the text">&#8617;</a></p>
+</li>
+<li id="fn:rcnn">
+<p>Girshick, R., Donahue, J., Darrell, T. &amp; Malik, J. Rich feature hierarchies for accurate object detection and semantic segmentation (R-CNN). <em>Proc. IEEE CVPR</em> 580–587 (2014). <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>&#160;<a class="footnote-backref" href="#fnref:rcnn" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+    </article>
+    <nav class="post-nav" aria-label="Adjacent posts"><a class="post-nav-cell post-nav-left" href="/blogs/2026-06-08-gaokao-math.html"><span class="post-nav-label">← Older post</span><span class="post-nav-title">2026 年高考数学压轴题：函数与集合 D(x₀)</span></a><span class="post-nav-cell"></span></nav>
+    <p style="margin-top:2rem;"><a href="/blogs/">← All posts</a></p>
+    <section id="comments" style="margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+      <h2 style="font-size:1.4rem; margin-bottom:1rem;">Comments</h2>
+      <script>
+        (function () {
+          var dark = (localStorage.getItem('theme') || 'light') === 'dark';
+          document.write(
+            '<script src="https://utteranc.es/client.js" '
+            + 'repo="xu-shi-jie/comments" issue-term="pathname" label="comment" '
+            + 'theme="' + (dark ? 'github-dark' : 'github-light') + '" '
+            + 'crossorigin="anonymous" async><' + '/script>'
+          );
+        })();
+      </script>
+    </section>
+    <div id="share-wrap">
+      <div id="share-menu" class="share-menu" hidden>
+        <a class="share-opt" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on X" aria-label="Share on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on LinkedIn" aria-label="Share on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://www.reddit.com/submit?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&title=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Reddit" aria-label="Share on Reddit"><i class="fa-brands fa-reddit-alien" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Facebook" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://api.whatsapp.com/send?text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds%20https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://t.me/share/url?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Telegram" aria-label="Share on Telegram"><i class="fa-brands fa-telegram" aria-hidden="true"></i></a>
+        <a class="share-opt" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Line" aria-label="Share on Line"><i class="fa-brands fa-line" aria-hidden="true"></i></a>
+        <a class="share-opt" href="mailto:?subject=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds&body=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Email" aria-label="Share on Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
+        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat"><i class="fa-brands fa-weixin" aria-hidden="true"></i></button>
+        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+      </div>
+      <button id="share-btn" class="float-btn" onclick="toggleShareMenu()" title="Share" aria-label="Share this post" aria-haspopup="true">
+        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+      </button>
+    </div>
+    <button id="top-btn" class="float-btn" onclick="scrollToTop()" title="Go to top" aria-label="Go to top">
+      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+    </button>
+    <span id="share-toast" role="status" aria-live="polite"></span>
+    <div id="wechat-qr" class="qr-modal" hidden onclick="hideWeChatQR()">
+      <div class="qr-card" onclick="event.stopPropagation()">
+        <img id="wechat-qr-img" alt="WeChat QR code" width="200" height="200">
+        <p>Scan with WeChat to open / share</p>
+        <button class="qr-close" onclick="hideWeChatQR()">Close</button>
+      </div>
+    </div>
+    <script>
+      function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+      function closeShareMenu() { document.getElementById('share-menu').hidden = true; }
+      function toggleShareMenu() {
+        var m = document.getElementById('share-menu');
+        m.hidden = !m.hidden;
+      }
+      function showShareToast(msg) {
+        var t = document.getElementById('share-toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        setTimeout(function () { t.classList.remove('show'); }, 1800);
+      }
+      function copyLink() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(location.href)
+            .then(function () { showShareToast('Link copied'); })
+            .catch(function () { showShareToast(location.href); });
+        } else {
+          showShareToast(location.href);
+        }
+        closeShareMenu();
+      }
+      function showWeChatQR() {
+        var img = document.getElementById('wechat-qr-img');
+        if (!img.getAttribute('src')) {
+          img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=10&data='
+            + encodeURIComponent(location.href);
+        }
+        document.getElementById('wechat-qr').hidden = false;
+        closeShareMenu();
+      }
+      function hideWeChatQR() { document.getElementById('wechat-qr').hidden = true; }
+      (function () {
+        var top = document.getElementById('top-btn');
+        function onScroll() { top.classList.toggle('show', window.scrollY > 400); }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        // Close the share menu on outside click or Escape.
+        document.addEventListener('click', function (e) {
+          var wrap = document.getElementById('share-wrap');
+          var menu = document.getElementById('share-menu');
+          if (menu && !menu.hidden && wrap && !wrap.contains(e.target)) menu.hidden = true;
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') { closeShareMenu(); hideWeChatQR(); }
+        });
+        // Clicking any share option (open a network, email) also dismisses the menu.
+        document.getElementById('share-menu').addEventListener('click', function (e) {
+          if (e.target.closest('a')) this.hidden = true;
+        });
+      })();
+    </script>
+
+  </div>
+  <footer style="text-align:center; font-size:small; color:var(--muted); padding:2rem 1rem;">
+    &copy; 2022-<span id="y"></span> Shijie Xu. Hosted via
+    <a href="https://docs.github.com/en/pages">GitHub Pages</a>.
+    <span id="page-counter"></span>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+  <!-- Visitor counter (shared with index.html) -->
+  <script>
+    window.COUNTER_API_URL = 'https://page-counter-eight.vercel.app/api/counter-neon';
+    window.COUNTER_PREFIX = 'Visitors: ';
+  </script>
+  <script src="https://page-counter-eight.vercel.app/counter.js"></script>
+</body>
+</html>

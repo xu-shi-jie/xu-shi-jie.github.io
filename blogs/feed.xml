@@ -5,8 +5,16 @@
   <link href="https://xu-shi-jie.github.io/blogs/feed.xml" rel="self"/>
   <link href="https://xu-shi-jie.github.io/blogs/"/>
   <id>https://xu-shi-jie.github.io/blogs/</id>
-  <updated>2026-07-02T00:00:00Z</updated>
+  <updated>2026-06-30T00:00:00Z</updated>
   <author><name>Shijie Xu</name></author>
+  <entry>
+    <title>How does a protein catch a metal? Teaching a computer to find the spot — in seconds</title>
+    <link href="https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html"/>
+    <id>https://xu-shi-jie.github.io/blogs/2026-06-16-prime.html</id>
+    <published>2026-06-16T00:00:00Z</published>
+    <updated>2026-06-30T00:00:00Z</updated>
+    <summary>How PRIME, our deep-learning method, finds protein metal-binding sites by scattering virtual probes — accurate across 14 metal ions, in ~11 seconds each.</summary>
+  </entry>
   <entry>
     <title>2026 年高考数学压轴题：函数与集合 D(x₀)</title>
     <link href="https://xu-shi-jie.github.io/blogs/2026-06-08-gaokao-math.html"/>
