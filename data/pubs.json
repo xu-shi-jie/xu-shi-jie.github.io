@@ -42,7 +42,10 @@
       "eng"
     ],
     "is_referenced_by_count": 0,
-    "others": {},
+    "others": {
+      "プレスリリース": "https://www.hokudai.ac.jp/news/2026/08/post-2409.html",
+      "Press release": "https://www.global.hokudai.ac.jp/news/27050/"
+    },
     "citations_by_year": {}
   },
   {
