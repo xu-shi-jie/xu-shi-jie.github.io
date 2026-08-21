@@ -161,10 +161,10 @@ def render_li(p, journals, idx):
 
 
 def render_news(pubs, journals):
-    """Aggregate every pub's `others` media links into <li>s for the News section.
+    """Group each pub's `others` media links into one <li> per paper.
 
-    One <li> per media link; the first link of each paper carries id="news-<i>"
-    so the "In the news" tag on publication <i> can jump straight to it.
+    Each paper's <li> carries id="news-<i>" so the "In the news" tag on
+    publication <i> can jump straight to it.
     """
     lines = []
     for i, p in enumerate(pubs):
@@ -176,14 +176,23 @@ def render_news(pubs, journals):
             (journals.get(journal_name) or {}).get("abbreviation") or journal_name or ""
         )
         year = html.escape(str(p.get("publication_date") or "")[:4])
-        for k, (label, href) in enumerate(others.items()):
-            anchor = f' id="news-{i}"' if k == 0 else ""
-            lines.append(
-                f'      <li{anchor}><a href="{html.escape(href)}">'
-                f'<i class="{icon_for(label)}" style="margin-right:0.3em"></i>'
-                f'{html.escape(label)}</a> '
-                f'<span class="news-ref">— <em>{jlabel}</em>, {year}</span></li>'
-            )
+        dois = (p.get("identifiers") or {}).get("doi") or []
+        doi_link = f"https://doi.org/{dois[0]}" if dois else None
+        title = fmt(lang(p.get("paper_title")))  # fmt() escapes, then restores pKa
+        title_html = (
+            f'<a href="{html.escape(doi_link)}">“{title}”</a>' if doi_link else f'“{title}”'
+        )
+        media = " | ".join(
+            f'<a href="{html.escape(href)}">'
+            f'<i class="{icon_for(label)}" style="margin-right:0.3em"></i>'
+            f'{html.escape(label)}</a>'
+            for label, href in others.items()
+        )
+        lines.append(
+            f'      <li id="news-{i}">{title_html} '
+            f'<span class="news-ref">— <em>{jlabel}</em>, {year}</span>'
+            f'<div class="news-media">{media}</div></li>'
+        )
     return "\n".join(lines)
 
 
