@@ -155,7 +155,19 @@
       padding: 0;
     }
     .pub-list li, .talk-list li { margin-bottom: 0.5rem; }
-    .news-list li { margin-bottom: 0.35rem; line-height: 1.45; }
+    .news-list li {
+      margin-bottom: 0.35rem;
+      line-height: 1.45;
+      position: relative;
+      padding-left: 1.2em;
+    }
+    .news-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
     .news-list .news-ref { color: #777; }
     [data-theme="dark"] .news-list .news-ref { color: #aaa; }
     .news-media { display: inline; }
