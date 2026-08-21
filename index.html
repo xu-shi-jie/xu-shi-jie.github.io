@@ -155,11 +155,11 @@
       padding: 0;
     }
     .pub-list li, .talk-list li { margin-bottom: 0.5rem; }
-    .news-list li { margin-bottom: 0.9rem; }
+    .news-list li { margin-bottom: 0.35rem; line-height: 1.45; }
     .news-list .news-ref { color: #777; }
     [data-theme="dark"] .news-list .news-ref { color: #aaa; }
-    .news-media { margin-top: 0.15rem; }
-    .news-media a { margin-right: 0.15rem; }
+    .news-media { display: inline; }
+    .news-media::before { content: "·"; margin: 0 0.45em; color: #999; }
     .news-tag {
       display: inline-block;
       font-size: 0.8em;
