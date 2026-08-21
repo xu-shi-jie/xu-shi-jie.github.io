@@ -127,7 +127,7 @@ SHARED_HEAD = """\
       box-sizing: border-box;
     }
     .breadcrumb-content {
-      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      padding-left: max(1rem, calc((100vw - 1000px) / 2 + 1rem));
       /* Fill the row (minus the toggle) and clip a long post title with an
          ellipsis instead of letting it collide with the theme button. */
       flex: 1;
@@ -136,12 +136,12 @@ SHARED_HEAD = """\
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem)); flex: 0 0 auto; }
+    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 1000px) / 2 + 1rem)); flex: 0 0 auto; }
     @media (max-width: 600px) {
       .breadcrumb-content { padding-left: 1rem; }
       .breadcrumb-nav button { padding-right: 1rem; }
     }
-    .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
+    .content { padding: 0 1rem 4rem; max-width: 1000px; margin: 0 auto; }
     a {
       color: var(--text-color);
       text-decoration: none;
