@@ -122,11 +122,20 @@ def render_li(p, journals):
 
     parts = [authors, title, journal, meta]
 
-    # other links (press release, video, ...)
+    # other links (press release, video, ...), each prefixed with an icon
     others = p.get("others")
     if isinstance(others, dict) and others:
+        def icon_for(label):
+            low = label.lower()
+            if "video" in low:
+                return "fa-solid fa-circle-play"
+            if "press" in low or "プレスリリース" in label or "リリース" in label:
+                return "fa-solid fa-newspaper"
+            return "fa-solid fa-arrow-up-right-from-square"
         links = " | ".join(
-            f'<a href="{html.escape(href)}">{html.escape(label)}</a>'
+            f'<a href="{html.escape(href)}">'
+            f'<i class="{icon_for(label)}" style="margin-right:0.3em"></i>'
+            f'{html.escape(label)}</a>'
             for label, href in others.items()
         )
         parts.append(f'<span style="margin-left:0.5rem">({links})</span>')
