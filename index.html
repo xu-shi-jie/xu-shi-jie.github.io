@@ -116,11 +116,11 @@
     }
     
     .breadcrumb-content {
-      padding-left: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      padding-left: max(1rem, calc((100vw - 800px) / 2));
     }
-    
+
     .breadcrumb-nav button {
-      padding-right: max(1rem, calc((100vw - 800px) / 2 + 1rem));
+      padding-right: max(1rem, calc((100vw - 800px) / 2));
     }
     
     @media (max-width: 600px) {
@@ -180,6 +180,16 @@
       white-space: nowrap;
     }
     .news-tag:hover { background: var(--link-color); color: var(--bg-color); }
+    .journal-tags span {
+      font-style: italic;
+      white-space: nowrap;
+    }
+    .journal-tags span:not(:last-child)::after {
+      content: "·";
+      margin: 0 0.55em;
+      font-style: normal;
+      opacity: 0.5;
+    }
     .copy-btn {
       margin-left: 0.5rem;
       padding: 0;
@@ -537,7 +547,7 @@
 
   <section id="academic-services">
     <h2>Academic Services</h2>
-    <p><strong>(Co-)Reviewer:</strong> <i>J. Chem. Inf. Model.</i>, <i>J. Chem. Theory Comput.</i>, <i>Bioinformatics</i>, <i>Appl. Math. Comput.</i>, <i>Curr. Opin. Struct. Biol.</i></p>
+    <p style="text-align: left;"><strong>(Co-)Reviewer:</strong> <span class="journal-tags"><span>J. Chem. Inf. Model.</span>&#8203;<span>J. Chem. Theory Comput.</span>&#8203;<span>Bioinformatics</span>&#8203;<span>Appl. Math. Comput.</span>&#8203;<span>Curr. Opin. Struct. Biol.</span></span></p>
   </section>
 
   <section id="Thanks">
