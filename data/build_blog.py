@@ -63,7 +63,16 @@ MD_EXTENSIONS = [
 # the other extensions run, so smarty/emphasis can't mangle the LaTeX.
 MD_EXTENSION_CONFIGS = {
     "pymdownx.arithmatex": {"generic": True},
+    # Footnote back-reference arrow: emit a placeholder we swap for a Font
+    # Awesome icon post-render (the extension sets it as element .text, so any
+    # markup passed here would be HTML-escaped). See FN_BACKREF_* below.
+    "footnotes": {"BACKLINK_TEXT": "%%FN_BACKREF%%"},
 }
+
+# Replace the footnote backref placeholder with a Font Awesome icon (not an
+# emoji / ↩ glyph), matching the icon styling used elsewhere in the page.
+FN_BACKREF_PLACEHOLDER = "%%FN_BACKREF%%"
+FN_BACKREF_ICON = '<i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i>'
 
 
 # --------------------------------------------------------------------------- #
@@ -786,6 +795,7 @@ class Post:
         # leading <h1> from the body to avoid showing the title twice.
         self.html = re.sub(r"^\s*<h1[^>]*>.*?</h1>\s*", "",
                            md.convert(body), count=1, flags=re.DOTALL)
+        self.html = self.html.replace(FN_BACKREF_PLACEHOLDER, FN_BACKREF_ICON)
         self.html = space_han_math(self.html)
         self.html = wrap_cjk_dash(self.html)
         self.html = add_image_dimensions(self.html)
