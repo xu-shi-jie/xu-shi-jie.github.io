@@ -41,12 +41,14 @@
     "languages": [
       "eng"
     ],
-    "is_referenced_by_count": 0,
+    "is_referenced_by_count": 1,
     "others": {
       "プレスリリース": "https://www.hokudai.ac.jp/news/2026/08/post-2409.html",
       "Press release": "https://www.global.hokudai.ac.jp/news/27050/"
     },
-    "citations_by_year": {}
+    "citations_by_year": {
+      "2026": 1
+    }
   },
   {
     "paper_title": {
