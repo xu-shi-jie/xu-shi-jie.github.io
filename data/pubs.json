@@ -137,10 +137,11 @@
     "languages": [
       "eng"
     ],
-    "is_referenced_by_count": 9,
+    "is_referenced_by_count": 12,
     "others": {},
     "citations_by_year": {
-      "2026": 9
+      "2026": 10,
+      "2025": 2
     }
   },
   {
@@ -233,11 +234,11 @@
     "languages": [
       "eng"
     ],
-    "is_referenced_by_count": 25,
+    "is_referenced_by_count": 24,
     "others": {},
     "citations_by_year": {
       "2026": 4,
-      "2025": 16,
+      "2025": 15,
       "2024": 5
     }
   }
