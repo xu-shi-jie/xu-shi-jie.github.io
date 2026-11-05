@@ -41,12 +41,14 @@
     "languages": [
       "eng"
     ],
-    "is_referenced_by_count": 0,
+    "is_referenced_by_count": 2,
     "others": {
       "プレスリリース": "https://www.hokudai.ac.jp/news/2026/08/post-2409.html",
       "Press release": "https://www.global.hokudai.ac.jp/news/27050/"
     },
-    "citations_by_year": {}
+    "citations_by_year": {
+      "2026": 2
+    }
   },
   {
     "paper_title": {
@@ -140,8 +142,8 @@
     "is_referenced_by_count": 13,
     "others": {},
     "citations_by_year": {
-      "2026": 11,
-      "2025": 2
+      "2026": 12,
+      "2025": 1
     }
   },
   {
@@ -234,12 +236,13 @@
     "languages": [
       "eng"
     ],
-    "is_referenced_by_count": 25,
+    "is_referenced_by_count": 26,
     "others": {},
     "citations_by_year": {
       "2026": 5,
       "2025": 15,
-      "2024": 5
+      "2024": 5,
+      "2023": 1
     }
   }
 ]
