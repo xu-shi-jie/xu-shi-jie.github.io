@@ -82,7 +82,8 @@
 
       // px per base pair, narrowed on very small screens until the links fit the column
       const colL = W >= 832 ? (W - 800) / 2 : 16, colR = W - colL;
-      const nSlots = links.reduce((n, a) => n + a.textContent.trim().length + 1, 0);
+      // the toggle needs its own slot plus a gap, or on a phone it has no room left in the row
+      const nSlots = links.reduce((n, a) => n + a.textContent.trim().length + 1, 0) + (toggle ? 2 : 0);
       const cw = Math.min(W < 600 ? 12 : 15, (colR - colL) / (3 * Math.max(nSlots, 1)));
       const cx = W / 2, cy = H * 0.38, R = H * 0.17;
       // bp index under the centre line; on wide screens shift it right so the gene's ATG
@@ -146,6 +147,8 @@
         }
         words.push({ a, t, ks });
       });
+      // a stop codon after the last word too, so the next residue never reads as part of it
+      if (links.length) setCodon(k, STOP);
       k += 3;
       let kT = Math.floor(off + (colR - 8 - cx) / cw);
       while (mod(kT, 3) !== 1) kT--;
@@ -240,8 +243,13 @@
     resize();
   }
 
-  // Mount right away, before the first paint (the <script> is deferred and render-blocking):
-  // mounting after it showed one frame of bare gradient and unlaid links on every page
-  // change, a visible flash. The cost is one style and layout pass before that paint.
-  document.querySelectorAll('.hero').forEach(mount);
+  // Pages load this file synchronously in <head> and call heroMount() from an inline
+  // <script> right after the .hero element, so the hero is laid out while the parser is
+  // still there and no browser can paint it first. (A deferred script with
+  // blocking="render" did that only in Chromium: Firefox painted the bare gradient and
+  // the unlaid links on every page change, a visible flash.)
+  window.heroMount = () => document.querySelectorAll('.hero:not([data-mounted])').forEach(el => {
+    el.dataset.mounted = '';
+    mount(el);
+  });
 })();

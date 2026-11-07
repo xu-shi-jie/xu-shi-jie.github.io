@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 """
-Server-side render the publication list into index.html at build time.
+Render the publication list into index.html at build time.
 
-The homepage renders publications client-side from data/pubs.json (see the
-renderPubs() script in index.html), which is great for interactivity but
-leaves the initial HTML's <ol id="pub-list"> empty — so no-JS crawlers and
-some social scrapers see no publications.
-
-This script injects an equivalent *static* <li> list between the
-PUBS:START / PUBS:END markers inside that <ol>. The client-side JS still runs
-on top (it wipes and re-renders the list with copy-citation buttons + emits
-ScholarlyArticle JSON-LD), so behaviour for real users is unchanged — this is
-pure progressive enhancement / SEO hardening.
+The list is plain HTML in the page, not built by client-side JS: crawlers that
+do not run JS (most AI crawlers among them) and social scrapers then see every
+publication. Written between the PUBS:START / PUBS:END markers inside
+<ol id="pub-list">: one <li> per paper with its copy-citation button (wired up
+by a small click handler in index.html), plus ScholarlyArticle JSON-LD.
 
 Idempotent: re-running replaces the previously injected block.
 Run from anywhere; paths resolve relative to this file.
@@ -58,8 +53,6 @@ def authors_html(people):
 def tc_badge_html(total, by_year):
     """'TC: N' badge; with a hover per-year bar chart when citations_by_year exists.
 
-    Mirrors the tcBadge() JS in index.html so the static (SEO) render and the
-    client-side render produce identical markup.
     """
     years = sorted(int(y) for y in (by_year or {}) if str(y).isdigit())
     if not years:
@@ -133,19 +126,69 @@ def render_li(p, journals, idx):
             f'</span>'
         )
 
-    # citation count (with hover per-year chart) / impact factor
+    # citation count (with hover per-year chart)
     tc = p.get("is_referenced_by_count")
     by_year = p.get("citations_by_year") or {}
-    jf = (journals.get(journal_name) or {}).get("impact factor")
-    badges = []
     if isinstance(tc, int) and tc > 0:
-        badges.append(tc_badge_html(tc, by_year))
-    if jf:
-        badges.append(f"IF: {html.escape(str(jf))}")
-    if badges:
-        parts.append(f'<span class="pub-badges" style="margin-left:0.5rem">({", ".join(badges)})</span>')
+        parts.append(f'<span class="pub-badges" style="margin-left:0.5rem">({tc_badge_html(tc, by_year)})</span>')
+
+    # copy-citation button (plain-text reference -> clipboard via the small
+    # handler in index.html), kept on the same line as whatever precedes it so
+    # it never wraps onto a line by itself
+    btn = (f'<button class="copy-btn" type="button" title="Copy citation" '
+           f'aria-label="Copy citation" data-cite="{html.escape(citation(p), quote=True)}">'
+           f'<i class="fa-regular fa-copy"></i></button>')
+    parts[-1] = f'<span style="white-space:nowrap">{parts[-1]}{btn}</span>'
 
     return "      <li>" + "".join(parts) + "</li>"
+
+
+def citation(p):
+    """Plain-text reference for the copy button."""
+    journal_name = lang(p.get("publication_name"))
+    dois = (p.get("identifiers") or {}).get("doi") or []
+    vol, num = p.get("volume") or "", p.get("number") or ""
+    start_pg, end_pg = p.get("starting_page") or "", p.get("ending_page") or ""
+    year = str(p.get("publication_date") or "")[:4]
+    s = ", ".join(a.get("name", "") for a in (p.get("authors") or {}).get("en") or [])
+    s += f'. "{lang(p.get("paper_title"))}." {journal_name}'
+    if vol:
+        s += f" {vol}" + (f"({num})" if num else "")
+    if start_pg:
+        s += f": {start_pg}-{end_pg}" if end_pg else f": {start_pg}"
+    if p.get("in_press"):
+        s += " (in press)"
+    if year:
+        s += f", {year}"
+    s += "."
+    if dois:
+        s += f" https://doi.org/{dois[0]}"
+    return s
+
+
+def jsonld(pubs):
+    """One ScholarlyArticle per publication, so each paper is indexable."""
+    articles = []
+    for p in pubs:
+        dois = (p.get("identifiers") or {}).get("doi") or []
+        node = {
+            "@context": "https://schema.org",
+            "@type": "ScholarlyArticle",
+            "headline": lang(p.get("paper_title")),
+            "name": lang(p.get("paper_title")),
+            "author": [{"@type": "Person", "name": a.get("name", "").rstrip("*")}
+                       for a in (p.get("authors") or {}).get("en") or []],
+            "datePublished": str(p.get("publication_date") or "")[:4],
+            "isPartOf": {"@type": "Periodical", "name": lang(p.get("publication_name"))},
+        }
+        if dois:
+            node["identifier"] = {"@type": "PropertyValue", "propertyID": "DOI", "value": dois[0]}
+            node["sameAs"] = node["url"] = f"https://doi.org/{dois[0]}"
+        if p.get("volume"):
+            node["isPartOf"]["volumeNumber"] = p["volume"]
+        articles.append(node)
+    data = json.dumps(articles, ensure_ascii=False).replace("</", "<\\/")
+    return f'      <script type="application/ld+json">{data}</script>'
 
 
 def main():
@@ -155,7 +198,8 @@ def main():
         journals = json.loads(JOURNALS.read_text(encoding="utf-8"))
 
     items = "\n".join(render_li(p, journals, i) for i, p in enumerate(pubs))
-    block = f"{START}\n{items}\n      {END}"
+    # <script> is allowed inside <ol>, so the JSON-LD travels with the list
+    block = f"{START}\n{items}\n{jsonld(pubs)}\n      {END}"
 
     text = INDEX.read_text(encoding="utf-8")
     ol_re = re.compile(r'(<ol id="pub-list"[^>]*>)(.*?)(</ol>)', re.DOTALL)

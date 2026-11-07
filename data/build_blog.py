@@ -87,7 +87,7 @@ SHARED_HEAD = """\
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link id="hero-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto+Serif:wght@300&text=ABCDEFGHIKLMNOPQRSTVWY%C2%B7&display=swap" media="print" onload="this.media='all'">
-  <script defer blocking="render" src="/docs/hero-dna.js"></script>
+  <script src="/docs/hero-dna.js"></script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     :root {
@@ -581,6 +581,7 @@ NAV = """\
       </button>
     </nav>
   </div>
+  <script>heroMount()</script>
 """
 
 FOOTER = """\
