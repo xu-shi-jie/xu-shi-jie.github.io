@@ -86,8 +86,8 @@ SHARED_HEAD = """\
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-  <link id="hero-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto+Serif:wght@300&text=ACDEFGHIKLMNPQRSTVWY%C2%B7&display=swap" media="print" onload="this.media='all'">
-  <script defer src="/docs/hero-dna.js"></script>
+  <link id="hero-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto+Serif:wght@300&text=ABCDEFGHIKLMNOPQRSTVWY%C2%B7&display=swap" media="print" onload="this.media='all'">
+  <script defer blocking="render" src="/docs/hero-dna.js"></script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     :root {
@@ -141,40 +141,48 @@ SHARED_HEAD = """\
     /* DNA helix drawn by /docs/hero-dna.js (shared with index.html); the gradient
        alone stands in without JS */
     .hero {
+      position: relative;
       width: 100%;
       height: 130px;
+      margin-bottom: 1.5rem;
       background: linear-gradient(to bottom right, var(--dna-bg1), var(--dna-bg2));
     }
     .hero canvas { display: block; }
-    .breadcrumb-content .sep { margin: 0 1.1rem; opacity: 0.55; }
-    .breadcrumb-content .sep:first-child { margin-left: 0; }
-    .breadcrumb-nav {
+    /* Site links live in the hero's translation row (laid out by /docs/hero-dna.js, one
+       letter per residue). Without JS they show as plain text at the hero's foot. */
+    .hero-nav {
+      position: absolute;
+      left: max(1rem, calc((100% - 800px) / 2));
+      right: max(1rem, calc((100% - 800px) / 2));
+      bottom: 6px;
       display: flex;
-      justify-content: space-between;
+      gap: 1.5rem;
       align-items: center;
-      margin-top: 0.25rem;
-      margin-bottom: 1rem;
-      padding: 0.25rem 0;
-      font-size: 0.95rem;
-      border-bottom: 1px solid var(--border);
-      width: 100%;
-      box-sizing: border-box;
+      font-family: "Roboto Serif", Georgia, serif;
+      font-weight: 300;
+      font-size: 17px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
     }
-    .breadcrumb-content {
-      padding-left: max(1rem, calc((100vw - 800px) / 2));
-      /* Fill the row (minus the toggle) and clip a long post title with an
-         ellipsis instead of letting it collide with the theme button. */
-      flex: 1;
-      min-width: 0;
-      white-space: nowrap;
+    .hero-nav a { color: var(--dna-ink); border: 0; opacity: 0.8; }
+    .hero-nav .theme-toggle { margin-left: auto; }
+    .hero-nav.laid { left: 0; right: 0; top: 0; bottom: 0; display: block; }
+    .hero-nav.laid a {
+      position: absolute;
+      color: transparent;
       overflow: hidden;
-      text-overflow: ellipsis;
+      opacity: 1;
+      border-radius: 3px;
     }
-    .breadcrumb-nav button { padding-right: max(1rem, calc((100vw - 800px) / 2)); flex: 0 0 auto; }
-    @media (max-width: 600px) {
-      .breadcrumb-content { padding-left: 1rem; }
-      .breadcrumb-nav button { padding-right: 1rem; }
+    .hero-nav.laid a:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
+    .hero-nav.laid .theme-toggle {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 1.6rem;
+      height: 1.6rem;
+      margin: 0;
     }
+    .hero-nav .theme-toggle img { width: 18px; height: 18px; }
     .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
     a {
       color: var(--text-color);
@@ -226,7 +234,13 @@ SHARED_HEAD = """\
     .post-list a { border-bottom: none; font-size: 1.05rem; }
     @media (max-width: 480px) {
       .post-list li { flex-direction: column; gap: 0.1rem; }
+      /* in a column the 6.5rem basis would become the date's height */
+      .post-date { flex: none; }
     }
+
+    /* A display equation wider than a phone scrolls inside itself instead of
+       widening the page */
+    mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
 
     /* Article body */
     article h1 { font-size: 2.4rem; margin: 0 0 0.25rem; line-height: 1.2; }
@@ -558,14 +572,15 @@ def render_float_ui(share_url: str, title: str) -> str:
 {FLOAT_JS}"""
 
 NAV = """\
-  <div class="hero" role="banner"></div>
-  <nav class="breadcrumb-nav">
-    <div class="breadcrumb-content">{breadcrumb}</div>
-    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
-      <img src="/docs/sun.svg" alt="Light mode" class="sun">
-      <img src="/docs/moon.svg" alt="Dark mode" class="moon">
-    </button>
-  </nav>
+  <div class="hero" role="banner">
+    <nav class="hero-nav" aria-label="Site">
+      {breadcrumb}
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle theme">
+        <img src="/docs/sun.svg" alt="Light mode" class="sun">
+        <img src="/docs/moon.svg" alt="Dark mode" class="moon">
+      </button>
+    </nav>
+  </div>
 """
 
 FOOTER = """\
@@ -790,22 +805,6 @@ def reading_minutes(html_body: str) -> int:
     return max(1, round((words + cjk) / 200))
 
 
-def crumb_title(title: str, limit: int = 48) -> str:
-    """Shorten a long title for the breadcrumb, breaking on a word boundary.
-
-    The full title still appears in the page <h1> and <title>; only the
-    breadcrumb is clipped so it never crowds the theme toggle.
-    """
-    t = title.strip()
-    if len(t) <= limit:
-        return html.escape(t)
-    cut = t[:limit].rstrip()
-    sp = cut.rfind(" ")
-    if sp > limit // 2:
-        cut = cut[:sp].rstrip()
-    return html.escape(cut) + "…"
-
-
 class Post:
     def __init__(self, path: Path):
         raw = path.read_text(encoding="utf-8")
@@ -951,12 +950,7 @@ def render_index(posts) -> str:
     <ul class="post-list">
 {listing}
     </ul>"""
-    breadcrumb = (
-        '<span class="sep">&gt;</span>'
-        '<a href="/">Home</a>'
-        '<span class="sep">&gt;</span>'
-        '<span style="font-weight:700;">Blog</span>'
-    )
+    breadcrumb = '<a href="/">Home</a>\n      <a href="/blogs/" aria-current="page">Blog</a>'
     blog_ld = {
         "@context": "https://schema.org",
         "@type": "Blog",
@@ -1036,14 +1030,8 @@ def render_post(p: Post, older: "Post" = None, newer: "Post" = None) -> str:
     </article>
 {post_nav(older, newer)}    <p style="margin-top:2rem;"><a href="/blogs/">← All posts</a></p>
 {COMMENTS}{render_float_ui(f"{BASE_URL}{p.url}", p.title)}"""
-    breadcrumb = (
-        '<span class="sep">&gt;</span>'
-        '<a href="/">Home</a>'
-        '<span class="sep">&gt;</span>'
-        '<a href="/blogs/">Blog</a>'
-        '<span class="sep">&gt;</span>'
-        f'<span style="font-weight:700;" title="{html.escape(p.title)}">{crumb_title(p.title)}</span>'
-    )
+    # a post sits in the Blog section; its own title is the page's h1
+    breadcrumb = '<a href="/">Home</a>\n      <a href="/blogs/" aria-current="true">Blog</a>'
     post_ld = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",

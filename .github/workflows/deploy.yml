@@ -25,16 +25,32 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0  # Fetch all history for proper git operations
 
+      - name: Update citations
+        run: |
+          cd data/
+          python3 update_citations.py
+
       - name: Check if CV needs compiling
         id: check_cv
         run: |
-          # cv.tex is generated from the JSON data + the build script, so
-          # recompile whenever any CV source changed since the last commit.
-          if git diff --quiet HEAD~1 HEAD -- cv-latex/ data/pubs.json data/presentations.json 2>/dev/null; then
-            echo "NEED_COMPILE=false" >> $GITHUB_ENV
-          else
-            echo "NEED_COMPILE=true" >> $GITHUB_ENV
+          # cv.tex is generated from the JSON data + the build script. Recompile when
+          # this run changed a CV source (fresh citation data above), when a push
+          # brought one, or on a manual run. Never because of the bot's own commit
+          # from the day before: comparing HEAD~1..HEAD on a schedule did exactly
+          # that, and the rebuilt PDF's new timestamps made one more commit.
+          SRC="cv-latex/ data/pubs.json data/presentations.json"
+          NEED=false
+          if ! git diff --quiet HEAD -- $SRC; then
+            NEED=true
+          elif [ "${{ github.event_name }}" = workflow_dispatch ]; then
+            NEED=true
+          elif [ "${{ github.event_name }}" = push ]; then
+            BEFORE="${{ github.event.before }}"
+            if ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null || ! git diff --quiet "$BEFORE" HEAD -- $SRC; then
+              NEED=true
+            fi
           fi
+          echo "NEED_COMPILE=$NEED" >> $GITHUB_ENV
 
       - name: Compile CV
         if: env.NEED_COMPILE == 'true'
@@ -47,11 +63,6 @@ jobs:
             apk add --no-cache python3
             python3 ${GITHUB_WORKSPACE}/cv-latex/build
 
-      - name: Update citations
-        run: |
-          cd data/
-          python3 update_citations.py
-
       - name: Render publications into index.html (static SEO)
         run: |
           python3 data/render_pubs.py
@@ -60,6 +71,10 @@ jobs:
         run: |
           pip install --quiet markdown pymdown-extensions Pillow
           python3 data/build_blog.py
+
+      - name: Version shared assets (cache busting)
+        run: |
+          python3 data/stamp_assets.py
 
       - name: Update sitemap (SEO metadata)
         run: |

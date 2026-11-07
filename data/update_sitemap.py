@@ -34,12 +34,24 @@ def today() -> str:
 
 
 def last_modified(sources) -> str:
-    """Newest commit date (YYYY-MM-DD) across the given source paths."""
+    """Newest commit date (YYYY-MM-DD) across the given source paths.
+
+    A source changed in the working tree but not yet committed (CI runs this
+    before its own "Update data" commit) counts as today. Otherwise the
+    sitemap would pick up that commit's date only on the next day's run, and
+    commit once more for nothing.
+    """
     newest = ""
     for src in sources:
         if not (ROOT / src).exists():
             continue
         try:
+            dirty = subprocess.run(
+                ["git", "status", "--porcelain", "--", src],
+                cwd=ROOT, capture_output=True, text=True, check=True,
+            ).stdout.strip()
+            if dirty:
+                return today()
             out = subprocess.run(
                 ["git", "log", "-1", "--format=%cs", "--", src],
                 cwd=ROOT, capture_output=True, text=True, check=True,
