@@ -42,6 +42,8 @@ from urllib.parse import quote
 
 import markdown
 
+from icons import icon
+
 ROOT = Path(__file__).resolve().parent.parent  # repo root (script lives in data/)
 POSTS_DIR = ROOT / "posts"
 BLOGS_DIR = ROOT / "blogs"
@@ -72,7 +74,7 @@ MD_EXTENSION_CONFIGS = {
 # Replace the footnote backref placeholder with a Font Awesome icon (not an
 # emoji / ↩ glyph), matching the icon styling used elsewhere in the page.
 FN_BACKREF_PLACEHOLDER = "%%FN_BACKREF%%"
-FN_BACKREF_ICON = '<i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i>'
+FN_BACKREF_ICON = icon("arrow-turn-up")
 
 
 # --------------------------------------------------------------------------- #
@@ -107,6 +109,7 @@ SHARED_HEAD = """\
       --dna-G: #157f97;
       --dna-C: #5a50bf;
       --dna-rung: 0.5;
+      --dna-trp: #2563eb;
     }
     [data-theme="dark"] {
       --text-color: #eee;
@@ -125,6 +128,7 @@ SHARED_HEAD = """\
       --dna-G: #74d0e0;
       --dna-C: #aaa2f3;
       --dna-rung: 0.32;
+      --dna-trp: #7cb0ff;
     }
     html, body { overflow-x: hidden; }
     /* Same width on every page, scrollbar or not, so the hero and the column never jump */
@@ -175,13 +179,17 @@ SHARED_HEAD = """\
       border-radius: 3px;
     }
     .hero-nav.laid a:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
+    /* Laid out, the toggle is a residue drawn on the canvas (W or a stop sign) and the
+       button an invisible target over it and its codon */
     .hero-nav.laid .theme-toggle {
       position: absolute;
-      transform: translate(-50%, -50%);
       width: 1.6rem;
       height: 1.6rem;
       margin: 0;
+      border-radius: 3px;
     }
+    .hero-nav.laid .theme-toggle img { display: none; }
+    .hero-nav.laid .theme-toggle:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
     .hero-nav .theme-toggle img { width: 18px; height: 18px; }
     .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
     a {
@@ -312,6 +320,8 @@ SHARED_HEAD = """\
     .post-nav-label { font-size: 0.8rem; color: var(--muted); }
     .post-nav-title { font-size: 1.02rem; }
     @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Inline SVG icons (data/icons.py), drawn like the Font Awesome glyphs they replaced */
+    .ico { display: inline-block; height: 1em; width: auto; overflow: visible; vertical-align: -0.125em; }
     /* Floating action buttons (share + go-to-top), bottom-right. */
     .float-btn {
       position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;
@@ -436,7 +446,8 @@ COMMENTS = """\
 """
 
 # MathJax v3. Delimiters match arithmatex's generic output (\\(...\\), \\[...\\]).
-# Loaded only on post pages (see render_post); the index needs no math.
+# Loaded only on post pages whose rendered body holds a formula (see render_post):
+# the engine is over 1 MB, and the index needs no math.
 MATHJAX = """\
   <script>
     window.MathJax = {
@@ -450,14 +461,6 @@ MATHJAX = """\
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 """
 
-# Font Awesome 6 (free, solid set) for the floating-button icons. Loaded only
-# on post pages, alongside FLOAT_UI.
-FONTAWESOME = (
-    '  <link rel="stylesheet" '
-    'href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" '
-    'crossorigin="anonymous" referrerpolicy="no-referrer">\n'
-)
-
 # Floating share + go-to-top buttons (post pages only). The share button opens
 # a small menu of social platforms (links built per-post from the canonical URL
 # + title); WeChat shows a scannable QR of the page; Copy falls back to the
@@ -469,14 +472,14 @@ FONTAWESOME = (
 # {u}=encoded URL and {t}=encoded title). WeChat/Copy are handled in JS, not
 # here, because they don't have a simple share URL.
 SHARE_PLATFORMS = [
-    ("X", "fa-brands fa-x-twitter", "https://twitter.com/intent/tweet?url={u}&text={t}"),
-    ("LinkedIn", "fa-brands fa-linkedin-in", "https://www.linkedin.com/sharing/share-offsite/?url={u}"),
-    ("Reddit", "fa-brands fa-reddit-alien", "https://www.reddit.com/submit?url={u}&title={t}"),
-    ("Facebook", "fa-brands fa-facebook-f", "https://www.facebook.com/sharer/sharer.php?u={u}"),
-    ("WhatsApp", "fa-brands fa-whatsapp", "https://api.whatsapp.com/send?text={t}%20{u}"),
-    ("Telegram", "fa-brands fa-telegram", "https://t.me/share/url?url={u}&text={t}"),
-    ("Line", "fa-brands fa-line", "https://social-plugins.line.me/lineit/share?url={u}"),
-    ("Email", "fa-solid fa-envelope", "mailto:?subject={t}&body={u}"),
+    ("X", "x-twitter", "https://twitter.com/intent/tweet?url={u}&text={t}"),
+    ("LinkedIn", "linkedin-in", "https://www.linkedin.com/sharing/share-offsite/?url={u}"),
+    ("Reddit", "reddit-alien", "https://www.reddit.com/submit?url={u}&title={t}"),
+    ("Facebook", "facebook-f", "https://www.facebook.com/sharer/sharer.php?u={u}"),
+    ("WhatsApp", "whatsapp", "https://api.whatsapp.com/send?text={t}%20{u}"),
+    ("Telegram", "telegram", "https://t.me/share/url?url={u}&text={t}"),
+    ("Line", "line", "https://social-plugins.line.me/lineit/share?url={u}"),
+    ("Email", "envelope", "mailto:?subject={t}&body={u}"),
 ]
 
 # Plain string (not an f-string) so the JS braces need no escaping.
@@ -544,22 +547,22 @@ def render_float_ui(share_url: str, title: str) -> str:
     links = "\n".join(
         f'        <a class="share-opt" href="{tmpl.format(u=u, t=t)}" target="_blank" '
         f'rel="noopener noreferrer" title="Share on {label}" aria-label="Share on {label}">'
-        f'<i class="{icon}" aria-hidden="true"></i></a>'
-        for label, icon, tmpl in SHARE_PLATFORMS
+        f'{icon(name)}</a>'
+        for label, name, tmpl in SHARE_PLATFORMS
     )
     return f"""\
     <div id="share-wrap">
       <div id="share-menu" class="share-menu" hidden>
 {links}
-        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat"><i class="fa-brands fa-weixin" aria-hidden="true"></i></button>
-        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat">{icon("weixin")}</button>
+        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link">{icon("link")}</button>
       </div>
       <button id="share-btn" class="float-btn" onclick="toggleShareMenu()" title="Share" aria-label="Share this post" aria-haspopup="true">
-        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+        {icon("share-nodes")}
       </button>
     </div>
     <button id="top-btn" class="float-btn" onclick="scrollToTop()" title="Go to top" aria-label="Go to top">
-      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+      {icon("arrow-up")}
     </button>
     <span id="share-toast" role="status" aria-live="polite"></span>
     <div id="wechat-qr" class="qr-modal" hidden onclick="hideWeChatQR()">
@@ -1050,7 +1053,7 @@ def render_post(p: Post, older: "Post" = None, newer: "Post" = None) -> str:
     return page(f"{p.title} — Shijie Xu", p.description, breadcrumb, body,
                 f"{BASE_URL}{p.url}", lang=p.lang, og_type="article",
                 keywords=p.keywords, published=p.date, jsonld=post_ld,
-                extra_head=MATHJAX + FONTAWESOME,
+                extra_head=(MATHJAX if 'class="arithmatex"' in body else ""),
                 image=p.image, image_w=p.image_w, image_h=p.image_h,
                 image_alt=p.image_alt)
 

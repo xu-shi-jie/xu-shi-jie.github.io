@@ -3,9 +3,10 @@
 // .hero element; colours come from the --dna-* tokens so it follows the theme. Without
 // JS the .hero keeps its CSS gradient.
 //
-// Sequence: chicken lysozyme C, LYZ coding sequence (NCBI NM_205281.2, CDS 32..475, incl. stop).
+// Sequence: human carbonic anhydrase II, CA2 coding sequence (NCBI NM_000067.3, CDS
+// 76..858, incl. stop). Its zinc ion is held by His94, His96 and His119.
 (function () {
-  const CDS = 'ATGAGGTCTTTGCTAATCTTGGTGCTTTGCTTCCTGCCCCTGGCTGCTCTGGGGAAAGTCTTTGGACGATGTGAGCTGGCAGCGGCTATGAAGCGTCACGGACTTGATAACTATCGGGGATACAGCCTGGGAAACTGGGTGTGTGCCGCAAAATTCGAGAGTAACTTCAACACCCAGGCTACAAACCGTAACACCGATGGGAGTACCGACTACGGAATCCTACAGATCAACAGCCGCTGGTGGTGCAACGATGGCAGGACCCCAGGCTCCAGGAACCTGTGCAACATCCCGTGCTCAGCCCTGCTGAGCTCAGACATAACAGCGAGCGTGAACTGCGCGAAGAAGATCGTCAGCGATGGAAACGGCATGAACGCGTGGGTCGCCTGGCGCAACCGCTGCAAGGGCACCGACGTCCAGGCGTGGATCAGAGGCTGCCGGCTGTGA';
+  const CDS = 'ATGTCCCATCACTGGGGGTACGGCAAACACAACGGACCTGAGCACTGGCATAAGGACTTCCCCATTGCCAAGGGAGAGCGCCAGTCCCCTGTTGACATCGACACTCATACAGCCAAGTATGACCCTTCCCTGAAGCCCCTGTCTGTTTCCTATGATCAAGCAACTTCCCTGAGGATCCTCAACAATGGTCATGCTTTCAACGTGGAGTTTGATGACTCTCAGGACAAAGCAGTGCTCAAGGGAGGACCCCTGGATGGCACTTACAGATTGATTCAGTTTCACTTTCACTGGGGTTCACTTGATGGACAAGGTTCAGAGCATACTGTGGATAAAAAGAAATATGCTGCAGAACTTCACTTGGTTCACTGGAACACCAAATATGGGGATTTTGGGAAAGCTGTGCAGCAACCTGATGGACTGGCCGTTCTAGGTATTTTTTTGAAGGTTGGCAGCGCTAAACCGGGCCTTCAGAAAGTTGTTGATGTGCTGGATTCCATTAAAACAAAGGGCAAGAGTGCTGACTTCACTAACTTCGATCCTCGTGGCCTCCTTCCTGAATCCTTGGATTACTGGACCTACCCAGGCTCACTGACCACCCCTCCTCTTCTGGAATGTGTGACCTGGATTGTGCTCAAGGAACCCATCAGCGTCAGCAGCGAGCAGGTGTTGAAATTCCGTAAACTTAACTTCAATGGGGAGGGTGAACCCGAAGAACTGATGGTGGACAACTGGCGCCCAGCTCAGCCACTGAAGAACAGGCAAATCAAAGCTTCCTTCAAATAA';
   const NB = CDS.length;
   const GAP = 12;          // bare helix between repeats of the gene
   const PERIOD = NB + GAP;
@@ -22,6 +23,10 @@
     R: 'CGC', S: 'AGC', T: 'ACC', U: 'TGA', V: 'GTG', W: 'TGG', Y: 'TAC',
   };
   const STOP = 'TAA';      // between two link words, drawn as a stop residue '·'
+  // The theme toggle is Trp97 (codon TGG), the residue that makes proteins fluoresce, right
+  // after His94-Phe95-His96, two of the zinc's three ligands. The dark theme is its point
+  // mutant: TGG -> TGA, a stop, so the light goes out.
+  const TOGGLE_RES = 97;
   const SERIF = '"Roboto Serif", Georgia, serif';
   const MONO = '"Roboto Mono", ui-monospace, Menlo, Consolas, monospace';
 
@@ -37,7 +42,7 @@
   };
   function readColors(el) {
     const cs = getComputedStyle(el);
-    for (const k of ['bg1', 'bg2', 'strand', 'ink', 'A', 'T', 'G', 'C']) C[k] = rgb(cs.getPropertyValue('--dna-' + k));
+    for (const k of ['bg1', 'bg2', 'strand', 'ink', 'A', 'T', 'G', 'C', 'trp']) C[k] = rgb(cs.getPropertyValue('--dna-' + k));
     C.rung = parseFloat(cs.getPropertyValue('--dna-rung')) || 0.5;
   }
   // IUPAC R (A or G) takes the colour halfway between A and G
@@ -64,6 +69,20 @@
       a.addEventListener('pointerenter', on); a.addEventListener('pointerleave', off);
       a.addEventListener('focus', on); a.addEventListener('blur', off);
     }
+    // The toggle glows while hovered or focused. After a click the glow goes out and waits
+    // until the pointer (or focus) leaves and comes back, so the switched theme is seen
+    // without the hover cue still on.
+    let hotT = false, held = false;
+    const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+    if (toggle) {
+      const on = () => { if (!held) { hotT = true; draw(); } };
+      const off = () => { held = false; hotT = false; draw(); };
+      toggle.addEventListener('pointerenter', on); toggle.addEventListener('pointerleave', off);
+      toggle.addEventListener('focus', on); toggle.addEventListener('blur', off);
+      // toggleTheme() (the markup's onclick) runs first and the theme observer may already
+      // have redrawn with the glow still on, so redraw once more after turning it off
+      toggle.addEventListener('click', () => { held = true; hotT = false; draw(); });
+    }
     if (nav) nav.classList.add('laid');
 
     function resize() {
@@ -80,15 +99,22 @@
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, W, H);
 
-      // px per base pair, narrowed on very small screens until the links fit the column
       const colL = W >= 832 ? (W - 800) / 2 : 16, colR = W - colL;
-      // the toggle needs its own slot plus a gap, or on a phone it has no room left in the row
-      const nSlots = links.reduce((n, a) => n + a.textContent.trim().length + 1, 0) + (toggle ? 2 : 0);
-      const cw = Math.min(W < 600 ? 12 : 15, (colR - colL) / (3 * Math.max(nSlots, 1)));
+      // px per base pair, narrowed on very small screens until the links, and after them the
+      // theme toggle, fit the column
+      const nSlots = links.reduce((n, a) => n + a.textContent.trim().length + 1, 0);
+      const cwMax = Math.min(W < 600 ? 12 : 15, (colR - colL - (toggle ? 130 : 0)) / (3 * Math.max(nSlots, 1)));
+      // with the toggle, a whole number of residues spans the column, so the first link's
+      // letter and His96's both sit exactly 6 px inside its edges
+      const nRes = Math.max(nSlots + 4, Math.ceil((colR - colL - 12) / (3 * cwMax)));
+      const cw = toggle ? (colR - colL - 12) / (3 * nRes) : cwMax;
       const cx = W / 2, cy = H * 0.38, R = H * 0.17;
-      // bp index under the centre line; on wide screens shift it right so the gene's ATG
-      // sits at or beyond the left edge instead of the gap and the gene's wrapped-around tail
-      const off = Math.max(57, Math.ceil(cx / cw));
+      const ntFont = `300 ${Math.min(10.5, cw * 1.2).toFixed(1)}px ${MONO}`;  // base letters
+      // The bp index under the centre line is set so the toggle, Trp97, sits at the column's
+      // right end, after the links, its letter on the column's right edge.
+      const kRes = r => 3 * (r - 1) + 1;   // a residue's slot: its codon's middle base
+      const xT = colR - 6;
+      const off = toggle ? kRes(TOGGLE_RES) - (xT - cx) / cw : Math.max(57, Math.ceil(cx / cw));
       const xOf = k => cx + (k - off) * cw;
       const at = (u, s) => {
         const th = (2 * Math.PI * u) / BP_TURN + (s ? GROOVE : 0);
@@ -129,7 +155,7 @@
       }
 
       // residue slots taken by the links: start at the content column's left edge, one
-      // blank slot between words; the theme toggle takes the last slot before its right edge
+      // blank slot between words
       const yNt = H * 0.74, yAa = H * 0.92;
       const taken = new Set(), words = [];
       // rewritten bases (bp index -> base) and the ones that belong to a link's codons
@@ -147,21 +173,14 @@
         }
         words.push({ a, t, ks });
       });
+      // the toggle's residue is drawn after the edge fade, like the links
+      if (toggle) taken.add(kRes(TOGGLE_RES));
+      // in the dark theme Trp97's codon carries the point mutation TGG -> TGA, a stop
+      const kW = kRes(TOGGLE_RES), mutant = !!toggle && isDark();
+      if (mutant) nt.set(kW + 1, 'A');
       // a stop codon after the last word too, so the next residue never reads as part of it
       if (links.length) setCodon(k, STOP);
       k += 3;
-      let kT = Math.floor(off + (colR - 8 - cx) / cw);
-      while (mod(kT, 3) !== 1) kT--;
-      const tFits = kT >= k;
-      // the toggle's codon is a point mutation away from dark: TGG (Trp, the residue that
-      // absorbs and fluoresces) in the light theme, TGA (stop: the light goes out) in the dark
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (tFits) {
-        taken.add(kT);
-        setCodon(kT, dark ? 'TGA' : 'TGG');
-        linkNt.add(kT - 1).add(kT).add(kT + 1);
-      }
-
       // coding strand (the only colour in the hero) and its translation
       ctx.textAlign = 'center';
       ctx.textBaseline = 'alphabetic';
@@ -170,7 +189,7 @@
         if (!b) continue;
         const x = xOf(k), e = em(x);
         if (!linkNt.has(k)) {
-          ctx.font = `300 10.5px ${MONO}`;
+          ctx.font = ntFont;
           ctx.fillStyle = css(baseColor(b), 0.25 + 0.6 * e);
           ctx.fillText(b, x, yNt);
         }
@@ -196,7 +215,7 @@
         const cur = a.getAttribute('aria-current'), on = hot === a;
         const x0 = xOf(ks[0]), x1 = xOf(ks[ks.length - 1]);
         // the link's codons, also painted after the fade
-        ctx.font = `300 10.5px ${MONO}`;
+        ctx.font = ntFont;
         for (const k of ks) for (const q of [k - 1, k, k + 1]) {
           const b = nt.get(q);
           if (!b || !linkNt.has(q)) continue;
@@ -214,16 +233,38 @@
           top: `${yAa - 20}px`, height: `${H - yAa + 20}px`,
         });
       }
-      if (tFits) {
-        ctx.font = `300 10.5px ${MONO}`;
-        for (const q of [kT - 1, kT, kT + 1]) {
-          ctx.fillStyle = css(baseColor(nt.get(q)), 0.9);
-          ctx.fillText(nt.get(q), xOf(q), yNt);
-        }
-      }
       if (toggle) {
-        const tx = tFits ? xOf(kT) : colR - 10, ty = tFits ? yAa - 6 : 16;
-        Object.assign(toggle.style, { left: `${tx}px`, top: `${ty}px` });
+        // Trp97 (W), the theme toggle, in its own slot in the translation row and in the row's
+        // type, glowing blue as tryptophan fluoresces; in the dark theme its mutant, a stop
+        // ('·'), and the light is out. While hovered or focused it gets a soft halo.
+        const dark = isDark();
+        const glow = hotT;
+        const xW = xOf(kW), yW = yAa - 6;   // the letter's mid height
+        if (glow) {
+          const g = ctx.createRadialGradient(xW, yW, 0, xW, yW, 20);
+          g.addColorStop(0, css(C.ink, 0.18)); g.addColorStop(1, css(C.ink, 0));
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(xW, yW, 20, 0, 7); ctx.fill();
+        }
+        const a = glow ? 1 : 0.8;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        ctx.font = `300 17px ${SERIF}`;
+        if (mutant) {
+          ctx.fillStyle = css(C.ink, a);
+          ctx.fillText('·', xW, yAa);
+        } else {
+          const g = ctx.createRadialGradient(xW, yW, 0, xW, yW, 17);
+          g.addColorStop(0, css(C.trp, 0.38)); g.addColorStop(1, css(C.trp, 0));
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(xW, yW, 17, 0, 7); ctx.fill();
+          ctx.fillStyle = css(mix(C.ink, C.trp, 0.75), a);
+          ctx.fillText('W', xW, yAa);
+        }
+        Object.assign(toggle.style, {
+          left: `${xW - 14}px`, width: '28px', top: `${yW - 14}px`, height: '26px',
+        });
+        toggle.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+        toggle.title = dark ? 'TGA → TGG: back to Trp97 (light theme)' : 'TGG → TGA: Trp97 to a stop (dark theme)';
       }
     }
 

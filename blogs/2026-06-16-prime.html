@@ -32,7 +32,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link id="hero-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto+Serif:wght@300&text=ABCDEFGHIKLMNOPQRSTVWY%C2%B7&display=swap" media="print" onload="this.media='all'">
-  <script src="/docs/hero-dna.js?v=1fb03bdb57"></script>
+  <script src="/docs/hero-dna.js?v=16b665ec1f"></script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     :root {
@@ -52,6 +52,7 @@
       --dna-G: #157f97;
       --dna-C: #5a50bf;
       --dna-rung: 0.5;
+      --dna-trp: #2563eb;
     }
     [data-theme="dark"] {
       --text-color: #eee;
@@ -70,6 +71,7 @@
       --dna-G: #74d0e0;
       --dna-C: #aaa2f3;
       --dna-rung: 0.32;
+      --dna-trp: #7cb0ff;
     }
     html, body { overflow-x: hidden; }
     /* Same width on every page, scrollbar or not, so the hero and the column never jump */
@@ -120,13 +122,17 @@
       border-radius: 3px;
     }
     .hero-nav.laid a:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
+    /* Laid out, the toggle is a residue drawn on the canvas (W or a stop sign) and the
+       button an invisible target over it and its codon */
     .hero-nav.laid .theme-toggle {
       position: absolute;
-      transform: translate(-50%, -50%);
       width: 1.6rem;
       height: 1.6rem;
       margin: 0;
+      border-radius: 3px;
     }
+    .hero-nav.laid .theme-toggle img { display: none; }
+    .hero-nav.laid .theme-toggle:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
     .hero-nav .theme-toggle img { width: 18px; height: 18px; }
     .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
     a {
@@ -257,6 +263,8 @@
     .post-nav-label { font-size: 0.8rem; color: var(--muted); }
     .post-nav-title { font-size: 1.02rem; }
     @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Inline SVG icons (data/icons.py), drawn like the Font Awesome glyphs they replaced */
+    .ico { display: inline-block; height: 1em; width: auto; overflow: visible; vertical-align: -0.125em; }
     /* Floating action buttons (share + go-to-top), bottom-right. */
     .float-btn {
       position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;
@@ -350,17 +358,6 @@
     // flash of light theme when navigating between pages in dark mode.
     document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
   </script>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']]
-      },
-      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
-    };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 </head>
 <body>
   <div class="hero" role="banner">
@@ -416,31 +413,31 @@
 <hr>
 <ol>
 <li id="fn:prime">
-<p>Xu, S. &amp; Onoda, A. Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations. <em>Nat. Commun.</em> <strong>17</strong>, 8146 (2026). <a href="https://doi.org/10.1038/s41467-026-74657-x">https://doi.org/10.1038/s41467-026-74657-x</a>&#160;<a class="footnote-backref" href="#fnref:prime" title="Jump back to footnote 1 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Xu, S. &amp; Onoda, A. Probe-Based Identification of Metal-Binding Sites Using Deep Learning Representations. <em>Nat. Commun.</em> <strong>17</strong>, 8146 (2026). <a href="https://doi.org/10.1038/s41467-026-74657-x">https://doi.org/10.1038/s41467-026-74657-x</a>&#160;<a class="footnote-backref" href="#fnref:prime" title="Jump back to footnote 1 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:esm">
-<p>Lin, Z. et al. Evolutionary-scale prediction of atomic-level protein structure with a language model (ESM-2). <em>Science</em> <strong>379</strong>, 1123–1130 (2023). <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>&#160;<a class="footnote-backref" href="#fnref:esm" title="Jump back to footnote 2 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Lin, Z. et al. Evolutionary-scale prediction of atomic-level protein structure with a language model (ESM-2). <em>Science</em> <strong>379</strong>, 1123–1130 (2023). <a href="https://doi.org/10.1126/science.ade2574">https://doi.org/10.1126/science.ade2574</a>&#160;<a class="footnote-backref" href="#fnref:esm" title="Jump back to footnote 2 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:lmetalsite">
-<p>Yuan, Q. et al. Alignment-free metal ion-binding site prediction from protein sequence through pretrained language model and multi-task learning (LMetalSite). <em>Brief. Bioinform.</em> <strong>23</strong>, bbac444 (2022). <a href="https://doi.org/10.1093/bib/bbac444">https://doi.org/10.1093/bib/bbac444</a>&#160;<a class="footnote-backref" href="#fnref:lmetalsite" title="Jump back to footnote 3 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Yuan, Q. et al. Alignment-free metal ion-binding site prediction from protein sequence through pretrained language model and multi-task learning (LMetalSite). <em>Brief. Bioinform.</em> <strong>23</strong>, bbac444 (2022). <a href="https://doi.org/10.1093/bib/bbac444">https://doi.org/10.1093/bib/bbac444</a>&#160;<a class="footnote-backref" href="#fnref:lmetalsite" title="Jump back to footnote 3 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:mionic">
-<p>Shenoy, A., Kalakoti, Y., Sundar, D. &amp; Elofsson, A. M-Ionic: prediction of metal-ion-binding sites from sequence using residue embeddings. <em>Bioinformatics</em> <strong>40</strong>, btad782 (2024). <a href="https://doi.org/10.1093/bioinformatics/btad782">https://doi.org/10.1093/bioinformatics/btad782</a>&#160;<a class="footnote-backref" href="#fnref:mionic" title="Jump back to footnote 4 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Shenoy, A., Kalakoti, Y., Sundar, D. &amp; Elofsson, A. M-Ionic: prediction of metal-ion-binding sites from sequence using residue embeddings. <em>Bioinformatics</em> <strong>40</strong>, btad782 (2024). <a href="https://doi.org/10.1093/bioinformatics/btad782">https://doi.org/10.1093/bioinformatics/btad782</a>&#160;<a class="footnote-backref" href="#fnref:mionic" title="Jump back to footnote 4 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:alphafold">
-<p>Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold. <em>Nature</em> <strong>596</strong>, 583–589 (2021). <a href="https://doi.org/10.1038/s41586-021-03819-2">https://doi.org/10.1038/s41586-021-03819-2</a>&#160;<a class="footnote-backref" href="#fnref:alphafold" title="Jump back to footnote 5 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Jumper, J. et al. Highly accurate protein structure prediction with AlphaFold. <em>Nature</em> <strong>596</strong>, 583–589 (2021). <a href="https://doi.org/10.1038/s41586-021-03819-2">https://doi.org/10.1038/s41586-021-03819-2</a>&#160;<a class="footnote-backref" href="#fnref:alphafold" title="Jump back to footnote 5 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:biometall">
-<p>Sánchez-Aparicio, J.-E. et al. BioMetAll: Identifying Metal-Binding Sites in Proteins from Backbone Preorganization. <em>J. Chem. Inf. Model.</em> <strong>61</strong>, 311–323 (2021). <a href="https://doi.org/10.1021/acs.jcim.0c00827">https://doi.org/10.1021/acs.jcim.0c00827</a>&#160;<a class="footnote-backref" href="#fnref:biometall" title="Jump back to footnote 6 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Sánchez-Aparicio, J.-E. et al. BioMetAll: Identifying Metal-Binding Sites in Proteins from Backbone Preorganization. <em>J. Chem. Inf. Model.</em> <strong>61</strong>, 311–323 (2021). <a href="https://doi.org/10.1021/acs.jcim.0c00827">https://doi.org/10.1021/acs.jcim.0c00827</a>&#160;<a class="footnote-backref" href="#fnref:biometall" title="Jump back to footnote 6 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:metal3d">
-<p>Dürr, S. L., Levy, A. &amp; Rothlisberger, U. Metal3D: a general deep learning framework for accurate metal ion location prediction in proteins. <em>Nat. Commun.</em> <strong>14</strong>, 2713 (2023). <a href="https://doi.org/10.1038/s41467-023-37870-6">https://doi.org/10.1038/s41467-023-37870-6</a>&#160;<a class="footnote-backref" href="#fnref:metal3d" title="Jump back to footnote 7 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Dürr, S. L., Levy, A. &amp; Rothlisberger, U. Metal3D: a general deep learning framework for accurate metal ion location prediction in proteins. <em>Nat. Commun.</em> <strong>14</strong>, 2713 (2023). <a href="https://doi.org/10.1038/s41467-023-37870-6">https://doi.org/10.1038/s41467-023-37870-6</a>&#160;<a class="footnote-backref" href="#fnref:metal3d" title="Jump back to footnote 7 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:allmetal3d">
-<p>Dürr, S. L. &amp; Rothlisberger, U. AllMetal3D: joint prediction of localization, identity and coordination geometry of common metal ions in proteins. <em>bioRxiv</em> (2025). <a href="https://doi.org/10.1101/2025.02.05.636627">https://doi.org/10.1101/2025.02.05.636627</a>&#160;<a class="footnote-backref" href="#fnref:allmetal3d" title="Jump back to footnote 8 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Dürr, S. L. &amp; Rothlisberger, U. AllMetal3D: joint prediction of localization, identity and coordination geometry of common metal ions in proteins. <em>bioRxiv</em> (2025). <a href="https://doi.org/10.1101/2025.02.05.636627">https://doi.org/10.1101/2025.02.05.636627</a>&#160;<a class="footnote-backref" href="#fnref:allmetal3d" title="Jump back to footnote 8 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 <li id="fn:rcnn">
-<p>Girshick, R., Donahue, J., Darrell, T. &amp; Malik, J. Rich feature hierarchies for accurate object detection and semantic segmentation (R-CNN). <em>Proc. IEEE CVPR</em> 580–587 (2014). <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>&#160;<a class="footnote-backref" href="#fnref:rcnn" title="Jump back to footnote 9 in the text"><i class="fa-solid fa-arrow-turn-up" aria-hidden="true"></i></a></p>
+<p>Girshick, R., Donahue, J., Darrell, T. &amp; Malik, J. Rich feature hierarchies for accurate object detection and semantic segmentation (R-CNN). <em>Proc. IEEE CVPR</em> 580–587 (2014). <a href="https://arxiv.org/abs/1311.2524">https://arxiv.org/abs/1311.2524</a>&#160;<a class="footnote-backref" href="#fnref:rcnn" title="Jump back to footnote 9 in the text"><svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M32 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l96 0c53 0 96-43 96-96l0-306.7 73.4 73.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 416c0 17.7-14.3 32-32 32l-96 0z"/></svg></a></p>
 </li>
 </ol>
 </div>
@@ -462,23 +459,23 @@
     </section>
     <div id="share-wrap">
       <div id="share-menu" class="share-menu" hidden>
-        <a class="share-opt" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on X" aria-label="Share on X"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on LinkedIn" aria-label="Share on LinkedIn"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://www.reddit.com/submit?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&title=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Reddit" aria-label="Share on Reddit"><i class="fa-brands fa-reddit-alien" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Facebook" aria-label="Share on Facebook"><i class="fa-brands fa-facebook-f" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://api.whatsapp.com/send?text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds%20https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp" aria-label="Share on WhatsApp"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://t.me/share/url?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Telegram" aria-label="Share on Telegram"><i class="fa-brands fa-telegram" aria-hidden="true"></i></a>
-        <a class="share-opt" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Line" aria-label="Share on Line"><i class="fa-brands fa-line" aria-hidden="true"></i></a>
-        <a class="share-opt" href="mailto:?subject=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds&body=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Email" aria-label="Share on Email"><i class="fa-solid fa-envelope" aria-hidden="true"></i></a>
-        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat"><i class="fa-brands fa-weixin" aria-hidden="true"></i></button>
-        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link"><i class="fa-solid fa-link" aria-hidden="true"></i></button>
+        <a class="share-opt" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on X" aria-label="Share on X"><svg class="ico" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></a>
+        <a class="share-opt" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on LinkedIn" aria-label="Share on LinkedIn"><svg class="ico" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"/></svg></a>
+        <a class="share-opt" href="https://www.reddit.com/submit?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&title=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Reddit" aria-label="Share on Reddit"><svg class="ico" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M373 138.6c-25.2 0-46.3-17.5-51.9-41l0 0c-30.6 4.3-54.2 30.7-54.2 62.4l0 .2c47.4 1.8 90.6 15.1 124.9 36.3c12.6-9.7 28.4-15.5 45.5-15.5c41.3 0 74.7 33.4 74.7 74.7c0 29.8-17.4 55.5-42.7 67.5c-2.4 86.8-97 156.6-213.2 156.6S45.5 410.1 43 323.4C17.6 311.5 0 285.7 0 255.7c0-41.3 33.4-74.7 74.7-74.7c17.2 0 33 5.8 45.7 15.6c34-21.1 76.8-34.4 123.7-36.4l0-.3c0-44.3 33.7-80.9 76.8-85.5C325.8 50.2 347.2 32 373 32c29.4 0 53.3 23.9 53.3 53.3s-23.9 53.3-53.3 53.3zM157.5 255.3c-20.9 0-38.9 20.8-40.2 47.9s17.1 38.1 38 38.1s36.6-9.8 37.8-36.9s-14.7-49.1-35.7-49.1zM395 303.1c-1.2-27.1-19.2-47.9-40.2-47.9s-36.9 22-35.7 49.1c1.2 27.1 16.9 36.9 37.8 36.9s39.3-11 38-38.1zm-60.1 70.8c1.5-3.6-1-7.7-4.9-8.1c-23-2.3-47.9-3.6-73.8-3.6s-50.8 1.3-73.8 3.6c-3.9 .4-6.4 4.5-4.9 8.1c12.9 30.8 43.3 52.4 78.7 52.4s65.8-21.6 78.7-52.4z"/></svg></a>
+        <a class="share-opt" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Facebook" aria-label="Share on Facebook"><svg class="ico" viewBox="0 0 320 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M80 299.3V512H196V299.3h86.5l18-97.8H196V166.9c0-51.7 20.3-71.5 72.7-71.5c16.3 0 29.4 .4 37 1.2V7.9C291.4 4 256.4 0 236.2 0C129.3 0 80 50.5 80 159.4v42.1H14v97.8H80z"/></svg></a>
+        <a class="share-opt" href="https://api.whatsapp.com/send?text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds%20https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on WhatsApp" aria-label="Share on WhatsApp"><svg class="ico" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg></a>
+        <a class="share-opt" href="https://t.me/share/url?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html&text=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds" target="_blank" rel="noopener noreferrer" title="Share on Telegram" aria-label="Share on Telegram"><svg class="ico" viewBox="0 0 496 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M248,8C111.033,8,0,119.033,0,256S111.033,504,248,504,496,392.967,496,256,384.967,8,248,8ZM362.952,176.66c-3.732,39.215-19.881,134.378-28.1,178.3-3.476,18.584-10.322,24.816-16.948,25.425-14.4,1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25,5.342-39.5,3.652-3.793,67.107-61.51,68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608,69.142-14.845,10.194-26.894,9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7,18.45-13.7,108.446-47.248,144.628-62.3c68.872-28.647,83.183-33.623,92.511-33.789,2.052-.034,6.639.474,9.61,2.885a10.452,10.452,0,0,1,3.53,6.716A43.765,43.765,0,0,1,362.952,176.66Z"/></svg></a>
+        <a class="share-opt" href="https://social-plugins.line.me/lineit/share?url=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Line" aria-label="Share on Line"><svg class="ico" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M311 196.8v81.3c0 2.1-1.6 3.7-3.7 3.7h-13c-1.3 0-2.4-.7-3-1.5l-37.3-50.3v48.2c0 2.1-1.6 3.7-3.7 3.7h-13c-2.1 0-3.7-1.6-3.7-3.7V196.9c0-2.1 1.6-3.7 3.7-3.7h12.9c1.1 0 2.4 .6 3 1.6l37.3 50.3V196.9c0-2.1 1.6-3.7 3.7-3.7h13c2.1-.1 3.8 1.6 3.8 3.5zm-93.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 2.1 1.6 3.7 3.7 3.7h13c2.1 0 3.7-1.6 3.7-3.7V196.8c0-1.9-1.6-3.7-3.7-3.7zm-31.4 68.1H150.3V196.8c0-2.1-1.6-3.7-3.7-3.7h-13c-2.1 0-3.7 1.6-3.7 3.7v81.3c0 1 .3 1.8 1 2.5c.7 .6 1.5 1 2.5 1h52.2c2.1 0 3.7-1.6 3.7-3.7v-13c0-1.9-1.6-3.7-3.5-3.7zm193.7-68.1H327.3c-1.9 0-3.7 1.6-3.7 3.7v81.3c0 1.9 1.6 3.7 3.7 3.7h52.2c2.1 0 3.7-1.6 3.7-3.7V265c0-2.1-1.6-3.7-3.7-3.7H344V247.7h35.5c2.1 0 3.7-1.6 3.7-3.7V230.9c0-2.1-1.6-3.7-3.7-3.7H344V213.5h35.5c2.1 0 3.7-1.6 3.7-3.7v-13c-.1-1.9-1.7-3.7-3.7-3.7zM512 93.4V419.4c-.1 51.2-42.1 92.7-93.4 92.6H92.6C41.4 511.9-.1 469.8 0 418.6V92.6C.1 41.4 42.2-.1 93.4 0H419.4c51.2 .1 92.7 42.1 92.6 93.4zM441.6 233.5c0-83.4-83.7-151.3-186.4-151.3s-186.4 67.9-186.4 151.3c0 74.7 66.3 137.4 155.9 149.3c21.8 4.7 19.3 12.7 14.4 42.1c-.8 4.7-3.8 18.4 16.1 10.1s107.3-63.2 146.5-108.2c27-29.7 39.9-59.8 39.9-93.1z"/></svg></a>
+        <a class="share-opt" href="mailto:?subject=How%20does%20a%20protein%20catch%20a%20metal%3F%20Teaching%20a%20computer%20to%20find%20the%20spot%20%E2%80%94%20in%20seconds&body=https%3A%2F%2Fxu-shi-jie.github.io%2Fblogs%2F2026-06-16-prime.html" target="_blank" rel="noopener noreferrer" title="Share on Email" aria-label="Share on Email"><svg class="ico" viewBox="0 0 512 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg></a>
+        <button class="share-opt" onclick="showWeChatQR()" title="Share on WeChat" aria-label="Share on WeChat"><svg class="ico" viewBox="0 0 576 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M385.2 167.6c6.4 0 12.6.3 18.8 1.1C387.4 90.3 303.3 32 207.7 32 100.5 32 13 104.8 13 197.4c0 53.4 29.3 97.5 77.9 131.6l-19.3 58.6 68-34.1c24.4 4.8 43.8 9.7 68.2 9.7 6.2 0 12.1-.3 18.3-.8-4-12.9-6.2-26.6-6.2-40.8-.1-84.9 72.9-154 165.3-154zm-104.5-52.9c14.5 0 24.2 9.7 24.2 24.4 0 14.5-9.7 24.2-24.2 24.2-14.8 0-29.3-9.7-29.3-24.2.1-14.7 14.6-24.4 29.3-24.4zm-136.4 48.6c-14.5 0-29.3-9.7-29.3-24.2 0-14.8 14.8-24.4 29.3-24.4 14.8 0 24.4 9.7 24.4 24.4 0 14.6-9.6 24.2-24.4 24.2zM563 319.4c0-77.9-77.9-141.3-165.4-141.3-92.7 0-165.4 63.4-165.4 141.3S305 460.7 397.6 460.7c19.3 0 38.9-5.1 58.6-9.9l53.4 29.3-14.8-48.6C534 402.1 563 363.2 563 319.4zm-219.1-24.5c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.8 0 24.4 9.7 24.4 19.3 0 10-9.7 19.6-24.4 19.6zm107.1 0c-9.7 0-19.3-9.7-19.3-19.6 0-9.7 9.7-19.3 19.3-19.3 14.5 0 24.4 9.7 24.4 19.3.1 10-9.9 19.6-24.4 19.6z"/></svg></button>
+        <button class="share-opt" onclick="copyLink()" title="Copy link" aria-label="Copy link"><svg class="ico" viewBox="0 0 640 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"/></svg></button>
       </div>
       <button id="share-btn" class="float-btn" onclick="toggleShareMenu()" title="Share" aria-label="Share this post" aria-haspopup="true">
-        <i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+        <svg class="ico" viewBox="0 0 448 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></svg>
       </button>
     </div>
     <button id="top-btn" class="float-btn" onclick="scrollToTop()" title="Go to top" aria-label="Go to top">
-      <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+      <svg class="ico" viewBox="0 0 384 512" aria-hidden="true" focusable="false"><path fill="currentColor" d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2 160 448c0 17.7 14.3 32 32 32s32-14.3 32-32l0-306.7L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"/></svg>
     </button>
     <span id="share-toast" role="status" aria-live="polite"></span>
     <div id="wechat-qr" class="qr-modal" hidden onclick="hideWeChatQR()">

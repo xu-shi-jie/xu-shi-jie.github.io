@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link id="hero-fonts" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&family=Roboto+Serif:wght@300&text=ABCDEFGHIKLMNOPQRSTVWY%C2%B7&display=swap" media="print" onload="this.media='all'">
-  <script src="/docs/hero-dna.js?v=1fb03bdb57"></script>
+  <script src="/docs/hero-dna.js?v=16b665ec1f"></script>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <style>
     :root {
@@ -49,6 +49,7 @@
       --dna-G: #157f97;
       --dna-C: #5a50bf;
       --dna-rung: 0.5;
+      --dna-trp: #2563eb;
     }
     [data-theme="dark"] {
       --text-color: #eee;
@@ -67,6 +68,7 @@
       --dna-G: #74d0e0;
       --dna-C: #aaa2f3;
       --dna-rung: 0.32;
+      --dna-trp: #7cb0ff;
     }
     html, body { overflow-x: hidden; }
     /* Same width on every page, scrollbar or not, so the hero and the column never jump */
@@ -117,13 +119,17 @@
       border-radius: 3px;
     }
     .hero-nav.laid a:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
+    /* Laid out, the toggle is a residue drawn on the canvas (W or a stop sign) and the
+       button an invisible target over it and its codon */
     .hero-nav.laid .theme-toggle {
       position: absolute;
-      transform: translate(-50%, -50%);
       width: 1.6rem;
       height: 1.6rem;
       margin: 0;
+      border-radius: 3px;
     }
+    .hero-nav.laid .theme-toggle img { display: none; }
+    .hero-nav.laid .theme-toggle:focus-visible { outline: 2px solid var(--dna-ink); outline-offset: 0; }
     .hero-nav .theme-toggle img { width: 18px; height: 18px; }
     .content { padding: 0 1rem 4rem; max-width: 800px; margin: 0 auto; }
     a {
@@ -254,6 +260,8 @@
     .post-nav-label { font-size: 0.8rem; color: var(--muted); }
     .post-nav-title { font-size: 1.02rem; }
     @media (max-width: 480px) { .post-nav-title { font-size: 0.92rem; } }
+    /* Inline SVG icons (data/icons.py), drawn like the Font Awesome glyphs they replaced */
+    .ico { display: inline-block; height: 1em; width: auto; overflow: visible; vertical-align: -0.125em; }
     /* Floating action buttons (share + go-to-top), bottom-right. */
     .float-btn {
       position: fixed; right: 1.5rem; width: 2.75rem; height: 2.75rem;

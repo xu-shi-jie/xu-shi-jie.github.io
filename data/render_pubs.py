@@ -18,6 +18,8 @@ import json
 import re
 from pathlib import Path
 
+from icons import icon
+
 ROOT = Path(__file__).resolve().parent.parent
 INDEX = ROOT / "index.html"
 PUBS = ROOT / "data" / "pubs.json"
@@ -122,7 +124,7 @@ def render_li(p, journals, idx):
         parts.append(
             f'<span style="margin-left:0.5rem">'
             f'<a href="#news-{idx}" class="news-tag">'
-            f'<i class="fa-solid fa-newspaper" style="margin-right:0.3em"></i>In the news</a>'
+            f'{icon("newspaper", "news-ico")}In the news</a>'
             f'</span>'
         )
 
@@ -137,7 +139,7 @@ def render_li(p, journals, idx):
     # it never wraps onto a line by itself
     btn = (f'<button class="copy-btn" type="button" title="Copy citation" '
            f'aria-label="Copy citation" data-cite="{html.escape(citation(p), quote=True)}">'
-           f'<i class="fa-regular fa-copy"></i></button>')
+           f'{icon("copy")}</button>')
     parts[-1] = f'<span style="white-space:nowrap">{parts[-1]}{btn}</span>'
 
     return "      <li>" + "".join(parts) + "</li>"
